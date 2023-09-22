@@ -4,6 +4,7 @@ import {View, Text, TextInput, Pressable, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
 import Icon from 'react-native-vector-icons/Ionicons';
+import DismissKeyboardView from '../components/DissmissKeyboardView';
 
 type SignUpPageScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -15,76 +16,81 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
   }, [navigation]);
 
   return (
-    <View>
+    <DismissKeyboardView>
       <View>
-        <View style={styles.View1}>
-          <Icon
-            name="mail-outline"
-            size={30}
-            color="black"
-            style={styles.Icons}
-          />
-          <TextInput style={styles.TextInPut1} placeholder="E-mail" />
+        <View>
+          <View style={styles.View1}>
+            <Icon
+              name="mail-outline"
+              size={30}
+              color="black"
+              style={styles.Icons}
+            />
+            <TextInput style={styles.TextInPut1} placeholder="E-mail" />
+          </View>
+          <View style={styles.View1}>
+            <Icon
+              name="lock-closed-outline"
+              size={30}
+              color="black"
+              style={styles.Icons}
+            />
+            <TextInput style={styles.TextInPut1} placeholder="비밀번호" />
+          </View>
+          <View style={styles.View1}>
+            <Icon name="" size={30} color="black" style={styles.Icons} />
+            <TextInput style={styles.TextInPut1} placeholder="비밀번호 확인" />
+          </View>
+          <View style={styles.View1}>
+            <Icon
+              name="mail-outline"
+              size={30}
+              color="black"
+              style={styles.Icons}
+            />
+            <TextInput style={styles.TextInPut1} placeholder="이름" />
+          </View>
+          <View style={styles.View1}>
+            <Icon
+              name="person-outline"
+              size={30}
+              color="black"
+              style={styles.Icons}
+            />
+            <TextInput style={styles.TextInPut1} placeholder="닉네임" />
+          </View>
+          <View style={styles.View1}>
+            <Icon
+              name="document-lock-outline"
+              size={30}
+              color="black"
+              style={styles.Icons}
+            />
+            <TextInput
+              style={styles.TextInPutId}
+              placeholder="주민번호 7자리"
+            />
+            <Text style={styles.IdText}>-</Text>
+            <TextInput style={styles.TextInPutIdBack} placeholder="" />
+            <Text style={styles.IdText}>******</Text>
+          </View>
+          <View style={styles.View1}>
+            <Icon
+              name="call-outline"
+              size={30}
+              color="black"
+              style={styles.Icons}
+            />
+            <TextInput style={styles.TextInPut1} placeholder="전화번호" />
+          </View>
         </View>
-        <View style={styles.View1}>
-          <Icon
-            name="lock-closed-outline"
-            size={30}
-            color="black"
-            style={styles.Icons}
-          />
-          <TextInput style={styles.TextInPut1} placeholder="비밀번호" />
-        </View>
-        <View style={styles.View1}>
-          <Icon name="" size={30} color="black" style={styles.Icons} />
-          <TextInput style={styles.TextInPut1} placeholder="비밀번호 확인" />
-        </View>
-        <View style={styles.View1}>
-          <Icon
-            name="mail-outline"
-            size={30}
-            color="black"
-            style={styles.Icons}
-          />
-          <TextInput style={styles.TextInPut1} placeholder="이름" />
-        </View>
-        <View style={styles.View1}>
-          <Icon
-            name="person-outline"
-            size={30}
-            color="black"
-            style={styles.Icons}
-          />
-          <TextInput style={styles.TextInPut1} placeholder="닉네임" />
-        </View>
-        <View style={styles.View1}>
-          <Icon
-            name="document-lock-outline"
-            size={30}
-            color="black"
-            style={styles.Icons}
-          />
-          <TextInput style={styles.TextInPutId} placeholder="주민번호 7자리" />
-          <Text style={styles.IdText}>-</Text>
-          <TextInput style={styles.TextInPutIdBack} placeholder="" />
-          <Text style={styles.IdText}>******</Text>
-        </View>
-        <View style={styles.View1}>
-          <Icon
-            name="call-outline"
-            size={30}
-            color="black"
-            style={styles.Icons}
-          />
-          <TextInput style={styles.TextInPut1} placeholder="전화번호" />
+        <View style={styles.View2}>
+          <Pressable style={styles.StartButton} onPress={toStartPage}>
+            <Text style={styles.StartButtonText}>시작하기</Text>
+          </Pressable>
         </View>
       </View>
-      <View style={styles.View2}>
-        <Pressable style={styles.StartButton} onPress={toStartPage}>
-          <Text style={styles.StartButtonText}>시작하기</Text>
-        </Pressable>
-      </View>
-    </View>
+    </DismissKeyboardView>
   );
 }
 
