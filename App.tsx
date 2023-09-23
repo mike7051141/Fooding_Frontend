@@ -14,6 +14,11 @@ import MainPage from './src/pages/MainPage';
 import CategoryPage from './src/pages/CategoryPage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import RestListPage from './src/pages/RestListPage';
+import {Screen, screensEnabled} from 'react-native-screens';
+import {Image, Pressable, Text, View} from 'react-native';
+import SearchPage from './src/pages/SearchPage';
+import MainStack from './src/components/MainStack';
 
 export type RootStackParamList = {
   StartPage: undefined;
@@ -21,116 +26,18 @@ export type RootStackParamList = {
   SignUpPage: undefined;
 };
 
-export type MainStackParamList = {
-  MainPage: undefined;
-  LikePage: undefined;
-  MapPage: undefined;
-  ProfilePage: undefined;
-  CategoryPage: undefined;
+export type RestListPagekParamList = {
+  RestListPage: undefined;
 };
 
-const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(true);
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <Tab.Navigator
-          screenOptions={({route}) => ({
-            tabBarIcon: ({color, size}) => {
-              let iconName;
-
-              if (route.name === 'MainPage') {
-                iconName = 'home-outline';
-              } else if (route.name === 'MapPage') {
-                iconName = 'location-outline';
-              } else if (route.name === 'CategoryPage') {
-                iconName = 'add-circle'; // 카테고리 페이지일 때 아이콘 변경
-              } else if (route.name === 'LikePage') {
-                iconName = 'heart-outline';
-              } else if (route.name === 'ProfilePage') {
-                iconName = 'person-outline';
-              }
-
-              // 카테고리 페이지일 때 색상 변경
-              const iconColor = route.name === 'CategoryPage' ? 'white' : color;
-
-              return <Ionicons name={iconName} size={size} color={iconColor} />;
-            },
-            headerShown: false,
-            tabBarStyle: {
-              height: 65,
-              backgroundColor:
-                route.name === 'CategoryPage' ? '#B6BE6A' : 'white',
-            },
-          })}
-          tabBarOptions={{
-            activeTintColor: '#B6BE6A',
-            inactiveTintColor: 'black',
-          }}>
-          <Tab.Screen
-            name="MainPage"
-            component={MainPage}
-            options={{
-              tabBarIcon: () => (
-                <Ionicons name="home-outline" size={33} color={'black'} />
-              ),
-
-              headerShown: false,
-              tabBarShowLabel: false,
-            }}
-          />
-          <Tab.Screen
-            name="MapPage"
-            component={MapPage}
-            options={{
-              tabBarIcon: () => (
-                <Ionicons name="location-outline" size={33} color={'black'} />
-              ),
-              headerShown: false,
-              tabBarShowLabel: false,
-            }}
-          />
-          <Tab.Screen
-            name="CategoryPage"
-            component={CategoryPage}
-            options={({route}) => ({
-              tabBarIcon: ({color, size, focused}) => (
-                <Ionicons
-                  name={focused ? 'close-circle' : 'add-circle'}
-                  size={40}
-                  color={focused ? 'white' : '#B6BE6A'} // focused 상태에 따라 색상을 변경합니다.
-                />
-              ),
-              headerShown: false,
-              tabBarShowLabel: false,
-            })}
-          />
-
-          <Tab.Screen
-            name="LikePage"
-            component={LikePage}
-            options={{
-              tabBarIcon: () => (
-                <Ionicons name="heart-outline" size={33} color={'black'} />
-              ),
-              title: '좋아요 한',
-              tabBarShowLabel: false,
-            }}
-          />
-          <Tab.Screen
-            name="ProfilePage"
-            component={ProfilePage}
-            options={{
-              tabBarIcon: () => (
-                <Ionicons name="person-outline" size={33} color={'black'} />
-              ),
-              title: 'My 푸딩',
-              tabBarShowLabel: false,
-            }}
-          />
-        </Tab.Navigator>
+        <MainStack />
       ) : (
         <Stack.Navigator>
           <Stack.Screen

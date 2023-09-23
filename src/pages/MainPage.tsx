@@ -10,17 +10,23 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import RestListPage from './RestListPage';
-import {MainStackParamList} from '../../App';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {MainPageStackParamList} from '../components/MainStack';
+
+const Stack = createNativeStackNavigator();
 
 type MainPageScreenProps = NativeStackScreenProps<
-  MainStackParamList,
+  MainPageStackParamList,
   'MainPage'
 >;
 
-function MainPage() {
-  const toRestListPage = () => {
-    // 'food1.png' 이미지를 클릭할 때 RestListPage로 이동
-    navigation.navigate('RestListPage');
+function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
+  const toSearchPage = () => {
+    navigation.navigate('SearchPage');
+  };
+
+  const toRestListPage = (tabName: string) => {
+    navigation.navigate('RestListPage', {screen: tabName});
   };
 
   return (
@@ -40,12 +46,14 @@ function MainPage() {
           <View style={{flex: 2}}>
             <Text style={styles.LocationText}>내 위치</Text>
           </View>
-          <View style={{flex: 3, marginTop: 10}}>
-            <IconTextInput
-              placeholder="오늘은 어디로?"
-              iconName="search-outline"
-            />
-          </View>
+          <Pressable onPress={toSearchPage}>
+            <View style={{flex: 3, marginTop: 10}} pointerEvents="none">
+              <IconTextInput
+                placeholder="오늘은 어디로?"
+                iconName="search-outline"
+              />
+            </View>
+          </Pressable>
         </View>
         <View
           style={{
@@ -54,7 +62,7 @@ function MainPage() {
           }}>
           <View style={styles.ViewFood}>
             <View style={styles.foods}>
-              <Pressable onPress={toRestListPage}>
+              <Pressable onPress={() => toRestListPage('Korea')}>
                 <Image
                   source={require('../assets/food1.png')}
                   style={styles.image}
@@ -63,31 +71,39 @@ function MainPage() {
               <Text style={styles.FoodsText}>한식</Text>
             </View>
             <View style={styles.foods}>
-              <Image
-                source={require('../assets/food2.png')}
-                style={styles.image}
-              />
+              <Pressable onPress={() => toRestListPage('China')}>
+                <Image
+                  source={require('../assets/food2.png')}
+                  style={styles.image}
+                />
+              </Pressable>
               <Text style={styles.FoodsText}>중식</Text>
             </View>
             <View style={styles.foods}>
-              <Image
-                source={require('../assets/food3.png')}
-                style={styles.image}
-              />
+              <Pressable onPress={() => toRestListPage('FoodPage1')}>
+                <Image
+                  source={require('../assets/food3.png')}
+                  style={styles.image}
+                />
+              </Pressable>
               <Text style={styles.FoodsText}>양식</Text>
             </View>
             <View style={styles.foods}>
-              <Image
-                source={require('../assets/food4.png')}
-                style={styles.image}
-              />
+              <Pressable onPress={() => toRestListPage('FoodPage2')}>
+                <Image
+                  source={require('../assets/food4.png')}
+                  style={styles.image}
+                />
+              </Pressable>
               <Text style={styles.FoodsText}>일식</Text>
             </View>
             <View style={styles.foods}>
-              <Image
-                source={require('../assets/food5.png')}
-                style={styles.image}
-              />
+              <Pressable onPress={() => toRestListPage('FoodPage3')}>
+                <Image
+                  source={require('../assets/food5.png')}
+                  style={styles.image}
+                />
+              </Pressable>
               <Text style={styles.FoodsText}>야식</Text>
             </View>
           </View>
