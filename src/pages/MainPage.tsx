@@ -1,22 +1,30 @@
-import React from 'react';
-import {Image, StyleSheet, TextInput} from 'react-native';
+import React, {useCallback} from 'react';
+import {Image, Pressable, StyleSheet, TextInput} from 'react-native';
 import {View, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {ScrollView} from 'react-native';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
+import {
+  NativeStackScreenProps,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
+import RestListPage from './RestListPage';
+import {MainStackParamList} from '../../App';
+
+type MainPageScreenProps = NativeStackScreenProps<
+  MainStackParamList,
+  'MainPage'
+>;
 
 function MainPage() {
-  const imageUrls = [
-    '../assets/food1.png',
-    '../assets/food2.png',
-    '../assets/food3.png',
-    '../assets/food4.png',
-    '../assets/food5.png',
-  ];
+  const toRestListPage = () => {
+    // 'food1.png' 이미지를 클릭할 때 RestListPage로 이동
+    navigation.navigate('RestListPage');
+  };
 
   return (
-    <DismissKeyboardView>
+    <DismissKeyboardView style={{backgroundColor: 'white'}}>
       <View
         style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
         <View
@@ -46,10 +54,12 @@ function MainPage() {
           }}>
           <View style={styles.ViewFood}>
             <View style={styles.foods}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.image}
-              />
+              <Pressable onPress={toRestListPage}>
+                <Image
+                  source={require('../assets/food1.png')}
+                  style={styles.image}
+                />
+              </Pressable>
               <Text style={styles.FoodsText}>한식</Text>
             </View>
             <View style={styles.foods}>

@@ -44,6 +44,7 @@ function App() {
               tabBarIcon: () => (
                 <Ionicons name="home-outline" size={30} color={'black'} />
               ),
+
               headerShown: false,
             }}
           />
