@@ -19,6 +19,7 @@ import {Screen, screensEnabled} from 'react-native-screens';
 import {Image, Pressable, Text, View} from 'react-native';
 import SearchPage from './src/pages/SearchPage';
 import MainStack from './src/components/MainStack';
+import MainStackList from './src/components/MainStack';
 
 export type RootStackParamList = {
   StartPage: undefined;
@@ -37,7 +38,7 @@ function App() {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <MainStack />
+        <MainStackList />
       ) : (
         <Stack.Navigator>
           <Stack.Screen

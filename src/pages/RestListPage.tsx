@@ -24,7 +24,7 @@ function RestListPage() {
         swipeEnabled: false,
       }}>
       <Tab.Screen
-        name="Korea"
+        name="KoreaFoodPage"
         component={KoreaFoodPage}
         options={{
           title: '한식',
@@ -64,6 +64,3 @@ function RestListPage() {
   );
 }
 export default RestListPage;
-function useBackHandler(handleBackButton: () => boolean) {
-  throw new Error('Function not implemented.');
-}

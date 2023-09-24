@@ -15,6 +15,42 @@ import {MainPageStackParamList} from '../components/MainStack';
 
 const Stack = createNativeStackNavigator();
 
+const MyNearPlacesData = [
+  {
+    name: '레스토랑 1',
+    rating: 4.5,
+    address: '주소 1',
+  },
+  {
+    name: '레스토랑 2',
+    rating: 3.8,
+    address: '주소 2',
+  },
+  {
+    name: '레스토랑 3',
+    rating: 3.8,
+    address: '주소 3',
+  },
+];
+
+const RecentPlacesData = [
+  {
+    name: '레스토랑 4',
+    rating: 4.5,
+    address: '주소 4',
+  },
+  {
+    name: '레스토랑 5',
+    rating: 3.8,
+    address: '주소 5',
+  },
+  {
+    name: '레스토랑 6',
+    rating: 3.8,
+    address: '주소 7',
+  },
+];
+
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
   'MainPage'
@@ -23,6 +59,10 @@ type MainPageScreenProps = NativeStackScreenProps<
 function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
   const toSearchPage = () => {
     navigation.navigate('SearchPage');
+  };
+
+  const toRestPage = () => {
+    navigation.navigate('RestPage');
   };
 
   const toRestListPage = (tabName: string) => {
@@ -62,7 +102,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           }}>
           <View style={styles.ViewFood}>
             <View style={styles.foods}>
-              <Pressable onPress={() => toRestListPage('Korea')}>
+              <Pressable onPress={() => toRestListPage('KoreaFoodPage')}>
                 <Image
                   source={require('../assets/food1.png')}
                   style={styles.image}
@@ -162,186 +202,16 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             내주변 가까운 맛집
           </Text>
           <ScrollView horizontal={true}>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
+            {MyNearPlacesData.map((MyNearPlace, index) => (
+              <Pressable onPress={toRestPage} key={index}>
+                <MyNearPlaces
+                  key={index}
+                  name={MyNearPlace.name}
+                  rating={MyNearPlace.rating}
+                  address={MyNearPlace.address}
                 />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
+              </Pressable>
+            ))}
           </ScrollView>
         </View>
         <View
@@ -359,189 +229,17 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
               fontWeight: 'bold',
               color: 'black',
             }}>
-            내주변 가까운 맛집
+            최근 방문한 장소
           </Text>
           <ScrollView horizontal={true}>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
+            {RecentPlacesData.map((RecentPlace, index) => (
+              <RecentPlaces
+                key={index}
+                name={RecentPlace.name}
+                rating={RecentPlace.rating}
+                address={RecentPlace.address}
               />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
-            <View style={{marginLeft: 20}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.Scrollimage}
-              />
-              <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-                땀땀
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black'}}>4.0 (302)</Text>
-              </View>
-              <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
-                강남구 강남대로 98길 12-5
-              </Text>
-            </View>
+            ))}
           </ScrollView>
         </View>
       </View>
@@ -593,6 +291,126 @@ const styles = StyleSheet.create({
   },
   ScrollText: {},
 });
+
+const MyNearPlaces = ({
+  name,
+  rating,
+  address,
+}: {
+  name: string;
+  rating: number;
+  address: string;
+}) => {
+  return (
+    <>
+      <View style={{marginLeft: 20}}>
+        <Image
+          source={require('../assets/food1.png')}
+          style={styles.Scrollimage}
+        />
+        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
+          {name}
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Text style={{color: 'black'}}>4.0 (302)</Text>
+        </View>
+        <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
+          {address}
+        </Text>
+      </View>
+    </>
+  );
+};
+
+const RecentPlaces = ({
+  name,
+  rating,
+  address,
+}: {
+  name: string;
+  rating: number;
+  address: string;
+}) => {
+  return (
+    <>
+      <View style={{marginLeft: 20}}>
+        <Image
+          source={require('../assets/food1.png')}
+          style={styles.Scrollimage}
+        />
+        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
+          {name}
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Ionicons
+            name="star-outline"
+            size={15}
+            color="black"
+            style={styles.Scrollstar}
+          />
+          <Text style={{color: 'black'}}>4.0 (302)</Text>
+        </View>
+        <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
+          {address}
+        </Text>
+      </View>
+    </>
+  );
+};
 
 interface IconTextInputProps {
   iconName: string; // iconName 프로퍼티의 타입을 string으로 명시적으로 지정
