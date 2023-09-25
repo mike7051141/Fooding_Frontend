@@ -92,7 +92,17 @@ function MainTabNavigator() {
             <Ionicons name="heart-outline" size={33} color={'black'} />
           ),
           title: '좋아요 한',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
+          headerStyle: {
+            borderBottomWidth: 1,
+            borderColor: 'black',
+          },
           tabBarShowLabel: false,
+          headerShown: true,
         }}
       />
       <Tab.Screen
@@ -103,7 +113,17 @@ function MainTabNavigator() {
             <Ionicons name="person-outline" size={33} color={'black'} />
           ),
           title: 'My 푸딩',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+          },
+          headerStyle: {
+            borderBottomWidth: 1,
+            borderColor: 'black',
+          },
           tabBarShowLabel: false,
+          headerShown: true,
         }}
       />
     </Tab.Navigator>
