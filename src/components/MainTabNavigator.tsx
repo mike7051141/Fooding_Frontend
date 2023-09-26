@@ -96,10 +96,12 @@ function MainTabNavigator() {
           headerTitleStyle: {
             fontSize: 20,
             fontWeight: 'bold',
+            color: 'white',
           },
           headerStyle: {
-            borderBottomWidth: 1,
+            borderBottomWidth: 1.5,
             borderColor: 'black',
+            backgroundColor: '#B6BE6A',
           },
           tabBarShowLabel: false,
           headerShown: true,
@@ -117,10 +119,12 @@ function MainTabNavigator() {
           headerTitleStyle: {
             fontSize: 20,
             fontWeight: 'bold',
+            color: 'white',
           },
           headerStyle: {
-            borderBottomWidth: 1,
+            borderBottomWidth: 1.5,
             borderColor: 'black',
+            backgroundColor: '#B6BE6A',
           },
           tabBarShowLabel: false,
           headerShown: true,

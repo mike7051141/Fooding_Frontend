@@ -12,20 +12,40 @@ import MapPage from '../pages/MapPage';
 import ProfilePage from '../pages/ProfilePage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestPage from '../pages/RestPage';
+import UpdatePage from '../pages/UpdatePage';
 import MainTabNavigator from './MainTabNavigator';
 
-export type LikePageStackParamList = {
+export type ProfilePageStackParamList = {
   RestPage: undefined;
+  UpdatePage: undefined;
 };
 
-const Stack1 = createNativeStackNavigator<LikePageStackParamList>();
+const Stack1 = createNativeStackNavigator<ProfilePageStackParamList>();
 
-function LikeStackList() {
+function ProfileStackList() {
   return (
     <Stack1.Navigator>
       <Stack1.Screen
         name="RestPage"
         component={RestPage}
+        options={({navigation}) => ({
+          headerShown: true,
+          title: '',
+          headerRight: () => (
+            <View>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate('MainPage');
+                }}>
+                <Ionicons name="create-outline" size={25} color={'black'} />
+              </Pressable>
+            </View>
+          ),
+        })}
+      />
+      <Stack1.Screen
+        name="UpdatePage"
+        component={UpdatePage}
         options={({navigation}) => ({
           headerShown: true,
           title: '',
