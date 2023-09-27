@@ -6,7 +6,7 @@ import {ProfilePageStackParamList} from '../components/ProfileStack';
 
 type ProfilePageScreenProps = NativeStackScreenProps<
   ProfilePageStackParamList,
-  'RestPage' | 'UpdatePage'
+  'ProfilePage'
 >;
 
 const ProfilePage = ({navigation}: ProfilePageScreenProps) => {

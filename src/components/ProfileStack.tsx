@@ -18,14 +18,15 @@ import MainTabNavigator from './MainTabNavigator';
 export type ProfilePageStackParamList = {
   RestPage: undefined;
   UpdatePage: undefined;
+  ProfilePage: undefined;
 };
 
-const Stack1 = createNativeStackNavigator<ProfilePageStackParamList>();
+const Stack2 = createNativeStackNavigator<ProfilePageStackParamList>();
 
 function ProfileStackList() {
   return (
-    <Stack1.Navigator>
-      <Stack1.Screen
+    <Stack2.Navigator>
+      <Stack2.Screen
         name="RestPage"
         component={RestPage}
         options={({navigation}) => ({
@@ -43,24 +44,16 @@ function ProfileStackList() {
           ),
         })}
       />
-      <Stack1.Screen
+      <Stack2.Screen
+        name="ProfilePage"
+        component={ProfilePage}
+        options={{headerShown: false}}
+      />
+      <Stack2.Screen
         name="UpdatePage"
         component={UpdatePage}
-        options={({navigation}) => ({
-          headerShown: true,
-          title: '',
-          headerRight: () => (
-            <View>
-              <Pressable
-                onPress={() => {
-                  navigation.navigate('MainPage');
-                }}>
-                <Ionicons name="create-outline" size={25} color={'black'} />
-              </Pressable>
-            </View>
-          ),
-        })}
+        options={{headerShown: false}}
       />
-    </Stack1.Navigator>
+    </Stack2.Navigator>
   );
 }
