@@ -201,7 +201,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             }}>
             내주변 가까운 맛집
           </Text>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {MyNearPlacesData.map((MyNearPlace, index) => (
               <Pressable onPress={toRestPage} key={index}>
                 <MyNearPlaces
@@ -231,7 +231,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             }}>
             최근 방문한 장소
           </Text>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {RecentPlacesData.map((RecentPlace, index) => (
               <RecentPlaces
                 key={index}

@@ -72,20 +72,7 @@ function MainStackList() {
       <Stack1.Screen
         name="RestPage"
         component={RestPage}
-        options={({navigation}) => ({
-          headerShown: true,
-          title: '',
-          headerRight: () => (
-            <View>
-              <Pressable
-                onPress={() => {
-                  navigation.navigate('MainPage');
-                }}>
-                <Ionicons name="create-outline" size={25} color={'black'} />
-              </Pressable>
-            </View>
-          ),
-        })}
+        options={{headerShown: false}}
       />
       <Stack1.Screen
         name="UpdatePage"

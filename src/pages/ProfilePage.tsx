@@ -2,14 +2,14 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, Pressable, FlatList} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {ProfilePageStackParamList} from '../components/ProfileStack';
+import {MainPageStackParamList} from '../components/MainStack';
 
-type ProfilePageScreenProps = NativeStackScreenProps<
-  ProfilePageStackParamList,
-  'ProfilePage'
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'RestPage' | 'UpdatePage'
 >;
 
-const ProfilePage = ({navigation}: ProfilePageScreenProps) => {
+const ProfilePage = ({navigation}: MainPageScreenProps) => {
   const toRestPage = () => {
     navigation.navigate('RestPage');
   };
@@ -50,6 +50,7 @@ const ProfilePage = ({navigation}: ProfilePageScreenProps) => {
         <Text style={styles.profileMidFont}>나만의 맛집</Text>
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={photosData}
         numColumns={3}
         horizontal={false}

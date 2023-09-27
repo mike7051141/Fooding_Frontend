@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {LikePageStackParamList} from '../components/LikeStack';
+import {MainPageStackParamList} from '../components/MainStack';
 
 const LikeRestData = [
   {
@@ -50,12 +50,12 @@ const LikeRestData = [
   },
 ];
 
-type LikePageScreenProps = NativeStackScreenProps<
-  LikePageStackParamList,
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
   'RestPage'
 >;
 
-function LikePage({navigation}: LikePageScreenProps) {
+function LikePage({navigation}: MainPageScreenProps) {
   const toRestPage = () => {
     navigation.navigate('RestPage');
   };
