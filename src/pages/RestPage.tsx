@@ -226,6 +226,7 @@ const RestHomePage = () => {
             borderColor: 'lightgray',
             borderWidth: 1,
             padding: 15,
+            marginBottom: 30,
           }}>
           <Pressable
             style={{flex: 1}}
