@@ -65,7 +65,7 @@ const RestHomePage = () => {
     setIsActivated(prev => !prev);
   };
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{}}>
         <View>
           <View style={{}}>

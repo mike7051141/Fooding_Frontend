@@ -62,6 +62,7 @@ function LikePage({navigation}: LikePageScreenProps) {
 
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
       {LikeRestData.map((LikeRest, index) => (
         <Pressable onPress={toRestPage} key={index}>
