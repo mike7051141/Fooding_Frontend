@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'blue',
   },
   input: {
+    color: 'gray',
     flex: 3,
     borderBottomWidth: 1.5,
     borderColor: 'gray',
