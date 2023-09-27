@@ -22,7 +22,7 @@ const UserProfileEdit = () => {
       </View>
       <View style={styles.profileContainer}>
         <Image
-          source={require('./profile-image.jpg')} // 프로필 이미지 경로 설정
+          source={require('../assets/food1.png')} // 프로필 이미지 경로 설정
           style={styles.profileImage}
         />
         <TouchableOpacity onPress={() => {}}>

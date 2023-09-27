@@ -1,5 +1,10 @@
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import {View, Text, Image, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import RestListPage from '../pages/RestListPage';
+import SearchPage from '../pages/SearchPage';
+import {NavigationContainer} from '@react-navigation/native';
 import CategoryPage from '../pages/CategoryPage';
 import LikePage from '../pages/LikePage';
 import MainPage from '../pages/MainPage';
@@ -122,6 +127,31 @@ function MainTabNavigator() {
           },
           tabBarShowLabel: false,
           headerShown: true,
+        }}
+      />
+      <Tab.Screen
+        name="SearchPage"
+        component={SearchPage}
+        options={{
+          tabBarIcon: () => (
+            <Ionicons name="person-outline" size={33} color={'black'} />
+          ),
+          title: 'My 푸딩',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'white',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'black',
+            backgroundColor: '#B6BE6A',
+          },
+          tabBarShowLabel: false,
+          headerShown: true,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
         }}
       />
     </Tab.Navigator>

@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const CategoryPage = () => {
-  // 가상의 사진 데이터 배열
+  const navigation = useNavigation(); // navigation 객체 가져오기
+
   const photos = [
     {id: 1, source: require('../assets/addrest.png')},
     {id: 2, source: require('../assets/regiauth.png')},
@@ -16,9 +18,13 @@ const CategoryPage = () => {
     {id: 4, source: require('../assets/livechat.png')},
   ];
 
-  // renderItem 함수를 정의하여 각 항목을 그리기
+  const handlePhotoPress = () => {
+    // 이미지 클릭 시 RestPage로 이동
+    navigation.navigate('SearchPage');
+  };
+
   const renderItem = ({item}) => (
-    <TouchableOpacity style={styles.photoContainer}>
+    <TouchableOpacity style={styles.photoContainer} onPress={handlePhotoPress}>
       <Image source={item.source} style={styles.photo} />
     </TouchableOpacity>
   );
@@ -29,7 +35,7 @@ const CategoryPage = () => {
         data={photos}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
-        numColumns={2} // 2열 그리드
+        numColumns={2}
         contentContainerStyle={styles.gridContainer}
       />
     </View>
@@ -40,19 +46,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#B6BE6A',
-    alignItems: 'center', // 수평 가운데 정렬
-    justifyContent: 'center', // 수직 가운데 정렬
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   gridContainer: {
     padding: 16,
     marginTop: 150,
   },
-
+  photoContainer: {
+    margin: 10,
+  },
   photo: {
     width: 150,
     height: 150,
-    margin: 10,
-    borderRadius: 10, // 정사각형 모양을 둥글게 만들기 위해 반지름 적용
+    borderRadius: 10,
   },
 });
 
