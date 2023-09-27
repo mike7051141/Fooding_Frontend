@@ -7,16 +7,27 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MainPageStackParamList} from '../components/MainStack';
 
-const UserProfileEdit = () => {
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'ProfilePage'
+>;
+
+const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
+  const toProfilePage = () => {
+    navigation.navigate('ProfilePage');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>회원 정보 수정</Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => toProfilePage()}>
           <Text style={styles.closeButton}>X</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
+        <Text style={styles.headerText}>회원 정보 수정</Text>
+        <TouchableOpacity onPress={() => toProfilePage()}>
           <Text style={styles.saveButton}>O</Text>
         </TouchableOpacity>
       </View>
@@ -30,10 +41,22 @@ const UserProfileEdit = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.inputContainer}>
-        <TextInput placeholder="이름" style={styles.input} />
-        <TextInput placeholder="아이디" style={styles.input} />
-        <TextInput placeholder="닉네임" style={styles.input} />
-        <TextInput placeholder="전화번호" style={styles.input} />
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>이름</Text>
+          <TextInput placeholder="홍길동" style={styles.input} />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>아이디</Text>
+          <TextInput placeholder="qwerty@mail.com" style={styles.input} />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>닉네임</Text>
+          <TextInput placeholder="워루우더우더우알" style={styles.input} />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>전화번호</Text>
+          <TextInput placeholder="010-XXXX-XXXX" style={styles.input} />
+        </View>
       </View>
     </View>
   );
@@ -42,17 +65,18 @@ const UserProfileEdit = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#ffffff',
   },
   header: {
+    padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 20,
+    color: 'black',
     fontWeight: 'bold',
   },
   closeButton: {
@@ -64,7 +88,7 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 30,
   },
   profileImage: {
     width: 120,
@@ -73,16 +97,41 @@ const styles = StyleSheet.create({
   },
   editProfileButton: {
     marginTop: 8,
-    color: 'blue',
+    color: '#B6BE6A',
+    fontWeight: 'bold',
   },
   inputContainer: {
     flex: 1,
+    borderTopWidth: 1,
+    borderColor: 'black',
+    paddingTop: 30,
+    // backgroundColor: 'red',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    // backgroundColor: 'red',
+    width: 400,
+  },
+  inputLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+    marginHorizontal: 15,
+    textAlign: 'center',
+    marginTop: 23,
+    marginLeft: 50,
+    // backgroundColor: 'blue',
   },
   input: {
-    borderBottomWidth: 1,
+    flex: 3,
+    borderBottomWidth: 1.5,
     borderColor: 'gray',
-    marginBottom: 16,
     fontSize: 18,
+    marginRight: 50,
+    // backgroundColor: 'red',
   },
 });
 
