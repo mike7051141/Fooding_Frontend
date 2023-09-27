@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -24,11 +25,11 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => toProfilePage()}>
-          <Text style={styles.closeButton}>X</Text>
+          <Ionicons name="arrow-back-outline" size={25} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerText}>회원 정보 수정</Text>
         <TouchableOpacity onPress={() => toProfilePage()}>
-          <Text style={styles.saveButton}>O</Text>
+          <Ionicons name="checkmark-outline" size={30} color="green" />
         </TouchableOpacity>
       </View>
       <View style={styles.profileContainer}>
@@ -51,7 +52,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>닉네임</Text>
-          <TextInput placeholder="워루우더우더우알" style={styles.input} />
+          <TextInput placeholder="서천동칼잡이" style={styles.input} />
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>전화번호</Text>
@@ -119,10 +120,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
-    marginHorizontal: 15,
+    marginHorizontal: 10,
     textAlign: 'center',
-    marginTop: 23,
-    marginLeft: 50,
+    marginTop: 8,
+    marginLeft: 25,
     // backgroundColor: 'blue',
   },
   input: {

@@ -41,7 +41,8 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
           <Text style={styles.username}>홍길동</Text>
           <Pressable onPress={() => toUpdatePage()}>
             <View style={styles.setting}>
-              <Text>내 정보 수정</Text>
+              <Text style={{marginRight: 5, fontSize: 15}}>내 정보 수정</Text>
+              <Ionicons name="receipt-outline" size={19} color="gray" />
             </View>
           </Pressable>
         </View>
@@ -87,13 +88,15 @@ const styles = StyleSheet.create({
     marginRight: 50,
   },
   username: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: 'bold',
     color: 'black',
   },
   setting: {
+    flexDirection: 'row',
     width: 110,
     height: 30,
+    marginTop: 5,
   },
   profileMid: {
     height: 60,

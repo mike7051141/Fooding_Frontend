@@ -23,6 +23,7 @@ export type MainPageStackParamList = {
   RestPage: undefined;
   KoreaFoodPage: undefined;
   UpdatePage: undefined;
+  ProfilePage: undefined;
 };
 
 const Tab = createBottomTabNavigator();
