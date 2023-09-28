@@ -70,24 +70,23 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
   };
 
   return (
-    <DismissKeyboardView style={{backgroundColor: 'white'}}>
+    <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
       <View
-        style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
-        <View
-          style={{
-            flex: 2,
-            flexDirection: 'column',
-            backgroundColor: '#B6BE6A',
-            padding: 10,
-          }}>
-          <View style={{flex: 1}}>
-            <Text style={{color: 'gray'}}>지금 내 위치는</Text>
-          </View>
-          <View style={{flex: 2}}>
-            <Text style={styles.LocationText}>내 위치</Text>
-          </View>
+        style={{
+          flex: 2,
+          flexDirection: 'column',
+          backgroundColor: '#B6BE6A',
+          padding: 10,
+        }}>
+        <View style={{flex: 1}}>
+          <Text style={{color: 'gray'}}>지금 내 위치는</Text>
+        </View>
+        <View style={{flex: 2}}>
+          <Text style={styles.LocationText}>내 위치</Text>
+        </View>
+        <View style={{flex: 3, marginTop: 10}}>
           <Pressable onPress={toSearchPage}>
-            <View style={{flex: 3, marginTop: 10}} pointerEvents="none">
+            <View pointerEvents="none">
               <IconTextInput
                 placeholder="오늘은 어디로?"
                 iconName="search-outline"
@@ -95,155 +94,155 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             </View>
           </Pressable>
         </View>
-        <View
-          style={{
-            flex: 4,
-            flexDirection: 'column',
-          }}>
-          <View style={styles.ViewFood}>
-            <View style={styles.foods}>
-              <Pressable onPress={() => toRestListPage('KoreaFoodPage')}>
-                <Image
-                  source={require('../assets/food1.png')}
-                  style={styles.image}
-                />
-              </Pressable>
-              <Text style={styles.FoodsText}>한식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Pressable onPress={() => toRestListPage('China')}>
-                <Image
-                  source={require('../assets/food2.png')}
-                  style={styles.image}
-                />
-              </Pressable>
-              <Text style={styles.FoodsText}>중식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Pressable onPress={() => toRestListPage('FoodPage1')}>
-                <Image
-                  source={require('../assets/food3.png')}
-                  style={styles.image}
-                />
-              </Pressable>
-              <Text style={styles.FoodsText}>양식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Pressable onPress={() => toRestListPage('FoodPage2')}>
-                <Image
-                  source={require('../assets/food4.png')}
-                  style={styles.image}
-                />
-              </Pressable>
-              <Text style={styles.FoodsText}>일식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Pressable onPress={() => toRestListPage('FoodPage3')}>
-                <Image
-                  source={require('../assets/food5.png')}
-                  style={styles.image}
-                />
-              </Pressable>
-              <Text style={styles.FoodsText}>야식</Text>
-            </View>
+      </View>
+      <View
+        style={{
+          flex: 4,
+          flexDirection: 'column',
+        }}>
+        <View style={styles.ViewFood}>
+          <View style={styles.foods}>
+            <Pressable onPress={() => toRestListPage('KoreaFoodPage')}>
+              <Image
+                source={require('../assets/food1.png')}
+                style={styles.image}
+              />
+            </Pressable>
+            <Text style={styles.FoodsText}>한식</Text>
           </View>
-          <View style={styles.ViewFood}>
-            <View style={styles.foods}>
+          <View style={styles.foods}>
+            <Pressable onPress={() => toRestListPage('China')}>
               <Image
-                source={require('../assets/food6.png')}
+                source={require('../assets/food2.png')}
                 style={styles.image}
               />
-              <Text style={styles.FoodsText}>디저트</Text>
-            </View>
-            <View style={styles.foods}>
+            </Pressable>
+            <Text style={styles.FoodsText}>중식</Text>
+          </View>
+          <View style={styles.foods}>
+            <Pressable onPress={() => toRestListPage('FoodPage1')}>
               <Image
-                source={require('../assets/food7.png')}
+                source={require('../assets/food3.png')}
                 style={styles.image}
               />
-              <Text style={styles.FoodsText}>치킨</Text>
-            </View>
-            <View style={styles.foods}>
+            </Pressable>
+            <Text style={styles.FoodsText}>양식</Text>
+          </View>
+          <View style={styles.foods}>
+            <Pressable onPress={() => toRestListPage('FoodPage2')}>
               <Image
-                source={require('../assets/food8.png')}
+                source={require('../assets/food4.png')}
                 style={styles.image}
               />
-              <Text style={styles.FoodsText}>피자</Text>
-            </View>
-            <View style={styles.foods}>
+            </Pressable>
+            <Text style={styles.FoodsText}>일식</Text>
+          </View>
+          <View style={styles.foods}>
+            <Pressable onPress={() => toRestListPage('FoodPage3')}>
               <Image
-                source={require('../assets/food9.png')}
+                source={require('../assets/food5.png')}
                 style={styles.image}
               />
-              <Text style={styles.FoodsText}>분식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food10.png')}
-                style={styles.image}
-              />
-              <Text style={styles.FoodsText}>패스트푸드</Text>
-            </View>
+            </Pressable>
+            <Text style={styles.FoodsText}>야식</Text>
           </View>
         </View>
-        <View
-          style={{
-            flex: 3,
-            flexDirection: 'column',
-            backgroundColor: 'white',
-          }}>
-          <Text
-            style={{
-              margin: 5,
-              marginLeft: 10,
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: 'black',
-            }}>
-            내주변 가까운 맛집
-          </Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {MyNearPlacesData.map((MyNearPlace, index) => (
-              <Pressable onPress={toRestPage} key={index}>
-                <MyNearPlaces
-                  key={index}
-                  name={MyNearPlace.name}
-                  rating={MyNearPlace.rating}
-                  address={MyNearPlace.address}
-                />
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-        <View
-          style={{
-            flex: 3,
-            flexDirection: 'column',
-            backgroundColor: 'white',
-            marginBottom: 20,
-          }}>
-          <Text
-            style={{
-              margin: 5,
-              marginLeft: 10,
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: 'black',
-            }}>
-            최근 방문한 장소
-          </Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {RecentPlacesData.map((RecentPlace, index) => (
-              <RecentPlaces
-                key={index}
-                name={RecentPlace.name}
-                rating={RecentPlace.rating}
-                address={RecentPlace.address}
-              />
-            ))}
-          </ScrollView>
+        <View style={styles.ViewFood}>
+          <View style={styles.foods}>
+            <Image
+              source={require('../assets/food6.png')}
+              style={styles.image}
+            />
+            <Text style={styles.FoodsText}>디저트</Text>
+          </View>
+          <View style={styles.foods}>
+            <Image
+              source={require('../assets/food7.png')}
+              style={styles.image}
+            />
+            <Text style={styles.FoodsText}>치킨</Text>
+          </View>
+          <View style={styles.foods}>
+            <Image
+              source={require('../assets/food8.png')}
+              style={styles.image}
+            />
+            <Text style={styles.FoodsText}>피자</Text>
+          </View>
+          <View style={styles.foods}>
+            <Image
+              source={require('../assets/food9.png')}
+              style={styles.image}
+            />
+            <Text style={styles.FoodsText}>분식</Text>
+          </View>
+          <View style={styles.foods}>
+            <Image
+              source={require('../assets/food10.png')}
+              style={styles.image}
+            />
+            <Text style={styles.FoodsText}>패스트푸드</Text>
+          </View>
         </View>
       </View>
-    </DismissKeyboardView>
+      <View
+        style={{
+          flex: 3,
+          flexDirection: 'column',
+          backgroundColor: 'white',
+        }}>
+        <Text
+          style={{
+            margin: 5,
+            marginLeft: 10,
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          }}>
+          내주변 가까운 맛집
+        </Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {MyNearPlacesData.map((MyNearPlace, index) => (
+            <Pressable onPress={toRestPage} key={index}>
+              <MyNearPlaces
+                key={index}
+                name={MyNearPlace.name}
+                rating={MyNearPlace.rating}
+                address={MyNearPlace.address}
+              />
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+      <View
+        style={{
+          flex: 3,
+          flexDirection: 'column',
+          backgroundColor: 'white',
+          marginBottom: 20,
+        }}>
+        <Text
+          style={{
+            margin: 5,
+            marginLeft: 10,
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          }}>
+          최근 방문한 장소
+        </Text>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {RecentPlacesData.map((RecentPlace, index) => (
+            <RecentPlaces
+              key={index}
+              name={RecentPlace.name}
+              rating={RecentPlace.rating}
+              address={RecentPlace.address}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </View>
   );
 }
 

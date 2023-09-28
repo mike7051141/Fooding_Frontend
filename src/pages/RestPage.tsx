@@ -66,7 +66,7 @@ const RestHomePage = () => {
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{}}>
+      <View style={{backgroundColor: 'white'}}>
         <View>
           <View style={{}}>
             <Image source={require('../assets/RestImage.png')} />

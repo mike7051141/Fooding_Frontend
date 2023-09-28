@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {View, Text, Image, Pressable} from 'react-native';
+import {View, Text, Image, Pressable, TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RestListPage from '../pages/RestListPage';
 import SearchPage from '../pages/SearchPage';
@@ -68,7 +68,25 @@ function MainStackList() {
       <Stack1.Screen
         name="SearchPage"
         component={SearchPage}
-        options={{headerShown: false}}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: () => (
+            <IconTextInput
+              placeholder="오늘은 어디로?"
+              iconName="search-outline"
+            />
+          ),
+          headerRight: () => (
+            <View style={{}}>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate('MainPage');
+                }}>
+                <Ionicons name="home-outline" size={25} color={'black'} />
+              </Pressable>
+            </View>
+          ),
+        })}
       />
       <Stack1.Screen
         name="RestPage"
@@ -83,5 +101,33 @@ function MainStackList() {
     </Stack1.Navigator>
   );
 }
+
+interface IconTextInputProps {
+  iconName: string; // iconName 프로퍼티의 타입을 string으로 명시적으로 지정
+  placeholder: string;
+}
+
+const IconTextInput: React.FC<IconTextInputProps> = ({
+  iconName,
+  placeholder,
+}) => {
+  return (
+    <View
+      style={{
+        backgroundColor: 'lightgray',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '80%',
+        borderRadius: 10,
+        paddingHorizontal: 15,
+      }}>
+      <Ionicons name={iconName} size={20} color="black" />
+      <TextInput
+        placeholder={placeholder}
+        style={{height: 40, color: 'black'}}
+      />
+    </View>
+  );
+};
 
 export default MainStackList;

@@ -11,6 +11,7 @@ import MainPage from '../pages/MainPage';
 import MapPage from '../pages/MapPage';
 import ProfilePage from '../pages/ProfilePage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import RestPage from '../pages/RestPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -130,26 +131,11 @@ function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="SearchPage"
-        component={SearchPage}
+        name="RestPage"
+        component={RestPage}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="person-outline" size={33} color={'black'} />
-          ),
-          title: 'My 푸딩',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: 'white',
-          },
-          headerStyle: {
-            borderBottomWidth: 1.5,
-            borderColor: 'black',
-            backgroundColor: '#B6BE6A',
-          },
           tabBarShowLabel: false,
-          headerShown: true,
+          headerShown: false,
           tabBarButton: () => null,
           tabBarLabel: () => null,
         }}
