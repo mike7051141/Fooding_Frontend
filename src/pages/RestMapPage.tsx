@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, Dimensions} from 'react-native';
+import {View, Text, ScrollView, Dimensions, Alert} from 'react-native';
 import NaverMapView, {Marker} from 'react-native-nmap';
 import Geolocation from '@react-native-community/geolocation';
+import TMap from '../modules/TMap';
 
 function RestMapPage() {
   const P0 = {latitude: 37.27566, longitude: 127.13245};
@@ -51,7 +52,19 @@ function RestMapPage() {
         <Marker
           coordinate={P0}
           pinColor="red"
-          onClick={() => console.warn('강남대!')}
+          onClick={() => {
+            TMap.openNavi(
+              '도착지',
+              P0.longitude.toString(),
+              P0.latitude.toString(),
+              'MOTORCYCLE',
+            ).then(data => {
+              console.log('TMap callback', data);
+              if (!data) {
+                Alert.alert('알림', '티맵을 설치하세요.');
+              }
+            });
+          }}
         />
       </NaverMapView>
     </View>
