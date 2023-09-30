@@ -14,6 +14,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestPage from '../pages/RestPage';
 import MainTabNavigator from './MainTabNavigator';
 import UpdatePage from '../pages/UpdatePage';
+import AddRestPage from '../pages/AddRestPage';
+import AuthRegisterPage from '../pages/AuthRegisterPage';
+import WriteReviewPage from '../pages/WriteReviewPage';
+import WriteLiveReviewPage from '../pages/WriteLiveReviewPage';
+import AuthRequestPage from '../pages/AuthRequestPage';
+import AddRestWritePage from '../pages/AddRestWritePage';
 
 export type MainPageStackParamList = {
   MainPage: undefined;
@@ -24,6 +30,13 @@ export type MainPageStackParamList = {
   KoreaFoodPage: undefined;
   UpdatePage: undefined;
   ProfilePage: undefined;
+  CategoryPage: undefined;
+  AddRestPage: undefined;
+  AuthRegisterPage: undefined;
+  WriteReviewPage: undefined;
+  WriteLiveReviewPage: undefined;
+  AuthRequestPage: undefined;
+  AddRestWritePage: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -96,6 +109,41 @@ function MainStackList() {
       <Stack1.Screen
         name="UpdatePage"
         component={UpdatePage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="CategoryPage"
+        component={CategoryPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="AddRestPage"
+        component={AddRestPage}
+        options={{headerShown: true}}
+      />
+      <Stack1.Screen
+        name="AuthRegisterPage"
+        component={AuthRegisterPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="WriteReviewPage"
+        component={WriteReviewPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="WriteLiveReviewPage"
+        component={WriteLiveReviewPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="AuthRequestPage"
+        component={AuthRequestPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="AddRestWritePage"
+        component={AddRestWritePage}
         options={{headerShown: false}}
       />
     </Stack1.Navigator>

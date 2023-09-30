@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, Image, Pressable, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import MainTabNavigator from '../components/MainTabNavigator';
 import MainPage from './MainPage';
 import RestListPage from './RestListPage';
@@ -18,6 +25,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {SafeAreaFrameContext} from 'react-native-safe-area-context';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import SearchPage from './SearchPage';
+import {useNavigation} from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -64,9 +72,18 @@ const RestHomePage = () => {
     isActivated ? setLine(3) : setLine(Number.MAX_SAFE_INTEGER);
     setIsActivated(prev => !prev);
   };
+
+  const navigation = useNavigation();
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{backgroundColor: 'white'}}>
+        <TouchableOpacity onPress={goBack} style={styles.backButton}>
+          <Ionicons name="arrow-back-outline" size={25} color="white" />
+        </TouchableOpacity>
         <View>
           <View style={{}}>
             <Image source={require('../assets/RestImage.png')} />
@@ -267,6 +284,12 @@ const styles = StyleSheet.create({
   },
   Scrollstar: {
     color: 'gray',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
   },
 });
 

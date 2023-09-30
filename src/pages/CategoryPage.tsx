@@ -9,7 +9,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 
 const CategoryPage = () => {
-  const navigation = useNavigation(); // navigation 객체 가져오기
+  const navigation = useNavigation();
 
   const photos = [
     {id: 1, source: require('../assets/addrest.png')},
@@ -18,21 +18,43 @@ const CategoryPage = () => {
     {id: 4, source: require('../assets/livechat.png')},
   ];
 
-  const handlePhotoPress = () => {
-    // 이미지 클릭 시 RestPage로 이동
-    navigation.navigate('SearchPage');
+  // 각 이미지를 눌렀을 때 다른 페이지로 이동하는 함수
+  const handlePhotoPress = pageName => {
+    navigation.navigate(pageName);
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={styles.photoContainer} onPress={handlePhotoPress}>
+    <TouchableOpacity
+      style={styles.photoContainer}
+      onPress={() => handlePhotoPress(item.pageName)} // 페이지 이름을 전달
+    >
       <Image source={item.source} style={styles.photo} />
     </TouchableOpacity>
   );
 
+  const dataWithPageNames = [
+    {id: 1, source: require('../assets/addrest.png'), pageName: 'AddRestPage'},
+    {
+      id: 2,
+      source: require('../assets/regiauth.png'),
+      pageName: 'AuthRegisterPage',
+    },
+    {
+      id: 3,
+      source: require('../assets/review.png'),
+      pageName: 'WriteReviewPage',
+    },
+    {
+      id: 4,
+      source: require('../assets/livechat.png'),
+      pageName: 'WriteLiveReviewPage',
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={photos}
+        data={dataWithPageNames} // 페이지 이름을 포함한 데이터를 사용
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         numColumns={2}

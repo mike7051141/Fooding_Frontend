@@ -74,6 +74,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
   },
   headerText: {
     fontSize: 20,
@@ -89,7 +91,8 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 25,
+    marginTop: 10,
   },
   profileImage: {
     width: 120,

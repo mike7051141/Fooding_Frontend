@@ -1,6 +1,13 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {View, Text, Image, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RestListPage from '../pages/RestListPage';
 import SearchPage from '../pages/SearchPage';
@@ -12,10 +19,21 @@ import MapPage from '../pages/MapPage';
 import ProfilePage from '../pages/ProfilePage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestPage from '../pages/RestPage';
+import AddRestPage from '../pages/AddRestPage';
+import AuthRegisterPage from '../pages/AuthRegisterPage';
+import WriteReviewPage from '../pages/WriteReviewPage';
+import WriteLiveReviewPage from '../pages/WriteLiveReviewPage';
+
+import {useNavigation} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 function MainTabNavigator() {
+  const navigation = useNavigation();
+  const goToBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -100,7 +118,7 @@ function MainTabNavigator() {
           },
           headerStyle: {
             borderBottomWidth: 1.5,
-            borderColor: 'black',
+            borderColor: 'gray',
             backgroundColor: '#B6BE6A',
           },
           tabBarShowLabel: false,
@@ -123,7 +141,7 @@ function MainTabNavigator() {
           },
           headerStyle: {
             borderBottomWidth: 1.5,
-            borderColor: 'black',
+            borderColor: 'gray',
             backgroundColor: '#B6BE6A',
           },
           tabBarShowLabel: false,
@@ -136,6 +154,134 @@ function MainTabNavigator() {
         options={{
           tabBarShowLabel: false,
           headerShown: false,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="AddRestPage"
+        component={AddRestPage}
+        options={{
+          title: '식당 추가',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'lightgray',
+            backgroundColor: 'white',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          headerShown: true,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="AuthRegisterPage"
+        component={AuthRegisterPage}
+        options={{
+          title: '권한 등록',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'lightgray',
+            backgroundColor: 'white',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          headerShown: true,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="WriteReviewPage"
+        component={WriteReviewPage}
+        options={{
+          title: '후기 작성',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'lightgray',
+            backgroundColor: 'white',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          headerShown: true,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="WriteLiveReviewPage"
+        component={WriteLiveReviewPage}
+        options={{
+          title: '실시간 리뷰 작성',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'lightgray',
+            backgroundColor: 'white',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          headerShown: true,
           tabBarButton: () => null,
           tabBarLabel: () => null,
         }}
