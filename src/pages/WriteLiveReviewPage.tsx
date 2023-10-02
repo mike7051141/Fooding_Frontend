@@ -42,6 +42,15 @@ const LiveReviewImageData = [
   {
     LiveReviewImg: require('../assets/food2.png'),
   },
+  {
+    LiveReviewImg: require('../assets/food2.png'),
+  },
+  {
+    LiveReviewImg: require('../assets/food2.png'),
+  },
+  {
+    LiveReviewImg: require('../assets/food2.png'),
+  },
 ];
 
 /*

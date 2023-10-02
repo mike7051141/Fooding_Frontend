@@ -42,6 +42,15 @@ const ReviewImageData = [
   {
     reviewImg: require('../assets/food2.png'),
   },
+  {
+    reviewImg: require('../assets/food2.png'),
+  },
+  {
+    reviewImg: require('../assets/food2.png'),
+  },
+  {
+    reviewImg: require('../assets/food2.png'),
+  },
 ];
 
 /*
