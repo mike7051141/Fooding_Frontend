@@ -79,7 +79,9 @@ const RestHomePage = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={{backgroundColor: 'white'}}>
       <View style={{backgroundColor: 'white'}}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
           <Ionicons name="arrow-back-outline" size={25} color="white" />
@@ -238,32 +240,58 @@ const RestHomePage = () => {
         <View
           style={{
             flexDirection: 'row',
-            marginHorizontal: 20,
+
             alignItems: 'center',
-            borderColor: 'lightgray',
-            borderWidth: 1,
-            padding: 15,
+            borderColor: 'gray',
+            borderBottomWidth: 1,
+            borderTopWidth: 1,
+            paddingHorizontal: 40,
+            paddingVertical: 20,
             marginBottom: 30,
           }}>
           <Pressable
             style={{flex: 1}}
             onPress={() => changePage('RestFoodPage')}>
-            <Text style={styles.ListText}>메뉴</Text>
+            <Text
+              style={[
+                styles.ListText,
+                currentPage === 'RestFoodPage' && styles.selectedButtonText,
+              ]}>
+              메뉴
+            </Text>
           </Pressable>
           <Pressable
             style={{flex: 1}}
             onPress={() => changePage('RestMapPage')}>
-            <Text style={styles.ListText}>길찾기</Text>
+            <Text
+              style={[
+                styles.ListText,
+                currentPage === 'RestMapPage' && styles.selectedButtonText,
+              ]}>
+              길찾기
+            </Text>
           </Pressable>
           <Pressable
             style={{flex: 1}}
             onPress={() => changePage('RestReviewPage')}>
-            <Text style={styles.ListText}>후기</Text>
+            <Text
+              style={[
+                styles.ListText,
+                currentPage === 'RestReviewPage' && styles.selectedButtonText,
+              ]}>
+              후기
+            </Text>
           </Pressable>
           <Pressable
             style={{flex: 1}}
             onPress={() => changePage('RestLivePage')}>
-            <Text style={styles.ListText}>실시간 리뷰</Text>
+            <Text
+              style={[
+                styles.ListText,
+                currentPage === 'RestLivePage' && styles.selectedButtonText,
+              ]}>
+              실시간 리뷰
+            </Text>
           </Pressable>
         </View>
         <View>
@@ -279,7 +307,7 @@ const RestHomePage = () => {
 
 const styles = StyleSheet.create({
   ListText: {
-    color: 'black',
+    color: 'gray',
     fontWeight: 'bold',
   },
   Scrollstar: {
@@ -290,6 +318,9 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 1,
+  },
+  selectedButtonText: {
+    color: 'black',
   },
 });
 

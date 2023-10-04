@@ -28,11 +28,13 @@ function LoginPage({navigation}: LoginPageScreenProps) {
         <View style={styles.Email}>
           <TextInput
             placeholder="아이디를 입력하세요"
+            placeholderTextColor="black"
             style={styles.TextInPut}></TextInput>
         </View>
         <View style={styles.Password}>
           <TextInput
             placeholder="비밀번호를 입력하세요"
+            placeholderTextColor="black"
             style={styles.TextInPut}></TextInput>
         </View>
       </View>

@@ -6,6 +6,7 @@ import {
   Image,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -14,6 +15,36 @@ const RestFoodsData = [
     name: '레스토랑 1',
     explanation: '음식 설명',
     price: '10,000',
+  },
+  {
+    name: '레스토랑 2',
+    explanation: '음식 설명',
+    price: '20,000',
+  },
+  {
+    name: '레스토랑 2',
+    explanation: '음식 설명',
+    price: '20,000',
+  },
+  {
+    name: '레스토랑 2',
+    explanation: '음식 설명',
+    price: '20,000',
+  },
+  {
+    name: '레스토랑 2',
+    explanation: '음식 설명',
+    price: '20,000',
+  },
+  {
+    name: '레스토랑 2',
+    explanation: '음식 설명',
+    price: '20,000',
+  },
+  {
+    name: '레스토랑 2',
+    explanation: '음식 설명',
+    price: '20,000',
   },
   {
     name: '레스토랑 2',
@@ -99,6 +130,21 @@ const styles = StyleSheet.create({
   },
   Scrollstar: {
     color: 'gray',
+  },
+  floatingButton: {
+    width: 60,
+    height: 60,
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    backgroundColor: '#B6BE6A',
+    padding: 1,
+    borderWidth: 2,
+    borderColor: '#B6BE6A',
+    borderRadius: 50,
+    elevation: 7, // Android에서 그림자 효과 추가
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

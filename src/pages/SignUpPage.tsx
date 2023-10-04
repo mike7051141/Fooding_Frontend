@@ -17,7 +17,7 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
 
   return (
     <DismissKeyboardView>
-      <View>
+      <View style={{marginHorizontal: '1%'}}>
         <View>
           <View style={styles.View1}>
             <Icon
@@ -35,11 +35,24 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               color="black"
               style={styles.Icons}
             />
-            <TextInput style={styles.TextInPut1} placeholder="비밀번호" />
+            <TextInput
+              style={styles.TextInPut1}
+              placeholder="비밀번호"
+              placeholderTextColor="black"
+            />
           </View>
           <View style={styles.View1}>
-            <Icon name="" size={30} color="black" style={styles.Icons} />
-            <TextInput style={styles.TextInPut1} placeholder="비밀번호 확인" />
+            <Icon
+              name="checkmark-outline"
+              color="black"
+              size={30}
+              style={styles.Icons}
+            />
+            <TextInput
+              style={styles.TextInPut1}
+              placeholder="비밀번호 확인"
+              placeholderTextColor="black"
+            />
           </View>
           <View style={styles.View1}>
             <Icon
@@ -48,7 +61,11 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               color="black"
               style={styles.Icons}
             />
-            <TextInput style={styles.TextInPut1} placeholder="이름" />
+            <TextInput
+              style={styles.TextInPut1}
+              placeholder="이름"
+              placeholderTextColor="black"
+            />
           </View>
           <View style={styles.View1}>
             <Icon
@@ -57,7 +74,11 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               color="black"
               style={styles.Icons}
             />
-            <TextInput style={styles.TextInPut1} placeholder="닉네임" />
+            <TextInput
+              style={styles.TextInPut1}
+              placeholder="닉네임"
+              placeholderTextColor="black"
+            />
           </View>
           <View style={styles.View1}>
             <Icon
@@ -69,10 +90,21 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
             <TextInput
               style={styles.TextInPutId}
               placeholder="주민번호 7자리"
+              placeholderTextColor="black"
             />
             <Text style={styles.IdText}>-</Text>
             <TextInput style={styles.TextInPutIdBack} placeholder="" />
-            <Text style={styles.IdText}>******</Text>
+            <Text
+              style={{
+                marginTop: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                fontSize: 30,
+                marginRight: 15,
+              }}>
+              ******
+            </Text>
           </View>
           <View style={styles.View1}>
             <Icon
@@ -81,7 +113,11 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               color="black"
               style={styles.Icons}
             />
-            <TextInput style={styles.TextInPut1} placeholder="전화번호" />
+            <TextInput
+              style={styles.TextInPut1}
+              placeholder="전화번호"
+              placeholderTextColor="black"
+            />
           </View>
         </View>
         <View style={styles.View2}>
@@ -120,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   TextInPutId: {
-    flex: 4,
+    flex: 3,
     padding: 5,
     paddingLeft: 10,
     margin: 10,
@@ -137,13 +173,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 5,
   },
-
   IdText: {
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
     fontSize: 30,
+    margin: 10,
   },
 
   View2: {},
