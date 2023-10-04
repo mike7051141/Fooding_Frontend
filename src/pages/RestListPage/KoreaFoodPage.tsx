@@ -13,16 +13,18 @@ import {MainPageStackParamList} from '../../components/MainStack';
 
 const KoreaFoodData = [
   {
-    name: '레스토랑 1',
-    rating: 4.5,
-    address: '주소 1',
+    name: '땀땀',
+    rating: 4.0,
+    address: '강남구 강남대로 98번길 12-5',
     closingTime: '22:00',
+    img: require('../../assets/image23.png'),
   },
   {
-    name: '레스토랑 2',
-    rating: 3.8,
-    address: '주소 2',
+    name: '장인닭갈비',
+    rating: 4.0,
+    address: '서강남구 태헤란로1길 19',
     closingTime: '21:30',
+    img: require('../../assets/image20.png'),
   },
   // 다른 레스토랑 정보 추가
 ];
@@ -48,6 +50,7 @@ function KoreaFoodPage({navigation}: KoreaFoodPageScreenProps) {
             rating={KoreaFood.rating}
             address={KoreaFood.address}
             closingTime={KoreaFood.closingTime}
+            img={KoreaFood.img}
           />
         </Pressable>
       ))}
@@ -60,11 +63,13 @@ const KoreaFoodItem = ({
   rating,
   address,
   closingTime,
+  img,
 }: {
   name: string;
   rating: number;
   address: string;
   closingTime: string;
+  img: string;
 }) => {
   return (
     <View
@@ -76,10 +81,7 @@ const KoreaFoodItem = ({
         borderColor: 'lightgray',
       }}>
       <View style={{marginHorizontal: 20}}>
-        <Image
-          source={require('../../assets/food1.png')}
-          style={styles.image}
-        />
+        <Image source={img} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View>
@@ -145,6 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100,
     height: 100,
+    borderRadius: 10,
   },
   Scrollstar: {
     color: 'gray',
