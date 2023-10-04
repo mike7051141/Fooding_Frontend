@@ -85,6 +85,7 @@ function MainTabNavigator() {
           ),
           headerShown: false,
           tabBarShowLabel: false,
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen

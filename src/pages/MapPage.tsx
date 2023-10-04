@@ -63,7 +63,7 @@ function MapPage() {
     <View style={{flex: 1}}>
       <NaverMapView
         style={{flex: 1}}
-        showsMyLocationButton={true}
+        showsMyLocationButton={false}
         center={{
           zoom: 15,
           latitude: currentLocation.latitude,
