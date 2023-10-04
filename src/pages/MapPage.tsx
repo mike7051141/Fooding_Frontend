@@ -65,7 +65,7 @@ function MapPage() {
         style={{flex: 1}}
         showsMyLocationButton={true}
         center={{
-          zoom: 11,
+          zoom: 15,
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
           //latitude: (currentLocation.latitude + P0.latitude) / 2,
@@ -86,6 +86,7 @@ function MapPage() {
           onClick={() => console.warn('강남대!')}
         />
       </NaverMapView>
+      {/*
       <TouchableOpacity
         onPress={() => getCurrentLocation()} // 버튼을 누를 때 현재 위치 업데이트
         style={{
@@ -98,6 +99,7 @@ function MapPage() {
         }}>
         <Text style={{color: 'white'}}>Update Current Location</Text>
       </TouchableOpacity>
+      */}
       {LikeRestData.map((restaurant, index) => (
         <View
           key={index}

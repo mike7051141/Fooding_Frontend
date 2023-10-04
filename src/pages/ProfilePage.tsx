@@ -76,11 +76,11 @@ const styles = StyleSheet.create({
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     height: 150,
     borderBottomWidth: 1.5,
     borderColor: 'gray',
-    paddingRight: 130,
+    paddingLeft: 20,
     backgroundColor: 'whitesmoke',
   },
   profileImage: {

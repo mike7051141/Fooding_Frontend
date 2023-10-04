@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     resizeMode: 'contain',
-    width: 400,
+    width: 300,
   },
 
   buttonZone: {

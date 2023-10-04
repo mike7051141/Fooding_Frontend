@@ -29,13 +29,13 @@ function RestMapPage() {
     <View
       style={{
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+        height: Dimensions.get('window').height - 300,
       }}>
       <NaverMapView
         style={{flex: 1}}
         showsMyLocationButton={true}
         center={{
-          zoom: 11,
+          zoom: 15,
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
           //latitude: (currentLocation.latitude + P0.latitude) / 2,
