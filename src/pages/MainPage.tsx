@@ -17,37 +17,43 @@ const Stack = createNativeStackNavigator();
 
 const MyNearPlacesData = [
   {
-    name: '레스토랑 1',
-    rating: 4.5,
-    address: '주소 1',
+    name: '땀땀',
+    rating: 4.0,
+    address: '강남구 강남대로 98번길 12-5',
+    img: require('../assets/image23.png'),
   },
   {
-    name: '레스토랑 2',
-    rating: 3.8,
-    address: '주소 2',
+    name: '비어룸',
+    rating: 3.0,
+    address: '강남구 강남대로 98번길 22',
+    img: require('../assets/image24.png'),
   },
   {
-    name: '레스토랑 3',
-    rating: 3.8,
-    address: '주소 3',
+    name: '낙원타코',
+    rating: 4.0,
+    address: '서초구 서초대로 73길 7 2층 ',
+    img: require('../assets/image26.png'),
   },
 ];
 
 const RecentPlacesData = [
   {
-    name: '레스토랑 4',
-    rating: 4.5,
-    address: '주소 4',
+    name: '장안닭갈비',
+    rating: 4.0,
+    address: '서강남구 태헤란로1길 19',
+    img: require('../assets/image20.png'),
   },
   {
-    name: '레스토랑 5',
-    rating: 3.8,
-    address: '주소 5',
+    name: '육하망칙',
+    rating: 3.0,
+    address: '강남구 강남대로 100길 13 3층',
+    img: require('../assets/image21.png'),
   },
   {
-    name: '레스토랑 6',
-    rating: 3.8,
-    address: '주소 7',
+    name: '구구당',
+    rating: 4.0,
+    address: '강남구 강남대로 100길 13 3층',
+    img: require('../assets/image22.png'),
   },
 ];
 
@@ -209,6 +215,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
                 name={MyNearPlace.name}
                 rating={MyNearPlace.rating}
                 address={MyNearPlace.address}
+                img={MyNearPlace.img}
               />
             </Pressable>
           ))}
@@ -238,6 +245,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
               name={RecentPlace.name}
               rating={RecentPlace.rating}
               address={RecentPlace.address}
+              img={RecentPlace.img}
             />
           ))}
         </ScrollView>
@@ -266,6 +274,7 @@ const styles = StyleSheet.create({
   foods: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   FoodsText: {
     color: 'black',
@@ -279,11 +288,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 60,
     height: 60,
+    borderRadius: 15,
+    borderColor: 'gray',
+    borderWidth: 1,
   },
 
   Scrollimage: {
     width: 150,
     height: 70,
+    borderRadius: 10,
   },
   Scrollstar: {
     color: 'gray',
@@ -295,18 +308,17 @@ const MyNearPlaces = ({
   name,
   rating,
   address,
+  img,
 }: {
   name: string;
   rating: number;
   address: string;
+  img: string;
 }) => {
   return (
     <>
       <View style={{marginLeft: 20}}>
-        <Image
-          source={require('../assets/food1.png')}
-          style={styles.Scrollimage}
-        />
+        <Image source={img} style={styles.Scrollimage} />
         <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
           {name}
         </Text>
@@ -355,18 +367,17 @@ const RecentPlaces = ({
   name,
   rating,
   address,
+  img,
 }: {
   name: string;
   rating: number;
   address: string;
+  img: string;
 }) => {
   return (
     <>
       <View style={{marginLeft: 20}}>
-        <Image
-          source={require('../assets/food1.png')}
-          style={styles.Scrollimage}
-        />
+        <Image source={img} style={styles.Scrollimage} />
         <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
           {name}
         </Text>
