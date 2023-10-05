@@ -55,7 +55,11 @@ function MainTabNavigator() {
           // 카테고리 페이지일 때 색상 변경
           const iconColor = route.name === 'CategoryPage' ? 'white' : color;
 
-          return <Ionicons name={iconName} size={size} color={iconColor} />;
+          return (
+            <TouchableOpacity>
+              <Ionicons name={iconName} size={size} color={iconColor} />
+            </TouchableOpacity>
+          );
         },
         headerShown: false,
         tabBarStyle: {
@@ -69,8 +73,12 @@ function MainTabNavigator() {
         name="MainPage"
         component={MainPage}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="home-outline" size={33} color={'black'} />
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={33}
+              color="black"
+            />
           ),
           headerShown: false,
           tabBarShowLabel: false,
@@ -80,8 +88,12 @@ function MainTabNavigator() {
         name="MapPage"
         component={MapPage}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="location-outline" size={33} color={'black'} />
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name={focused ? 'location' : 'location-outline'}
+              size={33}
+              color="black"
+            />
           ),
           headerShown: false,
           tabBarShowLabel: false,
@@ -91,8 +103,8 @@ function MainTabNavigator() {
       <Tab.Screen
         name="CategoryPage"
         component={CategoryPage}
-        options={({route}) => ({
-          tabBarIcon: ({color, size, focused}) => (
+        options={{
+          tabBarIcon: ({focused}) => (
             <Ionicons
               name={focused ? 'close-circle' : 'add-circle'}
               size={40}
@@ -101,14 +113,18 @@ function MainTabNavigator() {
           ),
           headerShown: false,
           tabBarShowLabel: false,
-        })}
+        }}
       />
       <Tab.Screen
         name="LikePage"
         component={LikePage}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="heart-outline" size={33} color={'black'} />
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name={focused ? 'heart' : 'heart-outline'}
+              size={33}
+              color={'black'}
+            />
           ),
           title: '좋아요 한',
           headerTitleAlign: 'center',
@@ -130,8 +146,12 @@ function MainTabNavigator() {
         name="ProfilePage"
         component={ProfilePage}
         options={{
-          tabBarIcon: () => (
-            <Ionicons name="person-outline" size={33} color={'black'} />
+          tabBarIcon: ({focused}) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              size={33}
+              color={'black'}
+            />
           ),
           title: 'My 푸딩',
           headerTitleAlign: 'center',
