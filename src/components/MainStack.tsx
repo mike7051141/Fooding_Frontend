@@ -20,6 +20,8 @@ import WriteReviewPage from '../pages/WriteReviewPage';
 import WriteLiveReviewPage from '../pages/WriteLiveReviewPage';
 import AuthRequestPage from '../pages/AuthRequestPage';
 import AddRestWritePage from '../pages/AddRestWritePage';
+import WriteReviewSearchPage from '../pages/WriteReviewSearchPage';
+import WriteLiveReviewSearchPage from '../pages/WriteLiveReviewSearchPage';
 
 export type MainPageStackParamList = {
   MainPage: undefined;
@@ -37,6 +39,8 @@ export type MainPageStackParamList = {
   WriteLiveReviewPage: undefined;
   AuthRequestPage: undefined;
   AddRestWritePage: undefined;
+  WriteReviewSearchPage: undefined;
+  WriteLiveReviewSearchPage: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -144,6 +148,16 @@ function MainStackList() {
       <Stack1.Screen
         name="AddRestWritePage"
         component={AddRestWritePage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="WriteReviewSearchPage"
+        component={WriteReviewSearchPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="WriteLiveReviewSearchPage"
+        component={WriteLiveReviewSearchPage}
         options={{headerShown: false}}
       />
     </Stack1.Navigator>

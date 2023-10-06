@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   Pressable,
@@ -53,33 +52,25 @@ const ReviewImageData = [
   },
 ];
 
-/*
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
-  'RestPage' | 'AddRestWritePage'
+  'WriteReviewSearchPage'
 >;
-*/
 
-function WriteReviewPage(/*{navigation}: MainPageScreenProps*/) {
-  /*
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
+function WriteReviewPage({navigation}: MainPageScreenProps) {
+  const toWriteReviewSearchPage = () => {
+    navigation.navigate('WriteReviewSearchPage');
   };
-
-  const toAddRestWritePage = () => {
-    navigation.navigate('AddRestWritePage');
-  };
-  */
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="어떤 식당에 후기를 작성할건가요?"
-            placeholderTextColor="#B6BE6A"
-          />
+          <TouchableOpacity onPress={toWriteReviewSearchPage}>
+            <Text style={styles.searchInput}>
+              어떤 식당에 후기를 작성할건가요?
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.searchButton}>
             <Ionicons name="search-outline" size={30} color="#B6BE6A" />
           </TouchableOpacity>
@@ -235,6 +226,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     paddingVertical: 8,
+    color: '#B6BE6A',
+    marginLeft: 5,
   },
   searchButton: {
     backgroundColor: 'white',

@@ -16,18 +16,18 @@ import {MainPageStackParamList} from '../components/MainStack';
 const LiveReviewData = [
   {
     myImg: require('../assets/defaultProfile.png'),
-    userName: '김영훈',
+    userName: '김민',
     rating: 4.5,
     userLiveReview: 'wow',
-    restName: '땀땀',
+    restName: '더진국',
     foodImg: require('../assets/RestImage.png'),
   },
   {
     myImg: require('../assets/defaultProfile.png'),
-    userName: '김민기',
+    userName: '신흥철',
     rating: 5.0,
     userLiveReview: 'Good',
-    restName: '낙원식당',
+    restName: '맥도날드',
     foodImg: require('../assets/RestImage.png'),
   },
 ];
@@ -53,33 +53,25 @@ const LiveReviewImageData = [
   },
 ];
 
-/*
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
-  'RestPage' | 'AddRestWritePage'
+  'WriteLiveReviewSearchPage'
 >;
-*/
 
-function WriteLiveReviewPage(/*{navigation}: MainPageScreenProps*/) {
-  /*
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
+function WriteLiveReviewPage({navigation}: MainPageScreenProps) {
+  const toWriteLiveReviewSearchPage = () => {
+    navigation.navigate('WriteLiveReviewSearchPage');
   };
-
-  const toAddRestWritePage = () => {
-    navigation.navigate('AddRestWritePage');
-  };
-  */
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="어떤 식당에 실시간 리뷰를 작성할건가요?"
-            placeholderTextColor="#B6BE6A"
-          />
+          <TouchableOpacity onPress={toWriteLiveReviewSearchPage}>
+            <Text style={styles.searchInput}>
+              어떤 식당에 실시간 리뷰를 작성할건가요?
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.searchButton}>
             <Ionicons name="search-outline" size={30} color="#B6BE6A" />
           </TouchableOpacity>
@@ -238,6 +230,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     paddingVertical: 8,
+    color: '#B6BE6A',
+    marginLeft: 5,
   },
   searchButton: {
     backgroundColor: 'white',

@@ -7,6 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
   StyleSheet,
+  TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RestListPage from '../pages/RestListPage';
@@ -23,6 +24,8 @@ import AddRestPage from '../pages/AddRestPage';
 import AuthRegisterPage from '../pages/AuthRegisterPage';
 import WriteReviewPage from '../pages/WriteReviewPage';
 import WriteLiveReviewPage from '../pages/WriteLiveReviewPage';
+import WriteReviewSearchPage from '../pages/WriteReviewSearchPage';
+import WriteLiveReviewSearchPage from '../pages/WriteLiveReviewSearchPage';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -33,6 +36,12 @@ function MainTabNavigator() {
   const goToBack = () => {
     navigation.goBack();
   };
+
+  // const customHeader = ({title}) => {
+  //   return (
+
+  //   )
+  // };
 
   return (
     <Tab.Navigator
@@ -292,7 +301,7 @@ function MainTabNavigator() {
             backgroundColor: 'white',
           },
           headerLeft: () => (
-            <TouchableOpacity onPress={() => goToBack()}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons
                 name="arrow-back-outline"
                 size={25}
@@ -307,8 +316,57 @@ function MainTabNavigator() {
           tabBarLabel: () => null,
         }}
       />
+      <Tab.Screen
+        name="WriteReviewSearchPage"
+        component={WriteReviewSearchPage}
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          headerTitle: () => (
+            <View style={styles.Container}>
+              <TextInput
+                placeholder="검색"
+                style={styles.SearchInput}
+                placeholderTextColor={'black'}></TextInput>
+            </View>
+          ),
+          headerShown: true, // 헤더 보여주기 여부 결정
+          tabBarShowLabel: false, // 탭바 아이콘들 밑 텍스트 출력 여부 결정
+          tabBarButton: () => null, // 탭바 아이콘 갯수 추가 여부 결정
+        }}
+      />
+      <Tab.Screen
+        name="WriteLiveReviewSearchPage"
+        component={WriteLiveReviewSearchPage}
+        options={{
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarButton: () => null,
+        }}
+      />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  Container: {},
+  SearchInput: {
+    width: 250,
+    height: 38,
+    borderWidth: 1.5,
+    borderColor: 'gray',
+    borderRadius: 10,
+    paddingLeft: 15,
+    backgroundColor: 'lightgray',
+  },
+});
 
 export default MainTabNavigator;
