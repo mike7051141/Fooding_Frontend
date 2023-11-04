@@ -22,6 +22,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestPage from '../pages/RestPage';
 import AddRestPage from '../pages/AddRestPage';
 import AuthRegisterPage from '../pages/AuthRegisterPage';
+import AuthRequestPage from '../pages/AuthRequestPage';
 import WriteReviewPage from '../pages/WriteReviewPage';
 import WriteLiveReviewPage from '../pages/WriteLiveReviewPage';
 import WriteReviewSearchPage from '../pages/WriteReviewSearchPage';
@@ -225,6 +226,38 @@ function MainTabNavigator() {
         component={AuthRegisterPage}
         options={{
           title: '권한 등록',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'lightgray',
+            backgroundColor: 'white',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          headerShown: true,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="AuthRequestPage"
+        component={AuthRequestPage}
+        options={{
+          title: '권한 신청',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 20,
