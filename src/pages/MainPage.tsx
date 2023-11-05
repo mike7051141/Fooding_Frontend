@@ -12,8 +12,18 @@ import {
 import RestListPage from './RestListPage';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {MainPageStackParamList} from '../components/MainStack';
+import {retrieveToken} from '../store/storage';
 
 const Stack = createNativeStackNavigator();
+
+const Token = async () => {
+  const token = await retrieveToken();
+  if (token) {
+    console.log('저장된 토큰:', token);
+  } else {
+    console.log('저장된 토큰을 찾을 수 없습니다.');
+  }
+};
 
 const MyNearPlacesData = [
   {

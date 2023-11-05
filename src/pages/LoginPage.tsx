@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,66 @@ import {
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../App';
+import axios, {AxiosError} from 'axios';
+import {storeToken} from '../store/storage';
 
 type LoginPageScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'LoginPage'
->;
-function LoginPage({navigation}: LoginPageScreenProps) {
+> & {onLoginSuccess: () => void};
+
+function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const emailRef = useRef<TextInput | null>(null);
+  const passwordRef = useRef<TextInput | null>(null);
+
+  const onChangeEmail = useCallback((text: string) => {
+    setEmail(text.trim());
+  }, []);
+  const onChangePassword = useCallback((text: string) => {
+    setPassword(text.trim());
+  }, []);
+
+  const onPostLogin = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    if (!email || !email.trim()) {
+      return Alert.alert('알림', '이메일을 입력해주세요.');
+    }
+    if (!password || !password.trim()) {
+      return Alert.alert('알림', '비밀번호를 입력해주세요.');
+    }
+
+    console.log(email, password);
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `http://kymokim.iptime.org:11080/api/auth/login`,
+        {
+          email,
+          password,
+        },
+      );
+      console.log(response.data.data.accessToken);
+      await storeToken(response.data.data.accessToken);
+      Alert.alert('알림', '로그인 되었습니다.');
+      onLoginSuccess();
+    } catch (error) {
+      const errorResponse = (error as AxiosError).response;
+      console.error(errorResponse);
+      if (errorResponse) {
+        console.log(errorResponse.data);
+        Alert.alert('알림', '아이디 또는 비밀번호가 일치하지 않습니다.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, navigation, email, password]);
+
   return (
     <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
       <View style={styles.Fooding}>
@@ -29,17 +83,23 @@ function LoginPage({navigation}: LoginPageScreenProps) {
           <TextInput
             placeholder="아이디를 입력하세요"
             placeholderTextColor="black"
+            value={email}
+            ref={emailRef}
+            onChangeText={onChangeEmail}
             style={styles.TextInPut}></TextInput>
         </View>
         <View style={styles.Password}>
           <TextInput
             placeholder="비밀번호를 입력하세요"
             placeholderTextColor="black"
+            value={password}
+            ref={passwordRef}
+            onChangeText={onChangePassword}
             style={styles.TextInPut}></TextInput>
         </View>
       </View>
       <View style={styles.buttonZone}>
-        <Pressable style={styles.LoginButton}>
+        <Pressable style={styles.LoginButton} onPress={onPostLogin}>
           <Text style={styles.LoginButtonText}>들어가기</Text>
         </Pressable>
       </View>
@@ -95,3 +155,6 @@ const styles = StyleSheet.create({
 });
 
 export default LoginPage;
+function setLoggedIn(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}

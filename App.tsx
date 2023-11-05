@@ -22,7 +22,12 @@ export type RestListPagekParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  const handleLoginSuccess = () => {
+    // 로그인이 성공하면 isLoggedIn 값을 true로 업데이트
+    setLoggedIn(true);
+  };
 
   usePermissions();
   return (
@@ -38,7 +43,9 @@ function App() {
           />
           <Stack.Screen
             name="LoginPage"
-            component={LoginPage}
+            component={props => (
+              <LoginPage {...props} onLoginSuccess={handleLoginSuccess} />
+            )}
             options={{title: '로그인'}}
           />
           <Stack.Screen

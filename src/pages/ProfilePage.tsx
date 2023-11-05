@@ -1,8 +1,18 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet, Pressable, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Alert,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
+import axios, {AxiosError} from 'axios';
+import {retrieveToken, storeToken} from '../store/storage';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -30,6 +40,33 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
     {id: 9, image: require('../assets/food9.png')},
   ];
 
+  const [loading, setLoading] = useState(false);
+
+  const [userData, setUserData] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        console.log(token);
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/auth/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data.nickName;
+        setUserData(data);
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
@@ -38,7 +75,7 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
           style={styles.profileImage}
         />
         <View>
-          <Text style={styles.username}>홍길동</Text>
+          <Text style={styles.username}>{userData}</Text>
           <Pressable onPress={() => toUpdatePage()}>
             <View style={styles.setting}>
               <Text style={{marginRight: 5, fontSize: 15, color: 'gray'}}>
@@ -127,3 +164,6 @@ const styles = StyleSheet.create({
 });
 
 export default ProfilePage;
+function getToken() {
+  throw new Error('Function not implemented.');
+}
