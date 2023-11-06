@@ -94,8 +94,17 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           backgroundColor: '#B6BE6A',
           padding: 10,
         }}>
-        <View style={{flex: 1}}>
+        <View
+          style={{
+            flex: 2,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           <Text style={{color: 'gray'}}>지금 내 위치는</Text>
+          <View style={{position: 'absolute', top: 0, right: 0}}>
+            <Text style={{color: 'gray'}}>홍길동님 환영합니다</Text>
+          </View>
         </View>
         <View style={{flex: 2}}>
           <Text style={styles.LocationText}>내 위치</Text>

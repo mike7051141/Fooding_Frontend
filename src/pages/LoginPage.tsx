@@ -81,7 +81,7 @@ function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
       <View style={{flex: 2}}>
         <View style={styles.Email}>
           <TextInput
-            placeholder="아이디를 입력하세요"
+            placeholder="이메일을 입력하세요"
             placeholderTextColor="black"
             value={email}
             ref={emailRef}
