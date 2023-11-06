@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Image, Pressable, StyleSheet, TextInput} from 'react-native';
 import {View, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,6 +13,7 @@ import RestListPage from './RestListPage';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {MainPageStackParamList} from '../components/MainStack';
 import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,31 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     navigation.navigate('RestListPage', {screen: tabName});
   };
 
+  const [userData, setUserData] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        console.log(token);
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/auth/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data.nickName;
+        setUserData(data);
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
       <View
@@ -103,7 +129,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           }}>
           <Text style={{color: 'gray'}}>지금 내 위치는</Text>
           <View style={{position: 'absolute', top: 0, right: 0}}>
-            <Text style={{color: 'gray'}}>홍길동님 환영합니다</Text>
+            <Text style={{color: 'gray'}}>{userData}님 환영합니다</Text>
           </View>
         </View>
         <View style={{flex: 2}}>
