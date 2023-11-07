@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,13 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import axios, {AxiosError} from 'axios';
+import {retrieveToken, storeToken} from '../store/storage';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -20,6 +23,42 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
   const toProfilePage = () => {
     navigation.navigate('ProfilePage');
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        console.log(token);
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/auth/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const name = response.data.data.name;
+        const email = response.data.data.email;
+        const nickName = response.data.data.nickName;
+        const tel = response.data.data.phoneNumber;
+
+        setUserName(name);
+        setUserEmail(email);
+        setUserNickName(nickName);
+        setUserTel(tel);
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // placeholder 표시하기 위한 변수들
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userNickName, setUserNickName] = useState('');
+  const [userTel, setUserTel] = useState(''); // 회원가입할 때 백에 전화번호 저장 안 됨 아직
 
   return (
     <View style={styles.container}>
@@ -44,19 +83,19 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>이름</Text>
-          <TextInput placeholder="홍길동" style={styles.input} />
+          <TextInput placeholder={userName} style={styles.input} />
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>아이디</Text>
-          <TextInput placeholder="qwerty@mail.com" style={styles.input} />
+          <TextInput placeholder={userEmail} style={styles.input} />
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>닉네임</Text>
-          <TextInput placeholder="서천동칼잡이" style={styles.input} />
+          <TextInput placeholder={userNickName} style={styles.input} />
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>전화번호</Text>
-          <TextInput placeholder="010-XXXX-XXXX" style={styles.input} />
+          <TextInput placeholder={userTel} style={styles.input} />
         </View>
       </View>
     </View>
