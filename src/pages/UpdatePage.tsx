@@ -11,7 +11,7 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {retrieveToken, storeToken} from '../store/storage';
 
 type MainPageScreenProps = NativeStackScreenProps<
@@ -20,15 +20,22 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
+  // profilePage로 이동하는 내비게이션 함수
   const toProfilePage = () => {
     navigation.navigate('ProfilePage');
   };
 
+  // placeholder 표시하기 위한 변수들
+  const [userName, setUserName] = useState('');
+  const [userNickName, setUserNickName] = useState('');
+  const [userTel, setUserTel] = useState(''); // 회원가입할 때 백에 전화번호 저장 안 됨 아직
+  const [userPassWord, setUserPassWord] = useState('');
+
+  // 사용자 정보 끌어와서 placeholder로 표시
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
-        console.log(token);
         const response = await axios.get(
           'http://kymokim.iptime.org:11080/api/auth/get',
           {
@@ -38,14 +45,14 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
           },
         );
         const name = response.data.data.name;
-        const email = response.data.data.email;
         const nickName = response.data.data.nickName;
         const tel = response.data.data.phoneNumber;
+        const password = response.data.data.password;
 
         setUserName(name);
-        setUserEmail(email);
         setUserNickName(nickName);
         setUserTel(tel);
+        setUserPassWord(password);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
       }
@@ -54,20 +61,58 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
     fetchData();
   }, []);
 
-  // placeholder 표시하기 위한 변수들
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userNickName, setUserNickName] = useState('');
-  const [userTel, setUserTel] = useState(''); // 회원가입할 때 백에 전화번호 저장 안 됨 아직
+  // 변경하기 위해 입력한 텍스트들 담는 변수들
+  const [loading, setLoading] = useState(false);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserPassWord, setNewUserPassWord] = useState('');
+  const [newUserNickName, setNewUserNickName] = useState('');
+  const [newUserTel, setNewUserTel] = useState('');
+
+  const updateUser = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const token = await retrieveToken();
+      const response = await axios.put(
+        'http://kymokim.iptime.org:11080/api/auth/update',
+        {
+          name: newUserName,
+          nickName: newUserNickName,
+          password: newUserPassWord,
+          phoneNumber: newUserTel,
+          ssNumber: '', // 회원정보수정에서는 SSN을 수정할 필요 없으니 빈 String값 넘김
+        },
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+      console.log('사용자 정보 업데이트됨:', response.data);
+      Alert.alert('알림', '회원 정보 수정 완료');
+      toProfilePage();
+    } catch (error) {
+      console.error('사용자 정보 업데이트 실패', error);
+    }
+  }, [
+    loading,
+    navigation,
+    newUserName,
+    newUserPassWord,
+    newUserNickName,
+    newUserTel,
+  ]);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => toProfilePage()}>
+        <TouchableOpacity onPress={toProfilePage}>
           <Ionicons name="arrow-back-outline" size={25} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerText}>회원 정보 수정</Text>
-        <TouchableOpacity onPress={() => toProfilePage()}>
+        <TouchableOpacity onPress={updateUser}>
           <Ionicons name="checkmark-outline" size={30} color="green" />
         </TouchableOpacity>
       </View>
@@ -83,19 +128,39 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>이름</Text>
-          <TextInput placeholder={userName} style={styles.input} />
-        </View>
-        <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>아이디</Text>
-          <TextInput placeholder={userEmail} style={styles.input} />
+          <TextInput
+            placeholder={userName}
+            style={styles.input}
+            value={newUserName}
+            onChangeText={text => setNewUserName(text)}
+          />
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>닉네임</Text>
-          <TextInput placeholder={userNickName} style={styles.input} />
+          <TextInput
+            placeholder={userNickName}
+            style={styles.input}
+            value={newUserNickName}
+            onChangeText={text => setNewUserNickName(text)}
+          />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>비밀번호</Text>
+          <TextInput
+            placeholder={userPassWord}
+            style={styles.input}
+            value={newUserPassWord}
+            onChangeText={text => setNewUserPassWord(text)}
+          />
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>전화번호</Text>
-          <TextInput placeholder={userTel} style={styles.input} />
+          <TextInput
+            placeholder={userTel}
+            style={styles.input}
+            value={newUserTel}
+            onChangeText={text => setNewUserTel(text)}
+          />
         </View>
       </View>
     </View>

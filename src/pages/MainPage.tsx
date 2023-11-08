@@ -108,8 +108,12 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
       }
     };
 
-    fetchData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const MyNearPlacesData = storeData.map((storeItem, index) => ({
     name: storeItem.storeName,

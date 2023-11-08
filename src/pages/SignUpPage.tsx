@@ -28,15 +28,17 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [nickName, setNickName] = useState('');
-  // const [ID, setID] = useState('');
-  // const [callnumber, setCallnumber] = useState('');
+  const [ID, setID] = useState('');
+  const [lastID, setLastID] = useState('');
+  const [callnumber, setCallNumber] = useState('');
 
   const emailRef = useRef<TextInput | null>(null);
   const nameRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
   const nickNameRef = useRef<TextInput | null>(null);
-  // const IDRef = useRef<TextInput | null>(null);
-  // const callnumberRef = useRef<TextInput | null>(null);
+  const IDRef = useRef<TextInput | null>(null);
+  const lastIDRef = useRef<TextInput | null>(null);
+  const callnumberRef = useRef<TextInput | null>(null);
 
   const onChangeEmail = useCallback((text: string) => {
     setEmail(text.trim());
@@ -50,12 +52,15 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
   const onChangeNickName = useCallback((text: string) => {
     setNickName(text.trim());
   }, []);
-  // const onChangeID = useCallback((text: string) => {
-  //   setName(text.trim());
-  // }, []);
-  // const onChangeCallnumber = useCallback((text: string) => {
-  //   setPassword(text.trim());
-  // }, []);
+  const onChangeID = useCallback((text: string) => {
+    setID(text.trim());
+  }, []);
+  const onChangeLastID = useCallback((text: string) => {
+    setLastID(text.trim());
+  }, []);
+  const onChangeCallNumber = useCallback((text: string) => {
+    setCallNumber(text.trim());
+  }, []);
 
   const onPostregister = useCallback(async () => {
     if (loading) {
@@ -73,12 +78,15 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
     if (!nickName || !nickName.trim()) {
       return Alert.alert('알림', '닉네임을 입력해주세요.');
     }
-    // if (!ID || !name.trim()) {
-    //   return Alert.alert('알림', '주민번호을 입력해주세요.');
-    // }
-    // if (!callnumber || !password.trim()) {
-    //   return Alert.alert('알림', '전화번호를 입력해주세요.');
-    // }
+    if (!ID || !name.trim()) {
+      return Alert.alert('알림', '주민번호을 입력해주세요.');
+    }
+    if (!lastID) {
+      return Alert.alert('알림', '주민번호 뒷자리를 입력해주세요.');
+    }
+    if (!callnumber || !password.trim()) {
+      return Alert.alert('알림', '전화번호를 입력해주세요.');
+    }
     // if (
     //   !/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/.test(
     //     email,
@@ -92,16 +100,18 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
     //     '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
     //   );
     // }
-    console.log(email, name, nickName, password);
+    console.log(email, name, nickName, password, ID, lastID, callnumber);
     try {
       setLoading(true);
       const response = await axios.post(
         `http://kymokim.iptime.org:11080/api/auth/register`,
         {
-          email,
-          name,
-          password,
-          nickName,
+          email: email,
+          name: name,
+          password: password,
+          nickName: nickName,
+          ssNumber: ID + lastID,
+          phoneNumber: callnumber,
         },
       );
       console.log(response.data);
@@ -116,7 +126,17 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
     } finally {
       setLoading(false);
     }
-  }, [loading, navigation, email, name, password, nickName]);
+  }, [
+    loading,
+    navigation,
+    email,
+    name,
+    password,
+    nickName,
+    ID,
+    lastID,
+    callnumber,
+  ]);
 
   return (
     <DismissKeyboardView>
@@ -208,11 +228,19 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
             <TextInput
               style={styles.TextInPutId}
               placeholder="주민번호 7자리"
-              // value={ID}
+              value={ID}
+              ref={IDRef}
+              onChangeText={onChangeID}
               placeholderTextColor="black"
             />
             <Text style={styles.IdText}>-</Text>
-            <TextInput style={styles.TextInPutIdBack} placeholder="" />
+            <TextInput
+              style={styles.TextInPutIdBack}
+              placeholder=""
+              value={lastID}
+              ref={lastIDRef}
+              onChangeText={onChangeLastID}
+            />
             <Text
               style={{
                 marginTop: 10,
@@ -235,7 +263,9 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
             <TextInput
               style={styles.TextInPut1}
               placeholder="전화번호"
-              // value={callnumber}
+              value={callnumber}
+              ref={callnumberRef}
+              onChangeText={onChangeCallNumber}
               placeholderTextColor="black"
             />
           </View>

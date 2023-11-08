@@ -64,8 +64,12 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
       }
     };
 
-    fetchData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
