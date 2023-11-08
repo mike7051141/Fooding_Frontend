@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,29 +9,59 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  Alert,
 } from 'react-native';
 
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {retrieveToken} from '../store/storage';
 import axios from 'axios';
-
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MainPageStackParamList} from '../components/MainStack';
 import {API_KEY} from '@env';
-const Token = async () => {
-  const token = await retrieveToken();
-  if (token) {
-    console.log('저장된 토큰:', token);
-  } else {
-    console.log('저장된 토큰을 찾을 수 없습니다.');
-  }
-};
 
-function AddRestWritePage() {
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'AddRestPage'
+>;
+
+const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
+  const toAddRestWritePage = () => {
+    navigation.navigate('AddRestPage');
+  };
+
+  const [loading, setLoading] = useState(false);
   const [locationInfo, setLocationInfo] = useState<string | null>(null);
-  const [addressInput, setAddressInput] = useState<string>(''); // State to store the input address
-  const [lat, setLat] = useState<string>(''); //위도
-  const [long, setLong] = useState<string>(''); //경도
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const [address, setAddress] = useState<string>(''); // State to store the input address
+  const [lat, setLatitude] = useState<string>(''); //위도
+  const [lng, setLongitude] = useState<string>(''); //경도
+  const [category, setCategory] = useState<string | null>(null);
+  const [closeHour, setCloseHour] = useState<number>(0);
+  const [openHour, setopenHour] = useState<number>(0);
+  const [storeContent, setStoreContent] = useState<string>('');
+  const [storeName, setStoreName] = useState<string>('');
+  const [storeNumber, setStoreNumber] = useState<string>('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/auth/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   async function geocodeAddress(address: string, apiKey: string) {
     try {
@@ -44,8 +74,9 @@ function AddRestWritePage() {
         const {lat, lng} = location;
         const info = `주소: ${address} - 위도: ${lat}, 경도: ${lng}`;
         setLocationInfo(info);
-        setLong(lng);
-        setLat(lat);
+        console.error(lng);
+        setLongitude(lat);
+        setLatitude(lng);
         console.log(info);
       } else {
         console.error(response.data);
@@ -56,7 +87,7 @@ function AddRestWritePage() {
   }
 
   const handleButtonClick = () => {
-    geocodeAddress(addressInput, API_KEY);
+    geocodeAddress(address, API_KEY);
   };
 
   const foodCategories = [
@@ -72,6 +103,52 @@ function AddRestWritePage() {
     {name: '패스트푸드', imageSource: require('../assets/food10.png')},
   ];
 
+  const postStore = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const token = await retrieveToken();
+      const response = await axios.post(
+        'http://kymokim.iptime.org:11080/api/store/create',
+        {
+          address,
+          category,
+          closeHour,
+          latitude: lat,
+          longitude: lng,
+          openHour,
+          storeContent,
+          storeName,
+          storeNumber,
+        },
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+      console.log('식당 추가 완료:', response.data);
+      Alert.alert('알림', '식당 추가 완료');
+      toAddRestWritePage();
+    } catch (error) {
+      console.error('사용자 정보 업데이트 실패', error);
+    }
+  }, [
+    loading,
+    navigation,
+    address,
+    category,
+    closeHour,
+    lat,
+    lng,
+    openHour,
+    storeContent,
+    storeName,
+    storeNumber,
+  ]);
+
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
       <DismissKeyboardView>
@@ -80,7 +157,12 @@ function AddRestWritePage() {
           <Text style={styles.text}>상호명을 입력해 주세요</Text>
         </View>
         <View>
-          <TextInput style={styles.Textinput} placeholder="Fooding" />
+          <TextInput
+            style={styles.Textinput}
+            value={storeName}
+            onChangeText={text => setStoreName(text)}
+            placeholder="Fooding"
+          />
         </View>
         <View style={styles.View1}>
           <Ionicons name="map-outline" size={25} color={'black'} />
@@ -96,14 +178,14 @@ function AddRestWritePage() {
         <View>
           <TextInput
             style={styles.Textinput}
-            value={addressInput}
-            onChangeText={text => setAddressInput(text)}
+            value={address}
+            onChangeText={text => setAddress(text)}
             placeholder="강남대학교"
           />
         </View>
         <View style={styles.View1}>
           <Text style={{...styles.text, flex: 1}}>경도: {lat}</Text>
-          <Text style={{...styles.text, flex: 1}}>위도: {long}</Text>
+          <Text style={{...styles.text, flex: 1}}>위도: {lng}</Text>
         </View>
 
         <View style={styles.View1}>
@@ -111,34 +193,54 @@ function AddRestWritePage() {
           <Text style={styles.text}>영업 시작 시간을 입력해 주세요</Text>
         </View>
         <View>
-          <TextInput style={styles.Textinput} placeholder="18:00" />
+          <TextInput
+            style={styles.Textinput}
+            value={openHour.toString()}
+            onChangeText={text => setopenHour(parseInt(text))}
+            placeholder="18:00"
+          />
         </View>
         <View style={styles.View1}>
           <Ionicons name="time-outline" size={25} color={'black'} />
           <Text style={styles.text}>영업 종료 시간을 입력해 주세요</Text>
         </View>
         <View>
-          <TextInput style={styles.Textinput} placeholder="02:00" />
+          <TextInput
+            style={styles.Textinput}
+            value={closeHour.toString()}
+            onChangeText={text => setCloseHour(parseInt(text))}
+            placeholder="02:00"
+          />
         </View>
         <View style={styles.View1}>
           <Ionicons name="call-outline" size={25} color={'black'} />
           <Text style={styles.text}>전화번호를 입력해 주세요</Text>
         </View>
         <View>
-          <TextInput style={styles.Textinput} placeholder="031-1234-5678" />
+          <TextInput
+            style={styles.Textinput}
+            value={storeNumber}
+            onChangeText={text => setStoreNumber(text)}
+            placeholder="031-1234-5678"
+          />
         </View>
         <View style={styles.View1}>
           <Ionicons name="list-outline" size={25} color={'black'} />
           <Text style={styles.text}>식당을 간단히 소개해주세요</Text>
         </View>
         <View>
-          <TextInput style={styles.Textinput} placeholder="싱싱한 육준서" />
+          <TextInput
+            style={styles.Textinput}
+            value={storeContent}
+            onChangeText={text => setStoreContent(text)}
+            placeholder="싱싱한 육준서"
+          />
         </View>
         <View style={styles.View1}>
           <Ionicons name="menu-book-outline" size={25} color={'black'} />
           <Text style={styles.text}>어떤 음식을 제공하나요?</Text>
           <View style={{flex: 1, alignItems: 'flex-end'}}>
-            <Text style={{color: 'black'}}>{selectedCategory}</Text>
+            <Text style={{color: 'black'}}>{category}</Text>
           </View>
         </View>
         <View style={{marginTop: 10, marginBottom: 5}}>
@@ -146,26 +248,24 @@ function AddRestWritePage() {
             <View key={rowIndex} style={{flexDirection: 'row'}}>
               {foodCategories
                 .slice(rowIndex * 5, (rowIndex + 1) * 5)
-                .map((category, index) => (
+                .map((Category, index) => (
                   <View
                     style={{
                       flex: 1,
                       borderColor:
-                        selectedCategory === category.name
-                          ? '#B6BE6A'
-                          : 'transparent',
-                      borderWidth: selectedCategory === category.name ? 2 : 2,
+                        category === Category.name ? '#B6BE6A' : 'transparent',
+                      borderWidth: category === Category.name ? 2 : 2,
                       marginBottom: 5,
                     }}
                     key={index}>
                     <TouchableOpacity
-                      onPress={() => setSelectedCategory(category.name)}
+                      onPress={() => setCategory(Category.name)}
                       style={styles.foods}>
                       <Image
-                        source={category.imageSource}
+                        source={Category.imageSource}
                         style={styles.image}
                       />
-                      <Text style={styles.FoodsText}>{category.name}</Text>
+                      <Text style={styles.FoodsText}>{Category.name}</Text>
                     </TouchableOpacity>
                   </View>
                 ))}
@@ -181,11 +281,31 @@ function AddRestWritePage() {
         <View>
           <Text style={styles.text}>이제 메뉴를 추가해볼까요?</Text>
         </View>
-        <View></View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            margin: 20,
+          }}>
+          {/* "신청" button */}
+          <TouchableOpacity
+            style={{
+              height: 40,
+              width: 60,
+              backgroundColor: '#B6BE6A',
+              borderRadius: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={postStore}>
+            <Text style={{color: 'white', fontSize: 16}}>신청</Text>
+          </TouchableOpacity>
+        </View>
       </DismissKeyboardView>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   View1: {
