@@ -28,7 +28,7 @@ export type MainPageStackParamList = {
   MainTabNavigator: undefined;
   RestListPage: {screen: string};
   SearchPage: undefined;
-  RestPage: undefined;
+  RestPage: {storeid: number};
   KoreaFoodPage: undefined;
   UpdatePage: undefined;
   ProfilePage: undefined;

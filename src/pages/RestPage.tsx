@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -25,7 +25,9 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {SafeAreaFrameContext} from 'react-native-safe-area-context';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import SearchPage from './SearchPage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import axios from 'axios';
+import {retrieveToken} from '../store/storage';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -77,6 +79,33 @@ const RestHomePage = () => {
   const goBack = () => {
     navigation.goBack();
   };
+  const route = useRoute();
+  const storeId = route.params.storeid;
+  const [restData, setRestData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        //console.log(token);
+        console.log(storeId);
+        const response = await axios.get(
+          `http://kymokim.iptime.org:11080/api/store/get/${storeId}`,
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data.storeName;
+        setRestData(data);
+        //console.log(data);
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <ScrollView
@@ -103,7 +132,7 @@ const RestHomePage = () => {
               <View style={{flex: 8}}>
                 <Text
                   style={{fontWeight: 'bold', color: 'black', fontSize: 25}}>
-                  가게 이름
+                  {restData}
                 </Text>
               </View>
               <View

@@ -57,10 +57,6 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     navigation.navigate('SearchPage');
   };
 
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
-  };
-
   const toRestListPage = (tabName: string) => {
     navigation.navigate('RestListPage', {screen: tabName});
   };
@@ -142,8 +138,13 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     name: storeItem.storeName,
     rating: storeItem.totalRate,
     address: storeItem.address,
+    storeid: storeItem.storeId,
     img: require('../assets/image23.png'),
   }));
+
+  const toRestPage = (storeid: number) => {
+    navigation.navigate('RestPage', {storeid: storeid});
+  };
 
   return (
     <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
@@ -282,7 +283,9 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         </Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {MyNearPlacesData.map((MyNearPlace, index) => (
-            <Pressable onPress={toRestPage} key={index}>
+            <Pressable
+              onPress={() => toRestPage(MyNearPlace.storeid)}
+              key={index}>
               <MyNearPlaces
                 key={index}
                 name={MyNearPlace.name}
