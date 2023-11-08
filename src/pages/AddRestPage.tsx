@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,45 +12,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
-
-const RestData = [
-  {
-    name: '땀땀',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 12-5',
-    closingTime: '02:00',
-  },
-  {
-    name: '비어룸',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 22',
-    closingTime: '01:00',
-  },
-  {
-    name: '낙원타코',
-    rating: 4.0,
-    address: '강남구 강남대로 123길 147',
-    closingTime: '12:00',
-  },
-  {
-    name: '경천 CU',
-    rating: 5.0,
-    address: '용인시 기흥구 구갈동 111',
-    closingTime: '24h',
-  },
-  {
-    name: '샬롬 GS25',
-    rating: 5.0,
-    address: '용인시 기흥구 구갈동 111',
-    closingTime: '24h',
-  },
-  {
-    name: '심전 emart24',
-    rating: 5.0,
-    address: '경기도 용인시 기흥구 상하동 521',
-    closingTime: '24h',
-  },
-];
+import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -66,6 +29,64 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     navigation.navigate('AddRestWritePage');
   };
 
+  const [loading, setLoading] = useState(false);
+  const [searchStore, setSearchStore] = useState('');
+  const [searchStoreList, setSearchStoreList] = useState<
+    Array<SearchStoreData>
+  >([]);
+
+  interface SearchStoreData {
+    name: string;
+    rating: number;
+    address: string;
+    closeHour: string;
+    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+  }
+
+  const listUpStore = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const token = await retrieveToken();
+      const response = await axios.get(
+        'http://kymokim.iptime.org:11080/api/store/get',
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+      const data = response.data.data;
+      if (data && Array.isArray(data)) {
+        setSearchStoreList(
+          data.map(storeItem => ({
+            name: storeItem.storeName,
+            rating: storeItem.totalRate,
+            address: storeItem.address,
+            closeHour: storeItem.closeHour.toString(),
+            img: require('../assets/image23.png'),
+          })),
+        );
+      } else {
+        console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+      }
+    } catch (error) {
+      console.error('식당 조회 실패', error);
+    }
+    // 이 놈의 위치가 문제인지 아님 코드가 문제인지 모르겠음 일단 이거 내일 다시 수정 ㄱㄱ
+    /*
+    useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        setSearchStoreList([]);
+        listUpStore();
+      });
+      return unsubscribe;
+    }, [navigation]);
+    */
+  }, [loading, navigation]);
+
   return (
     <View style={styles.container}>
       <View>
@@ -74,8 +95,10 @@ function AddRestPage({navigation}: MainPageScreenProps) {
             style={styles.searchInput}
             placeholder="이미 있는 식당은 아닌가요?"
             placeholderTextColor="#B6BE6A"
+            value={searchStore}
+            onChangeText={text => setSearchStore(text)}
           />
-          <TouchableOpacity style={styles.searchButton}>
+          <TouchableOpacity style={styles.searchButton} onPress={listUpStore}>
             <Ionicons name="search-outline" size={30} color="#B6BE6A" />
           </TouchableOpacity>
         </View>
@@ -83,14 +106,14 @@ function AddRestPage({navigation}: MainPageScreenProps) {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
-        {RestData.map((Rest, index) => (
+        {searchStoreList.map((Rest, index) => (
           <Pressable onPress={toRestPage} key={index}>
             <RestItem
               key={index}
               name={Rest.name}
               rating={Rest.rating}
               address={Rest.address}
-              closingTime={Rest.closingTime}
+              closingTime={Rest.closeHour}
             />
           </Pressable>
         ))}
@@ -241,7 +264,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#B6BE6A',
     borderRadius: 50,
-    elevation: 7, // Android에서 그림자 효과 추가
+    elevation: 7,
     alignItems: 'center',
     justifyContent: 'center',
   },
