@@ -384,7 +384,7 @@ const MyNearPlaces = ({
   img,
 }: {
   name: string;
-  rating: string;
+  rating: number;
   address: string;
   img: string;
 }) => {
@@ -431,7 +431,7 @@ const MyNearPlaces = ({
           {name}
         </Text>
         <View style={{flexDirection: 'row'}}>
-          <Text>{renderStars(parseInt(rating))}</Text>
+          <Text>{renderStars(rating)}</Text>
           <Text style={{color: 'black'}}>{rating}</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
@@ -449,7 +449,7 @@ const RecentPlaces = ({
   img,
 }: {
   name: string;
-  rating: string;
+  rating: number;
   address: string;
   img: string;
 }) => {

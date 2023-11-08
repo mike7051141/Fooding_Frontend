@@ -90,6 +90,41 @@ const LikeRestItem = ({
   address: string;
   closingTime: string;
 }) => {
+  const renderStars = (rating: number) => {
+    const yellowStars = [];
+    const grayStars = [];
+
+    for (let i = 0; i < rating; i++) {
+      yellowStars.push(
+        <Ionicons
+          key={i}
+          name="star"
+          size={15}
+          color="yellow"
+          style={styles.Scrollstar}
+        />,
+      );
+    }
+
+    for (let i = rating; i < 5; i++) {
+      grayStars.push(
+        <Ionicons
+          key={i}
+          name="star-outline"
+          size={15}
+          color="gray"
+          style={styles.Scrollstar}
+        />,
+      );
+    }
+
+    return (
+      <View style={{flexDirection: 'row'}}>
+        {yellowStars}
+        {grayStars}
+      </View>
+    );
+  };
   return (
     <View
       style={{
@@ -112,37 +147,8 @@ const LikeRestItem = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Text style={{color: 'black', marginLeft: 5}}>{rating} (302)</Text>
+          <Text>{renderStars(rating)}</Text>
+          <Text style={{color: 'black'}}>{rating}</Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>
