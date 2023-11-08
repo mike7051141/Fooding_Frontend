@@ -105,7 +105,7 @@ const RestHomePage = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [storeId]);
 
   return (
     <ScrollView
