@@ -26,27 +26,6 @@ const Token = async () => {
   }
 };
 
-const MyNearPlacesData = [
-  {
-    name: '땀땀',
-    rating: 4.0,
-    address: '강남구 강남대로 98번길 12-5',
-    img: require('../assets/image23.png'),
-  },
-  {
-    name: '비어룸',
-    rating: 3.0,
-    address: '강남구 강남대로 98번길 22',
-    img: require('../assets/image24.png'),
-  },
-  {
-    name: '낙원타코',
-    rating: 4.0,
-    address: '서초구 서초대로 73길 7 2층 ',
-    img: require('../assets/image26.png'),
-  },
-];
-
 const RecentPlacesData = [
   {
     name: '장안닭갈비',
@@ -86,23 +65,44 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     navigation.navigate('RestListPage', {screen: tabName});
   };
 
-  const [userData, setUserData] = useState('');
+  interface StoreData {
+    storeId: number;
+    storeName: string;
+    category: string;
+    address: string;
+    openHour: number;
+    closeHour: number;
+    totalRate: number;
+    reviewCount: number;
+    storeLikeCount: number;
+  }
+
+  const [storeData, setStoreData] = useState<Array<StoreData>>([]);
+  const [storeName, setStoreName] = useState('');
+  const [category, setCategory] = useState('');
+  const [address, setAddress] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
-        console.log(token);
+        const token = await retrieveToken();
         const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/auth/get',
+          'http://kymokim.iptime.org:11080/api/store/get',
           {
             headers: {
               'x-auth-token': token,
             },
           },
         );
-        const data = response.data.data.nickName;
-        setUserData(data);
+
+        const data = response.data.data;
+        console.log(data);
+        if (data && Array.isArray(data)) {
+          // 데이터를 가져와서 필요한 상태 변수를 업데이트합니다.
+          setStoreData(data); // 전체 데이터를 상태로 설정
+        } else {
+          console.error('데이터가 올바르게 반환되지 않았습니다.');
+        }
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
       }
@@ -110,6 +110,13 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
 
     fetchData();
   }, []);
+
+  const MyNearPlacesData = storeData.map((storeItem, index) => ({
+    name: storeItem.storeName,
+    rating: storeItem.totalRate,
+    address: storeItem.address,
+    img: require('../assets/image23.png'),
+  }));
 
   return (
     <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
@@ -120,17 +127,8 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           backgroundColor: '#B6BE6A',
           padding: 10,
         }}>
-        <View
-          style={{
-            flex: 2,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+        <View style={{flex: 1}}>
           <Text style={{color: 'gray'}}>지금 내 위치는</Text>
-          <View style={{position: 'absolute', top: 0, right: 0}}>
-            <Text style={{color: 'gray'}}>{userData}님 환영합니다</Text>
-          </View>
         </View>
         <View style={{flex: 2}}>
           <Text style={styles.LocationText}>내 위치</Text>
@@ -356,7 +354,7 @@ const MyNearPlaces = ({
   img,
 }: {
   name: string;
-  rating: number;
+  rating: string;
   address: string;
   img: string;
 }) => {
@@ -398,7 +396,7 @@ const MyNearPlaces = ({
             color="black"
             style={styles.Scrollstar}
           />
-          <Text style={{color: 'black'}}>4.0 (302)</Text>
+          <Text style={{color: 'black'}}>{rating}</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}
