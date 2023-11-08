@@ -31,6 +31,7 @@ function AddRestWritePage() {
   const [addressInput, setAddressInput] = useState<string>(''); // State to store the input address
   const [lat, setLat] = useState<string>(''); //위도
   const [long, setLong] = useState<string>(''); //경도
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   async function geocodeAddress(address: string, apiKey: string) {
     try {
@@ -57,6 +58,20 @@ function AddRestWritePage() {
   const handleButtonClick = () => {
     geocodeAddress(addressInput, API_KEY);
   };
+
+  const foodCategories = [
+    {name: '한식', imageSource: require('../assets/food1.png')},
+    {name: '중식', imageSource: require('../assets/food2.png')},
+    {name: '양식', imageSource: require('../assets/food3.png')},
+    {name: '일식', imageSource: require('../assets/food4.png')},
+    {name: '야식', imageSource: require('../assets/food5.png')},
+    {name: '디저트', imageSource: require('../assets/food6.png')},
+    {name: '치킨', imageSource: require('../assets/food7.png')},
+    {name: '피자', imageSource: require('../assets/food8.png')},
+    {name: '분식', imageSource: require('../assets/food9.png')},
+    {name: '패스트푸드', imageSource: require('../assets/food10.png')},
+  ];
+
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
       <DismissKeyboardView>
@@ -122,88 +137,42 @@ function AddRestWritePage() {
         <View style={styles.View1}>
           <Ionicons name="menu-book-outline" size={25} color={'black'} />
           <Text style={styles.text}>어떤 음식을 제공하나요?</Text>
-        </View>
-        <View style={{marginTop: 5}}>
-          <View style={styles.ViewFood}>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.image}
-              />
-
-              <Text style={styles.FoodsText}>한식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food2.png')}
-                style={styles.image}
-              />
-
-              <Text style={styles.FoodsText}>중식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food3.png')}
-                style={styles.image}
-              />
-
-              <Text style={styles.FoodsText}>양식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food4.png')}
-                style={styles.image}
-              />
-
-              <Text style={styles.FoodsText}>일식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food5.png')}
-                style={styles.image}
-              />
-
-              <Text style={styles.FoodsText}>야식</Text>
-            </View>
-          </View>
-          <View style={styles.ViewFood}>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food6.png')}
-                style={styles.image}
-              />
-              <Text style={styles.FoodsText}>디저트</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food7.png')}
-                style={styles.image}
-              />
-              <Text style={styles.FoodsText}>치킨</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food8.png')}
-                style={styles.image}
-              />
-              <Text style={styles.FoodsText}>피자</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food9.png')}
-                style={styles.image}
-              />
-              <Text style={styles.FoodsText}>분식</Text>
-            </View>
-            <View style={styles.foods}>
-              <Image
-                source={require('../assets/food10.png')}
-                style={styles.image}
-              />
-              <Text style={styles.FoodsText}>패스트푸드</Text>
-            </View>
+          <View style={{flex: 1, alignItems: 'flex-end'}}>
+            <Text style={{color: 'black'}}>{selectedCategory}</Text>
           </View>
         </View>
+        <View style={{marginTop: 10, marginBottom: 5}}>
+          {Array.from({length: 2}).map((_, rowIndex) => (
+            <View key={rowIndex} style={{flexDirection: 'row'}}>
+              {foodCategories
+                .slice(rowIndex * 5, (rowIndex + 1) * 5)
+                .map((category, index) => (
+                  <View
+                    style={{
+                      flex: 1,
+                      borderColor:
+                        selectedCategory === category.name
+                          ? '#B6BE6A'
+                          : 'transparent',
+                      borderWidth: selectedCategory === category.name ? 2 : 2,
+                      marginBottom: 5,
+                    }}
+                    key={index}>
+                    <TouchableOpacity
+                      onPress={() => setSelectedCategory(category.name)}
+                      style={styles.foods}>
+                      <Image
+                        source={category.imageSource}
+                        style={styles.image}
+                      />
+                      <Text style={styles.FoodsText}>{category.name}</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+            </View>
+          ))}
+        </View>
+
         <View style={styles.View1}>
           <Ionicons name="camera-outline" size={25} color={'black'} />
           <Text style={styles.text}>사진을 추가해 주세요</Text>

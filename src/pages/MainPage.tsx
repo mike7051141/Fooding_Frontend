@@ -286,7 +286,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             <RecentPlaces
               key={index}
               name={RecentPlace.name}
-              rating={RecentPlace.rating}
+              rating={4}
               address={RecentPlace.address}
               img={RecentPlace.img}
             />
@@ -358,6 +358,41 @@ const MyNearPlaces = ({
   address: string;
   img: string;
 }) => {
+  const renderStars = (rating: number) => {
+    const yellowStars = [];
+    const grayStars = [];
+
+    for (let i = 0; i < rating; i++) {
+      yellowStars.push(
+        <Ionicons
+          key={i}
+          name="star"
+          size={15}
+          color="yellow"
+          style={styles.Scrollstar}
+        />,
+      );
+    }
+
+    for (let i = rating; i < 5; i++) {
+      grayStars.push(
+        <Ionicons
+          key={i}
+          name="star-outline"
+          size={15}
+          color="gray"
+          style={styles.Scrollstar}
+        />,
+      );
+    }
+
+    return (
+      <View style={{flexDirection: 'row'}}>
+        {yellowStars}
+        {grayStars}
+      </View>
+    );
+  };
   return (
     <>
       <View style={{marginLeft: 20}}>
@@ -366,36 +401,7 @@ const MyNearPlaces = ({
           {name}
         </Text>
         <View style={{flexDirection: 'row'}}>
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
+          <Text>{renderStars(parseInt(rating))}</Text>
           <Text style={{color: 'black'}}>{rating}</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
@@ -413,10 +419,46 @@ const RecentPlaces = ({
   img,
 }: {
   name: string;
-  rating: number;
+  rating: string;
   address: string;
   img: string;
 }) => {
+  const renderStars = (rating: number) => {
+    const yellowStars = [];
+    const grayStars = [];
+
+    for (let i = 0; i < rating; i++) {
+      yellowStars.push(
+        <Ionicons
+          key={i}
+          name="star"
+          size={15}
+          color="yellow"
+          style={styles.Scrollstar}
+        />,
+      );
+    }
+
+    for (let i = rating; i < 5; i++) {
+      grayStars.push(
+        <Ionicons
+          key={i}
+          name="star-outline"
+          size={15}
+          color="gray"
+          style={styles.Scrollstar}
+        />,
+      );
+    }
+
+    return (
+      <View style={{flexDirection: 'row'}}>
+        {yellowStars}
+        {grayStars}
+      </View>
+    );
+  };
+
   return (
     <>
       <View style={{marginLeft: 20}}>
@@ -425,37 +467,8 @@ const RecentPlaces = ({
           {name}
         </Text>
         <View style={{flexDirection: 'row'}}>
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Text style={{color: 'black'}}>4.0 (302)</Text>
+          <Text>{renderStars(4)}</Text>
+          <Text style={{color: 'black'}}>4 (302)</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}
