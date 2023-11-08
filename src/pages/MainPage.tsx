@@ -82,6 +82,29 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
   const [category, setCategory] = useState('');
   const [address, setAddress] = useState('');
 
+  const [userData, setUserData] = useState('');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        console.log(token);
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/auth/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data.nickName;
+        setUserData(data);
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -133,6 +156,9 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         }}>
         <View style={{flex: 1}}>
           <Text style={{color: 'gray'}}>지금 내 위치는</Text>
+        </View>
+        <View style={{position: 'absolute', top: 10, right: 10}}>
+          <Text style={{color: 'gray'}}>{userData}님 환영합니다</Text>
         </View>
         <View style={{flex: 2}}>
           <Text style={styles.LocationText}>내 위치</Text>
