@@ -27,6 +27,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
 
   // placeholder 표시하기 위한 변수들
   const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [userNickName, setUserNickName] = useState('');
   const [userTel, setUserTel] = useState(''); // 회원가입할 때 백에 전화번호 저장 안 됨 아직
   const [userPassWord, setUserPassWord] = useState('');
@@ -44,12 +45,16 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
             },
           },
         );
+        // get매핑의 response객체에서 각각 필요한 정보 뺀 후 변수에 저장
         const name = response.data.data.name;
+        const email = response.data.data.email;
         const nickName = response.data.data.nickName;
         const tel = response.data.data.phoneNumber;
         const password = response.data.data.password;
 
+        // 데이터 담기
         setUserName(name);
+        setUserEmail(email);
         setUserNickName(nickName);
         setUserTel(tel);
         setUserPassWord(password);
@@ -63,10 +68,9 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
 
   // 변경하기 위해 입력한 텍스트들 담는 변수들
   const [loading, setLoading] = useState(false);
-  const [newUserName, setNewUserName] = useState('');
-  const [newUserPassWord, setNewUserPassWord] = useState('');
-  const [newUserNickName, setNewUserNickName] = useState('');
   const [newUserTel, setNewUserTel] = useState('');
+  const [newUserNickName, setNewUserNickName] = useState('');
+  const [newUserPassWord, setNewUserPassWord] = useState('');
 
   const updateUser = useCallback(async () => {
     if (loading) {
@@ -78,7 +82,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
       const response = await axios.put(
         'http://kymokim.iptime.org:11080/api/auth/update',
         {
-          name: newUserName,
+          name: userName, // 이름은 수정할 필요가 없어서 그냥 기존의 userName값 전달
           nickName: newUserNickName,
           password: newUserPassWord,
           phoneNumber: newUserTel,
@@ -99,7 +103,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
   }, [
     loading,
     navigation,
-    newUserName,
+    userName,
     newUserPassWord,
     newUserNickName,
     newUserTel,
@@ -129,10 +133,30 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>이름</Text>
           <TextInput
-            placeholder={userName}
+            //placeholder={userName}
+            //value={newUserName}
+            //onChangeText={text => setNewUserName(text)}
             style={styles.input}
-            value={newUserName}
-            onChangeText={text => setNewUserName(text)}
+            value={userName}
+          />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>아이디</Text>
+          <TextInput
+            //placeholder={userName}
+            //value={newUserName}
+            //onChangeText={text => setNewUserName(text)}
+            style={styles.input}
+            value={userEmail}
+          />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>전화번호</Text>
+          <TextInput
+            placeholder={userTel}
+            style={styles.input}
+            value={newUserTel}
+            onChangeText={text => setNewUserTel(text)}
           />
         </View>
         <View style={styles.inputRow}>
@@ -151,15 +175,6 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
             style={styles.input}
             value={newUserPassWord}
             onChangeText={text => setNewUserPassWord(text)}
-          />
-        </View>
-        <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>전화번호</Text>
-          <TextInput
-            placeholder={userTel}
-            style={styles.input}
-            value={newUserTel}
-            onChangeText={text => setNewUserTel(text)}
           />
         </View>
       </View>
@@ -234,7 +249,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'blue',
   },
   input: {
-    color: 'gray',
+    color: 'black',
     flex: 3,
     borderBottomWidth: 1.5,
     borderColor: 'gray',
