@@ -19,6 +19,7 @@ import axios from 'axios';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import {API_KEY} from '@env';
+import DatePicker from 'react-native-date-picker';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -37,11 +38,25 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
   const [lat, setLatitude] = useState<string>(''); //위도
   const [lng, setLongitude] = useState<string>(''); //경도
   const [category, setCategory] = useState<string | null>(null);
-  const [closeHour, setCloseHour] = useState<number>(0);
-  const [openHour, setopenHour] = useState<number>(0);
+  const [closeHour, setCloseHour] = useState<string>('');
+  const [openHour, setopenHour] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
+
+  const [openDate, setOpenDate] = useState(new Date());
+  const [closeDate, setCloseDate] = useState(new Date());
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [closeConfirm, setCloseConfirm] = useState(false);
+
+  const selectedOpenTime = openDate.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const selectedCloseTime = closeDate.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,7 +89,6 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
         const {lat, lng} = location;
         const info = `주소: ${address} - 위도: ${lat}, 경도: ${lng}`;
         setLocationInfo(info);
-        console.error(lng);
         setLongitude(lat);
         setLatitude(lng);
         console.log(info);
@@ -193,24 +207,58 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
           <Text style={styles.text}>영업 시작 시간을 입력해 주세요</Text>
         </View>
         <View>
-          <TextInput
-            style={styles.Textinput}
-            value={openHour.toString()}
-            onChangeText={text => setopenHour(parseInt(text))}
-            placeholder="18:00"
-          />
+          <TouchableOpacity onPress={() => setOpenConfirm(true)}>
+            <TextInput
+              pointerEvents="none"
+              style={styles.Textinput}
+              underlineColorAndroid="transparent"
+              editable={false}
+              value={selectedOpenTime}
+            />
+            <DatePicker
+              mode="time"
+              modal
+              open={openConfirm}
+              date={openDate}
+              onConfirm={date => {
+                setOpenConfirm(false);
+                setOpenDate(date);
+                setopenHour(selectedOpenTime);
+              }}
+              onCancel={() => {
+                setOpenConfirm(false);
+              }}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.View1}>
           <Ionicons name="time-outline" size={25} color={'black'} />
           <Text style={styles.text}>영업 종료 시간을 입력해 주세요</Text>
         </View>
         <View>
-          <TextInput
-            style={styles.Textinput}
-            value={closeHour.toString()}
-            onChangeText={text => setCloseHour(parseInt(text))}
-            placeholder="02:00"
-          />
+          <TouchableOpacity onPress={() => setCloseConfirm(true)}>
+            <TextInput
+              pointerEvents="none"
+              style={styles.Textinput}
+              underlineColorAndroid="transparent"
+              editable={false}
+              value={selectedCloseTime}
+            />
+            <DatePicker
+              mode="time"
+              modal
+              open={closeConfirm}
+              date={closeDate}
+              onConfirm={date => {
+                setCloseConfirm(false);
+                setCloseDate(date);
+                setCloseHour(selectedCloseTime);
+              }}
+              onCancel={() => {
+                setCloseConfirm(false);
+              }}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.View1}>
           <Ionicons name="call-outline" size={25} color={'black'} />
