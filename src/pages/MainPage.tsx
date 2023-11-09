@@ -98,8 +98,12 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         console.error('데이터 가져오기 실패', error);
       }
     };
-    fetchData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const fetchData = async () => {
