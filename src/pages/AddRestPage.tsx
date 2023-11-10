@@ -22,8 +22,8 @@ type MainPageScreenProps = NativeStackScreenProps<
 
 function AddRestPage({navigation}: MainPageScreenProps) {
   // RestPage로 이동 (식당 페이지)
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
+  const toRestPage = (storeId: number) => {
+    navigation.navigate('RestPage', {storeid: storeId});
   };
 
   // AddRestWritePage로 이동 (식당 추가 페이지)
@@ -44,6 +44,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     rating: number;
     address: string;
     closeHour: string;
+    storeId: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -67,7 +68,8 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               name: storeItem.storeName,
               rating: storeItem.totalRate,
               address: storeItem.address,
-              closeHour: storeItem.closeHour.toString(),
+              closeHour: storeItem.closeHour,
+              storeId: storeItem.storeId.toString(),
               img: require('../assets/image23.png'),
             })),
           );
@@ -108,7 +110,8 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               name: storeItem.storeName,
               rating: storeItem.totalRate,
               address: storeItem.address,
-              closeHour: storeItem.closeHour.toString(),
+              closeHour: storeItem.closeHour,
+              storeId: storeItem.storeId.toString(),
               img: require('../assets/image23.png'),
             })),
           );
@@ -137,17 +140,17 @@ function AddRestPage({navigation}: MainPageScreenProps) {
             value={searchStore}
             onChangeText={handleSearchChange}
           />
-          {/* 검색 버튼 */}
           <TouchableOpacity style={styles.searchButton}>
             <Ionicons name="search-outline" size={30} color="#B6BE6A" />
           </TouchableOpacity>
         </View>
       </View>
+      {/* 식당 정보 출력 컴포넌트 */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
         {searchStoreList.map((Rest, index) => (
-          <Pressable onPress={toRestPage} key={index}>
+          <Pressable onPress={() => toRestPage(Rest.storeId)} key={index}>
             <RestItem
               key={index}
               name={Rest.name}
