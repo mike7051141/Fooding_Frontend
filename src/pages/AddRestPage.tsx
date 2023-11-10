@@ -70,7 +70,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeId: storeItem.storeId.toString(),
-              img: require('../assets/image23.png'),
+              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
         } else {
@@ -112,7 +112,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeId: storeItem.storeId.toString(),
-              img: require('../assets/image23.png'),
+              img: require('../assets/image23.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
             })),
           );
         } else {
@@ -157,6 +157,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               rating={Rest.rating}
               address={Rest.address}
               closingTime={Rest.closeHour}
+              img={Rest.img}
             />
           </Pressable>
         ))}
@@ -175,11 +176,13 @@ const RestItem = ({
   rating,
   address,
   closingTime,
+  img,
 }: {
   name: string;
   rating: number;
   address: string;
   closingTime: string;
+  img: string;
 }) => {
   const renderStars = (rating: number) => {
     const yellowStars = [];
@@ -229,7 +232,7 @@ const RestItem = ({
         height: 150,
       }}>
       <View style={{marginHorizontal: 20}}>
-        <Image source={require('../assets/food1.png')} style={styles.image} />
+        <Image source={img} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View>
