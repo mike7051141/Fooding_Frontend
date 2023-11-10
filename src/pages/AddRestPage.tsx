@@ -21,24 +21,20 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 function AddRestPage({navigation}: MainPageScreenProps) {
-  // RestPage로 이동 (식당 페이지)
   const toRestPage = () => {
     navigation.navigate('RestPage');
   };
 
-  // AddRestWritePage로 이동 (식당 추가 페이지)
   const toAddRestWritePage = () => {
     navigation.navigate('AddRestWritePage');
   };
 
-  // 검색어 저장하는 변수
+  const [loading, setLoading] = useState(false);
   const [searchStore, setSearchStore] = useState('');
-  // 서버에서 받아온 식당들을 배열 형태로 저장
   const [searchStoreList, setSearchStoreList] = useState<
     Array<SearchStoreData>
   >([]);
 
-  // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
   interface SearchStoreData {
     name: string;
     rating: number;
@@ -47,84 +43,49 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
-  // 식당 전체 조회 기능
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = await retrieveToken();
-        const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/store/get',
-          {
-            headers: {
-              'x-auth-token': token,
-            },
-          },
-        );
-        const data = response.data.data;
-        if (data && Array.isArray(data)) {
-          setSearchStoreList(
-            data.map(storeItem => ({
-              name: storeItem.storeName,
-              rating: storeItem.totalRate,
-              address: storeItem.address,
-              closeHour: storeItem.closeHour.toString(),
-              img: require('../assets/image23.png'),
-            })),
-          );
-        } else {
-          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
-        }
-      } catch (error) {
-        console.error('식당 조회 실패', error);
-      }
-    };
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchData();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
-  // 식당 이름 검색 기능
-  const handleSearchChange = (text: string) => {
-    setSearchStore(text);
-
-    if (text === '') {
-      // 검색어가 빈 string 값일 때 다시 식당 전체 조회 기능
-      const researchStoreList = async () => {
-        const token = await retrieveToken();
-        const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/store/get',
-          {
-            headers: {
-              'x-auth-token': token,
-            },
-          },
-        );
-        const data = response.data.data;
-        if (data && Array.isArray(data)) {
-          setSearchStoreList(
-            data.map(storeItem => ({
-              name: storeItem.storeName,
-              rating: storeItem.totalRate,
-              address: storeItem.address,
-              closeHour: storeItem.closeHour.toString(),
-              img: require('../assets/image23.png'),
-            })),
-          );
-        } else {
-          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
-        }
-      };
-      researchStoreList();
-    } else {
-      // 검색어가 빈 string이 아닐 경우 해당 검색어를 포함한 식당들만 출력
-      const filteredStores = searchStoreList.filter(storeItem =>
-        storeItem.name.includes(text),
-      );
-      setSearchStoreList(filteredStores);
+  const listUpStore = useCallback(async () => {
+    if (loading) {
+      return;
     }
-  };
+    try {
+      setLoading(true);
+      const token = await retrieveToken();
+      const response = await axios.get(
+        'http://kymokim.iptime.org:11080/api/store/get',
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+      const data = response.data.data;
+      if (data && Array.isArray(data)) {
+        setSearchStoreList(
+          data.map(storeItem => ({
+            name: storeItem.storeName,
+            rating: storeItem.totalRate,
+            address: storeItem.address,
+            closeHour: storeItem.closeHour.toString(),
+            img: require('../assets/image23.png'),
+          })),
+        );
+      } else {
+        console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+      }
+    } catch (error) {
+      console.error('식당 조회 실패', error);
+    }
+    // 이 놈의 위치가 문제인지 아님 코드가 문제인지 모르겠음 일단 이거 내일 다시 수정 ㄱㄱ
+    /*
+    useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        setSearchStoreList([]);
+        listUpStore();
+      });
+      return unsubscribe;
+    }, [navigation]);
+    */
+  }, [loading, navigation]);
 
   return (
     <View style={styles.container}>
@@ -135,10 +96,9 @@ function AddRestPage({navigation}: MainPageScreenProps) {
             placeholder="이미 있는 식당은 아닌가요?"
             placeholderTextColor="#B6BE6A"
             value={searchStore}
-            onChangeText={handleSearchChange}
+            onChangeText={text => setSearchStore(text)}
           />
-          {/* 검색 버튼 */}
-          <TouchableOpacity style={styles.searchButton}>
+          <TouchableOpacity style={styles.searchButton} onPress={listUpStore}>
             <Ionicons name="search-outline" size={30} color="#B6BE6A" />
           </TouchableOpacity>
         </View>
