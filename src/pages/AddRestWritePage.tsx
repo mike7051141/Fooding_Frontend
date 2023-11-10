@@ -26,7 +26,6 @@ type MainPageScreenProps = NativeStackScreenProps<
   'AddRestPage'
 >;
 
-const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
 const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
   const toAddRestWritePage = () => {
     navigation.navigate('AddRestPage');

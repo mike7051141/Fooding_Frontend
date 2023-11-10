@@ -85,25 +85,7 @@ function MainStackList() {
       <Stack1.Screen
         name="SearchPage"
         component={SearchPage}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: () => (
-            <IconTextInput
-              placeholder="오늘은 어디로?"
-              iconName="search-outline"
-            />
-          ),
-          headerRight: () => (
-            <View style={{}}>
-              <Pressable
-                onPress={() => {
-                  navigation.navigate('MainPage');
-                }}>
-                <Ionicons name="home-outline" size={25} color={'black'} />
-              </Pressable>
-            </View>
-          ),
-        })}
+        options={{headerShown: false}}
       />
       <Stack1.Screen
         name="RestPage"

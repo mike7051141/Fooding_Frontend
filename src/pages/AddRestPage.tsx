@@ -112,7 +112,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeId: storeItem.storeId.toString(),
-              img: require('../assets/image23.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
+              img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
             })),
           );
         } else {
@@ -130,6 +130,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
   };
 
   return (
+    // 화면 전체적인 UI
     <View style={styles.container}>
       <View>
         <View style={styles.searchContainer}>
@@ -149,15 +150,15 @@ function AddRestPage({navigation}: MainPageScreenProps) {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
-        {searchStoreList.map((Rest, index) => (
-          <Pressable onPress={() => toRestPage(Rest.storeId)} key={index}>
+        {searchStoreList.map((store, index) => (
+          <Pressable onPress={() => toRestPage(store.storeId)} key={index}>
             <RestItem
               key={index}
-              name={Rest.name}
-              rating={Rest.rating}
-              address={Rest.address}
-              closingTime={Rest.closeHour}
-              img={Rest.img}
+              name={store.name}
+              rating={store.rating}
+              address={store.address}
+              closingTime={store.closeHour}
+              img={store.img}
             />
           </Pressable>
         ))}
@@ -171,6 +172,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
   );
 }
 
+// 식당 1개에 대한 UI 컴포넌트
 const RestItem = ({
   name,
   rating,
@@ -318,6 +320,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100,
     height: 100,
+    borderRadius: 10,
   },
   Scrollstar: {
     color: 'gray',
