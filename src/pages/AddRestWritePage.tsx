@@ -27,6 +27,7 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
+const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
   const toAddRestWritePage = () => {
     navigation.navigate('AddRestPage');
   };
@@ -49,14 +50,42 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [closeConfirm, setCloseConfirm] = useState(false);
 
-  const selectedOpenTime = openDate.toLocaleTimeString('en-US', {
+  const selectedOpenTime = openDate.toLocaleTimeString('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
   });
-  const selectedCloseTime = closeDate.toLocaleTimeString('en-US', {
+  const selectedCloseTime = closeDate.toLocaleTimeString('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
   });
+  useEffect(() => {
+    setCloseHour(selectedCloseTime);
+  }, [selectedCloseTime]);
+  useEffect(() => {
+    setopenHour(selectedOpenTime);
+  }, [selectedOpenTime]);
+
+  useEffect(() => {
+    // route.params가 없거나 resetState 속성이 없을 경우에 대한 예외 처리
+    if (route.params && 'resetState' in route.params) {
+      // 초기화할 상태들을 여기에 추가
+      setAddress('');
+      setLatitude('');
+      setLongitude('');
+      setCategory(null);
+      setCloseHour('');
+      setopenHour('');
+      setStoreContent('');
+      setStoreName('');
+      setStoreNumber('');
+      setOpenDate(new Date());
+      setCloseDate(new Date());
+      setOpenConfirm(false);
+      setCloseConfirm(false);
+
+      // 기타 초기화 로직 추가 가능
+    }
+  }, [route.params]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,6 +192,9 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
     storeNumber,
   ]);
 
+  useEffect(() => {
+    setLoading(false);
+  }, [selectedCloseTime]);
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
       <DismissKeyboardView>
@@ -214,6 +246,7 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
               underlineColorAndroid="transparent"
               editable={false}
               value={selectedOpenTime}
+              onChangeText={text => setopenHour(text)}
             />
             <DatePicker
               mode="time"
@@ -223,7 +256,6 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
               onConfirm={date => {
                 setOpenConfirm(false);
                 setOpenDate(date);
-                setopenHour(selectedOpenTime);
               }}
               onCancel={() => {
                 setOpenConfirm(false);
@@ -252,7 +284,6 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
               onConfirm={date => {
                 setCloseConfirm(false);
                 setCloseDate(date);
-                setCloseHour(selectedCloseTime);
               }}
               onCancel={() => {
                 setCloseConfirm(false);
@@ -280,7 +311,10 @@ const AddRestWritePage = ({navigation}: MainPageScreenProps) => {
           <TextInput
             style={styles.Textinput}
             value={storeContent}
-            onChangeText={text => setStoreContent(text)}
+            onChangeText={text => {
+              setStoreContent(text);
+              console.error(openHour);
+            }}
             placeholder="싱싱한 육준서"
           />
         </View>
@@ -377,6 +411,7 @@ const styles = StyleSheet.create({
     marginVertical: '3%',
     marginHorizontal: '10%',
     paddingLeft: 20,
+    color: 'black',
   },
 
   foods: {
