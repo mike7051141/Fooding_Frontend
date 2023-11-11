@@ -30,6 +30,7 @@ import WriteLiveReviewSearchPage from '../pages/WriteLiveReviewSearchPage';
 
 import {useNavigation} from '@react-navigation/native';
 import AddRestWritePage from '../pages/AddRestWritePage';
+import StoreInfoEditPage from '../pages/StoreInfoEditPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -227,6 +228,38 @@ function MainTabNavigator() {
         component={AddRestWritePage}
         options={{
           title: '식당 추가',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'black',
+          },
+          headerStyle: {
+            borderBottomWidth: 1.5,
+            borderColor: 'lightgray',
+            backgroundColor: 'white',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => goToBack()}>
+              <Ionicons
+                name="arrow-back-outline"
+                size={25}
+                color="black"
+                style={{marginLeft: 13}}
+              />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          headerShown: true,
+          tabBarButton: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="StoreInfoEditPage"
+        component={StoreInfoEditPage}
+        options={{
+          title: '식당 정보 수정',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 20,

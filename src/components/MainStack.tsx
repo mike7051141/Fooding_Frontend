@@ -22,6 +22,7 @@ import AuthRequestPage from '../pages/AuthRequestPage';
 import AddRestWritePage from '../pages/AddRestWritePage';
 import WriteReviewSearchPage from '../pages/WriteReviewSearchPage';
 import WriteLiveReviewSearchPage from '../pages/WriteLiveReviewSearchPage';
+import StoreInfoEditPage from '../pages/StoreInfoEditPage';
 
 export type MainPageStackParamList = {
   MainPage: undefined;
@@ -33,12 +34,13 @@ export type MainPageStackParamList = {
   UpdatePage: undefined;
   ProfilePage: undefined;
   CategoryPage: undefined;
+  StoreInfoEditPage: {storeid: number; resetState: boolean};
   AddRestPage: undefined;
   AuthRegisterPage: undefined;
   WriteReviewPage: undefined;
   WriteLiveReviewPage: undefined;
   AuthRequestPage: undefined;
-  AddRestWritePage: undefined;
+  AddRestWritePage: {resetState: boolean};
   WriteReviewSearchPage: undefined;
   WriteLiveReviewSearchPage: undefined;
 };
@@ -130,6 +132,11 @@ function MainStackList() {
       <Stack1.Screen
         name="AddRestWritePage"
         component={AddRestWritePage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="StoreInfoEditPage"
+        component={StoreInfoEditPage}
         options={{headerShown: false}}
       />
       <Stack1.Screen

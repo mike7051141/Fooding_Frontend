@@ -28,7 +28,9 @@ function AddRestPage({navigation}: MainPageScreenProps) {
 
   // AddRestWritePage로 이동 (식당 추가 페이지)
   const toAddRestWritePage = () => {
-    navigation.navigate('AddRestWritePage');
+    navigation.navigate('AddRestWritePage', {
+      resetState: true,
+    });
   };
 
   // 검색어 저장하는 변수

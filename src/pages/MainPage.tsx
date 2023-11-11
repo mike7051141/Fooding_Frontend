@@ -119,7 +119,6 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         );
 
         const data = response.data.data;
-        console.log(data);
         if (data && Array.isArray(data)) {
           // 데이터를 가져와서 필요한 상태 변수를 업데이트합니다.
           setStoreData(data); // 전체 데이터를 상태로 설정

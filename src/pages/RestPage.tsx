@@ -21,6 +21,7 @@ import RestFoodPage from './RestFoodPage';
 import RestLivePage from './RestLivePage';
 import RestMapPage from './RestMapPage';
 import RestReviewPage from './RestReviewPage';
+import StoreInfoEditPage from './StoreInfoEditPage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SafeAreaFrameContext} from 'react-native-safe-area-context';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
@@ -28,38 +29,20 @@ import SearchPage from './SearchPage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import axios from 'axios';
 import {retrieveToken} from '../store/storage';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MainPageStackParamList} from '../components/MainStack';
 
 const Tab = createMaterialTopTabNavigator();
 
-function RestPage() {
-  return (
-    /* <Tab.Navigator>
-        <Tab.Screen
-          name="RestFoodPage"
-          component={RestFoodPage}
-          options={{title: '메뉴'}}
-        />
-        <Tab.Screen
-          name="RestMapPage"
-          component={RestMapPage}
-          options={{title: '길찾기'}}
-        />
-        <Tab.Screen
-          name="RestReviewPage"
-          component={RestReviewPage}
-          options={{title: '후기'}}
-        />
-        <Tab.Screen
-          name="RestLivePage"
-          component={RestLivePage}
-          options={{title: '실시간 리뷰'}}
-        />
-      </Tab.Navigator> */
-    <RestHomePage />
-  );
-}
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'StoreInfoEditPage'
+>;
 
-const RestHomePage = () => {
+function RestPage({navigation}: MainPageScreenProps) {
+  const toStoreInfoEditPage = (storeId: number) => {
+    navigation.navigate('StoreInfoEditPage', {storeid: storeId});
+  };
   const [currentPage, setCurrentPage] = useState('');
 
   // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
@@ -75,9 +58,9 @@ const RestHomePage = () => {
     setIsActivated(prev => !prev);
   };
 
-  const navigation = useNavigation();
+  const navigation2 = useNavigation();
   const goBack = () => {
-    navigation.goBack();
+    navigation2.goBack();
   };
   const route = useRoute();
   const storeId = route.params.storeid;
@@ -145,7 +128,10 @@ const RestHomePage = () => {
                   color={'black'}
                   style={{marginRight: 15}}
                 />
-                <Ionicons name="map-outline" size={30} color={'black'} />
+
+                <TouchableOpacity onPress={() => toStoreInfoEditPage(storeId)}>
+                  <Ionicons name="create" size={30} />
+                </TouchableOpacity>
               </View>
             </View>
             <View
@@ -332,7 +318,7 @@ const RestHomePage = () => {
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   ListText: {
