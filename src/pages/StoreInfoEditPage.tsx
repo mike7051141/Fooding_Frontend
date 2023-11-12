@@ -40,13 +40,13 @@ const StoreInfoEditPage = ({route, navigation}: MainPageScreenProps) => {
   const [lng, setLongitude] = useState<string>(''); //경도
   const [category, setCategory] = useState<string | null>(null);
   const [closeHour, setCloseHour] = useState<string>('');
-  const [openHour, setopenHour] = useState<string>('');
+  const [openHour, setOpenHour] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
   const [storeId, setStoreId] = useState<number>();
-  const [openDate, setOpenDate] = useState(new Date());
-  const [closeDate, setCloseDate] = useState(new Date());
+  const [openDate, setOpenDate] = useState(new Date('2023-11-12T00:00:00'));
+  const [closeDate, setCloseDate] = useState(new Date('2023-11-12T00:00:00'));
   const [openConfirm, setOpenConfirm] = useState(false);
   const [closeConfirm, setCloseConfirm] = useState(false);
 
@@ -62,7 +62,7 @@ const StoreInfoEditPage = ({route, navigation}: MainPageScreenProps) => {
     setCloseHour(selectedCloseTime);
   }, [selectedCloseTime]);
   useEffect(() => {
-    setopenHour(selectedOpenTime);
+    setOpenHour(selectedOpenTime);
   }, [selectedOpenTime]);
 
   useEffect(() => {
@@ -76,8 +76,8 @@ const StoreInfoEditPage = ({route, navigation}: MainPageScreenProps) => {
       setStoreContent('');
       setStoreName('');
       setStoreNumber('');
-      setOpenDate(new Date());
-      setCloseDate(new Date());
+      setOpenDate(new Date('2023-11-12T00:00:00'));
+      setCloseDate(new Date('2023-11-12T00:00:00'));
       setOpenConfirm(false);
       setCloseConfirm(false);
 
@@ -271,7 +271,7 @@ const StoreInfoEditPage = ({route, navigation}: MainPageScreenProps) => {
               underlineColorAndroid="transparent"
               editable={false}
               value={selectedOpenTime}
-              onChangeText={text => setopenHour(text)}
+              onChangeText={text => setOpenHour(text)}
             />
             <DatePicker
               mode="time"

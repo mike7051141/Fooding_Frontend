@@ -40,10 +40,17 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 function RestPage({navigation}: MainPageScreenProps) {
-  const toStoreInfoEditPage = (storeId: number) => {
-    navigation.navigate('StoreInfoEditPage', {storeid: storeId});
+  const toStoreInfoEditPage = (storeId: number, resetState: boolean) => {
+    navigation.navigate('StoreInfoEditPage', {
+      storeid: storeId,
+      resetState: resetState,
+    });
   };
   const [currentPage, setCurrentPage] = useState('');
+  const [address, setAddress] = useState<string>(''); // State to store the input address
+  const [closeHour, setCloseHour] = useState<string>('');
+  const [storeNumber, setStoreNumber] = useState<string>('');
+  const [storeContent, setStoreContent] = useState<string>('');
 
   // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
   const changePage = (pageName: string) => {
@@ -80,8 +87,11 @@ function RestPage({navigation}: MainPageScreenProps) {
             },
           },
         );
-        const data = response.data.data.storeName;
-        setRestData(data);
+        setRestData(response.data.data.storeName);
+        setAddress(response.data.data.address);
+        setCloseHour(response.data.data.closeHour);
+        setStoreNumber(response.data.data.storeNumber);
+        setStoreContent(response.data.data.storeContent);
         //console.log(data);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
@@ -169,7 +179,7 @@ function RestPage({navigation}: MainPageScreenProps) {
                   fontSize: 15,
                   marginLeft: 5,
                 }}>
-                가게주소
+                {address}
               </Text>
             </View>
             <View
@@ -201,7 +211,7 @@ function RestPage({navigation}: MainPageScreenProps) {
                 fontSize: 15,
                 marginLeft: 5,
               }}>
-              영업 종료 : 04:30
+              영업 종료 : {closeHour}
             </Text>
           </View>
           <View
@@ -221,7 +231,7 @@ function RestPage({navigation}: MainPageScreenProps) {
                 fontSize: 15,
                 marginLeft: 5,
               }}>
-              010 - 3168 - 7488
+              {storeNumber}
             </Text>
           </View>
           <View
@@ -243,12 +253,7 @@ function RestPage({navigation}: MainPageScreenProps) {
               numberOfLines={line}
               ellipsizeMode="tail"
               onPress={() => handleLine()}>
-              진심을 담은 한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!진심을 담은 한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!진심을 담은 한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!한상차림!진심을 담은 한상차림!진심을 담은 한상차림!진심을
-              담은 한상차림!한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!진심을 담은 한상차림!
+              {storeContent}
             </Text>
           </View>
         </View>

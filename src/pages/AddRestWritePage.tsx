@@ -45,8 +45,8 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
   const [storeName, setStoreName] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
 
-  const [openDate, setOpenDate] = useState(new Date());
-  const [closeDate, setCloseDate] = useState(new Date());
+  const [openDate, setOpenDate] = useState(new Date('2023-11-12T00:00:00'));
+  const [closeDate, setCloseDate] = useState(new Date('2023-11-12T00:00:00'));
   const [openConfirm, setOpenConfirm] = useState(false);
   const [closeConfirm, setCloseConfirm] = useState(false);
 
@@ -78,8 +78,8 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       setStoreContent('');
       setStoreName('');
       setStoreNumber('');
-      setOpenDate(new Date());
-      setCloseDate(new Date());
+      setOpenDate(new Date('2023-11-12T00:00:00'));
+      setCloseDate(new Date('2023-11-12T00:00:00'));
       setOpenConfirm(false);
       setCloseConfirm(false);
 
