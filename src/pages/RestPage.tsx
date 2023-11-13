@@ -21,6 +21,7 @@ import RestFoodPage from './RestFoodPage';
 import RestLivePage from './RestLivePage';
 import RestMapPage from './RestMapPage';
 import RestReviewPage from './RestReviewPage';
+import StoreInfoEditPage from './StoreInfoEditPage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {SafeAreaFrameContext} from 'react-native-safe-area-context';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
@@ -28,39 +29,28 @@ import SearchPage from './SearchPage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import axios from 'axios';
 import {retrieveToken} from '../store/storage';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MainPageStackParamList} from '../components/MainStack';
 
 const Tab = createMaterialTopTabNavigator();
 
-function RestPage() {
-  return (
-    /* <Tab.Navigator>
-        <Tab.Screen
-          name="RestFoodPage"
-          component={RestFoodPage}
-          options={{title: '메뉴'}}
-        />
-        <Tab.Screen
-          name="RestMapPage"
-          component={RestMapPage}
-          options={{title: '길찾기'}}
-        />
-        <Tab.Screen
-          name="RestReviewPage"
-          component={RestReviewPage}
-          options={{title: '후기'}}
-        />
-        <Tab.Screen
-          name="RestLivePage"
-          component={RestLivePage}
-          options={{title: '실시간 리뷰'}}
-        />
-      </Tab.Navigator> */
-    <RestHomePage />
-  );
-}
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'StoreInfoEditPage'
+>;
 
-const RestHomePage = () => {
+function RestPage({navigation}: MainPageScreenProps) {
+  const toStoreInfoEditPage = (storeId: number, resetState: boolean) => {
+    navigation.navigate('StoreInfoEditPage', {
+      storeid: storeId,
+      resetState: resetState,
+    });
+  };
   const [currentPage, setCurrentPage] = useState('');
+  const [address, setAddress] = useState<string>(''); // State to store the input address
+  const [closeHour, setCloseHour] = useState<string>('');
+  const [storeNumber, setStoreNumber] = useState<string>('');
+  const [storeContent, setStoreContent] = useState<string>('');
 
   // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
   const changePage = (pageName: string) => {
@@ -75,9 +65,9 @@ const RestHomePage = () => {
     setIsActivated(prev => !prev);
   };
 
-  const navigation = useNavigation();
+  const navigation2 = useNavigation();
   const goBack = () => {
-    navigation.goBack();
+    navigation2.goBack();
   };
   const route = useRoute();
   const storeId = route.params.storeid;
@@ -97,8 +87,11 @@ const RestHomePage = () => {
             },
           },
         );
-        const data = response.data.data.storeName;
-        setRestData(data);
+        setRestData(response.data.data.storeName);
+        setAddress(response.data.data.address);
+        setCloseHour(response.data.data.closeHour);
+        setStoreNumber(response.data.data.storeNumber);
+        setStoreContent(response.data.data.storeContent);
         //console.log(data);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
@@ -139,15 +132,52 @@ const RestHomePage = () => {
                 style={{
                   flexDirection: 'row',
                 }}>
-                <Ionicons
-                  name="heart-outline"
-                  size={30}
-                  color={'black'}
-                  style={{marginRight: 15}}
-                />
-                <Ionicons name="map-outline" size={30} color={'black'} />
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginHorizontal: 5,
+                  }}>
+                  <Ionicons name="heart-outline" size={30} color={'black'} />
+                  <Text style={{color: 'black', marginLeft: 0}}>좋아요</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginHorizontal: 5,
+                  }}>
+                  <Ionicons
+                    name="fast-food-outline"
+                    size={30}
+                    color={'black'}
+                  />
+                  <Text style={{color: 'black', marginRight: 0}}>
+                    메뉴 수정
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginHorizontal: 5,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => toStoreInfoEditPage(storeId, false)}>
+                    <Ionicons
+                      name="create-outline"
+                      size={30}
+                      color={'black'}
+                      style={{marginLeft: 15}}
+                    />
+                    <Text style={{color: 'black', marginRight: 0}}>
+                      식당 수정
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
+
             <View
               style={{
                 flexDirection: 'row',
@@ -183,7 +213,7 @@ const RestHomePage = () => {
                   fontSize: 15,
                   marginLeft: 5,
                 }}>
-                가게주소
+                {address}
               </Text>
             </View>
             <View
@@ -215,7 +245,7 @@ const RestHomePage = () => {
                 fontSize: 15,
                 marginLeft: 5,
               }}>
-              영업 종료 : 04:30
+              영업 종료 : {closeHour}
             </Text>
           </View>
           <View
@@ -235,7 +265,7 @@ const RestHomePage = () => {
                 fontSize: 15,
                 marginLeft: 5,
               }}>
-              010 - 3168 - 7488
+              {storeNumber}
             </Text>
           </View>
           <View
@@ -257,12 +287,7 @@ const RestHomePage = () => {
               numberOfLines={line}
               ellipsizeMode="tail"
               onPress={() => handleLine()}>
-              진심을 담은 한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!진심을 담은 한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!진심을 담은 한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!한상차림!진심을 담은 한상차림!진심을 담은 한상차림!진심을
-              담은 한상차림!한상차림!진심을 담은 한상차림!진심을 담은
-              한상차림!진심을 담은 한상차림!
+              {storeContent}
             </Text>
           </View>
         </View>
@@ -332,7 +357,7 @@ const RestHomePage = () => {
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   ListText: {

@@ -27,8 +27,8 @@ type MainPageScreenProps = NativeStackScreenProps<
   'AddRestPage'
 >;
 
-const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
-  const toAddRestPage = () => {
+const StoreInfoEditPage = ({route, navigation}: MainPageScreenProps) => {
+  const toAddRestWritePage = () => {
     navigation.navigate('AddRestPage');
   };
 
@@ -40,11 +40,11 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
   const [lng, setLongitude] = useState<string>(''); //경도
   const [category, setCategory] = useState<string | null>(null);
   const [closeHour, setCloseHour] = useState<string>('');
-  const [openHour, setopenHour] = useState<string>('');
+  const [openHour, setOpenHour] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
-
+  const [storeId, setStoreId] = useState<number>();
   const [openDate, setOpenDate] = useState(new Date('2023-11-12T00:00:00'));
   const [closeDate, setCloseDate] = useState(new Date('2023-11-12T00:00:00'));
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -62,7 +62,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     setCloseHour(selectedCloseTime);
   }, [selectedCloseTime]);
   useEffect(() => {
-    setopenHour(selectedOpenTime);
+    setOpenHour(selectedOpenTime);
   }, [selectedOpenTime]);
 
   useEffect(() => {
@@ -73,8 +73,6 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       setLatitude('');
       setLongitude('');
       setCategory(null);
-      setCloseHour('');
-      setopenHour('');
       setStoreContent('');
       setStoreName('');
       setStoreNumber('');
@@ -86,26 +84,36 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       // 기타 초기화 로직 추가 가능
     }
   }, [route.params]);
-
+  const route2 = useRoute();
+  const getstoreId = route2.params.storeid;
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        //console.log(token);
+        console.log(getstoreId);
+        setStoreId(getstoreId);
         const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/auth/get',
+          `http://kymokim.iptime.org:11080/api/store/get/${getstoreId}`,
           {
             headers: {
               'x-auth-token': token,
             },
           },
         );
+        setStoreName(response.data.data.storeName);
+        setAddress(response.data.data.address);
+        setLatitude(response.data.data.latitude);
+        setLongitude(response.data.data.longitude);
+        setCategory(response.data.data.category);
+        setStoreContent(response.data.data.storeContent);
+        setStoreNumber(response.data.data.storeNumber);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
       }
     };
-
     fetchData();
-  }, []);
+  }, [route.params.storeid]);
 
   async function geocodeAddress(address: string, apiKey: string) {
     try {
@@ -146,7 +154,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     {name: '패스트푸드', imageSource: require('../assets/food10.png')},
   ];
 
-  const postStore = useCallback(async () => {
+  const updateStore = useCallback(async () => {
     if (loading) {
       return;
     }
@@ -168,16 +176,17 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     try {
       setLoading(true);
       const token = await retrieveToken();
-      const response = await axios.post(
-        'http://kymokim.iptime.org:11080/api/store/create',
+      const response = await axios.put(
+        'http://kymokim.iptime.org:11080/api/store/update',
         {
           address,
           category,
-          closeHour,
+          closeHour: selectedCloseTime,
           latitude: lat,
           longitude: lng,
-          openHour,
+          openHour: selectedOpenTime,
           storeContent,
+          storeId,
           storeName,
           storeNumber,
         },
@@ -187,9 +196,9 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
           },
         },
       );
-      console.log('식당 추가 완료:', response.data);
-      Alert.alert('알림', '식당 추가 완료');
-      toAddRestPage();
+      console.log('식당 정보 수정:', response.data);
+      Alert.alert('알림', '식당 정보 수정');
+      toAddRestWritePage();
     } catch (error) {
       console.error('사용자 정보 업데이트 실패', error);
     }
@@ -203,6 +212,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     lng,
     openHour,
     storeContent,
+    storeId,
     storeName,
     storeNumber,
   ]);
@@ -261,7 +271,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
               underlineColorAndroid="transparent"
               editable={false}
               value={selectedOpenTime}
-              onChangeText={text => setopenHour(text)}
+              onChangeText={text => setOpenHour(text)}
             />
             <DatePicker
               mode="time"
@@ -394,8 +404,8 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            onPress={postStore}>
-            <Text style={{color: 'white', fontSize: 16}}>신청</Text>
+            onPress={updateStore}>
+            <Text style={{color: 'white', fontSize: 16}}>수정</Text>
           </TouchableOpacity>
         </View>
       </DismissKeyboardView>
@@ -451,4 +461,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddRestWritePage;
+export default StoreInfoEditPage;

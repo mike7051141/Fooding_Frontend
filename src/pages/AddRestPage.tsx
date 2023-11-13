@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,45 +12,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
-
-const RestData = [
-  {
-    name: '땀땀',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 12-5',
-    closingTime: '02:00',
-  },
-  {
-    name: '비어룸',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 22',
-    closingTime: '01:00',
-  },
-  {
-    name: '낙원타코',
-    rating: 4.0,
-    address: '강남구 강남대로 123길 147',
-    closingTime: '12:00',
-  },
-  {
-    name: '경천 CU',
-    rating: 5.0,
-    address: '용인시 기흥구 구갈동 111',
-    closingTime: '24h',
-  },
-  {
-    name: '샬롬 GS25',
-    rating: 5.0,
-    address: '용인시 기흥구 구갈동 111',
-    closingTime: '24h',
-  },
-  {
-    name: '심전 emart24',
-    rating: 5.0,
-    address: '경기도 용인시 기흥구 상하동 521',
-    closingTime: '24h',
-  },
-];
+import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -58,15 +21,118 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 function AddRestPage({navigation}: MainPageScreenProps) {
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
+  // RestPage로 이동 (식당 페이지)
+  const toRestPage = (storeId: number) => {
+    navigation.navigate('RestPage', {storeid: storeId});
   };
 
+  // AddRestWritePage로 이동 (식당 추가 페이지)
   const toAddRestWritePage = () => {
-    navigation.navigate('AddRestWritePage');
+    navigation.navigate('AddRestWritePage', {
+      resetState: true,
+    });
+  };
+
+  // 검색어 저장하는 변수
+  const [searchStore, setSearchStore] = useState('');
+  // 서버에서 받아온 식당들을 배열 형태로 저장
+  const [searchStoreList, setSearchStoreList] = useState<
+    Array<SearchStoreData>
+  >([]);
+
+  // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
+  interface SearchStoreData {
+    name: string;
+    rating: number;
+    address: string;
+    closeHour: string;
+    storeId: number;
+    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+  }
+
+  // 식당 전체 조회 기능
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken();
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/store/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          setSearchStoreList(
+            data.map(storeItem => ({
+              name: storeItem.storeName,
+              rating: storeItem.totalRate,
+              address: storeItem.address,
+              closeHour: storeItem.closeHour,
+              storeId: storeItem.storeId.toString(),
+              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+            })),
+          );
+        } else {
+          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+        }
+      } catch (error) {
+        console.error('식당 조회 실패', error);
+      }
+    };
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  // 식당 이름 검색 기능
+  const handleSearchChange = (text: string) => {
+    setSearchStore(text);
+
+    if (text === '') {
+      // 검색어가 빈 string 값일 때 다시 식당 전체 조회 기능
+      const researchStoreList = async () => {
+        const token = await retrieveToken();
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/store/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          setSearchStoreList(
+            data.map(storeItem => ({
+              name: storeItem.storeName,
+              rating: storeItem.totalRate,
+              address: storeItem.address,
+              closeHour: storeItem.closeHour,
+              storeId: storeItem.storeId.toString(),
+              img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
+            })),
+          );
+        } else {
+          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+        }
+      };
+      researchStoreList();
+    } else {
+      // 검색어가 빈 string이 아닐 경우 해당 검색어를 포함한 식당들만 출력
+      const filteredStores = searchStoreList.filter(storeItem =>
+        storeItem.name.includes(text),
+      );
+      setSearchStoreList(filteredStores);
+    }
   };
 
   return (
+    // 화면 전체적인 UI
     <View style={styles.container}>
       <View>
         <View style={styles.searchContainer}>
@@ -74,23 +140,27 @@ function AddRestPage({navigation}: MainPageScreenProps) {
             style={styles.searchInput}
             placeholder="이미 있는 식당은 아닌가요?"
             placeholderTextColor="#B6BE6A"
+            value={searchStore}
+            onChangeText={handleSearchChange}
           />
           <TouchableOpacity style={styles.searchButton}>
             <Ionicons name="search-outline" size={30} color="#B6BE6A" />
           </TouchableOpacity>
         </View>
       </View>
+      {/* 식당 정보 출력 컴포넌트 */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
-        {RestData.map((Rest, index) => (
-          <Pressable onPress={toRestPage} key={index}>
+        {searchStoreList.map((store, index) => (
+          <Pressable onPress={() => toRestPage(store.storeId)} key={index}>
             <RestItem
               key={index}
-              name={Rest.name}
-              rating={Rest.rating}
-              address={Rest.address}
-              closingTime={Rest.closingTime}
+              name={store.name}
+              rating={store.rating}
+              address={store.address}
+              closingTime={store.closeHour}
+              img={store.img}
             />
           </Pressable>
         ))}
@@ -104,16 +174,19 @@ function AddRestPage({navigation}: MainPageScreenProps) {
   );
 }
 
+// 식당 1개에 대한 UI 컴포넌트
 const RestItem = ({
   name,
   rating,
   address,
   closingTime,
+  img,
 }: {
   name: string;
   rating: number;
   address: string;
   closingTime: string;
+  img: string;
 }) => {
   const renderStars = (rating: number) => {
     const yellowStars = [];
@@ -163,7 +236,7 @@ const RestItem = ({
         height: 150,
       }}>
       <View style={{marginHorizontal: 20}}>
-        <Image source={require('../assets/food1.png')} style={styles.image} />
+        <Image source={img} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View>
@@ -241,7 +314,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#B6BE6A',
     borderRadius: 50,
-    elevation: 7, // Android에서 그림자 효과 추가
+    elevation: 7,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -249,6 +322,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100,
     height: 100,
+    borderRadius: 10,
   },
   Scrollstar: {
     color: 'gray',
