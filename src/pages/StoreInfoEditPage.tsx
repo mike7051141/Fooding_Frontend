@@ -113,7 +113,7 @@ const StoreInfoEditPage = ({route, navigation}: MainPageScreenProps) => {
       }
     };
     fetchData();
-  }, [navigation]);
+  }, [route.params.storeid]);
 
   async function geocodeAddress(address: string, apiKey: string) {
     try {
