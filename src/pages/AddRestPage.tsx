@@ -91,41 +91,47 @@ function AddRestPage({navigation}: MainPageScreenProps) {
 
   // 식당 이름 검색 기능
   const handleSearchChange = (text: string) => {
-    setSearchStore(text);
+    const lowerCaseSearchText = text.toLowerCase(); // 검색어를 소문자로 변환
+    setSearchStore(lowerCaseSearchText);
 
-    if (text === '') {
+    if (lowerCaseSearchText === '') {
       // 검색어가 빈 string 값일 때 다시 식당 전체 조회 기능
       const researchStoreList = async () => {
-        const token = await retrieveToken();
-        const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/store/get',
-          {
-            headers: {
-              'x-auth-token': token,
+        try {
+          const token = await retrieveToken();
+          const response = await axios.get(
+            'http://kymokim.iptime.org:11080/api/store/get',
+            {
+              headers: {
+                'x-auth-token': token,
+              },
             },
-          },
-        );
-        const data = response.data.data;
-        if (data && Array.isArray(data)) {
-          setSearchStoreList(
-            data.map(storeItem => ({
-              name: storeItem.storeName,
-              rating: storeItem.totalRate,
-              address: storeItem.address,
-              closeHour: storeItem.closeHour,
-              storeId: storeItem.storeId.toString(),
-              img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
-            })),
           );
-        } else {
-          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+          const data = response.data.data;
+          if (data && Array.isArray(data)) {
+            setSearchStoreList(
+              data.map(storeItem => ({
+                name: storeItem.storeName,
+                rating: storeItem.totalRate,
+                address: storeItem.address,
+                closeHour: storeItem.closeHour,
+                storeId: storeItem.storeId.toString(),
+                // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
+                img: require('../assets/image22.png'),
+              })),
+            );
+          } else {
+            console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+          }
+        } catch (error) {
+          console.error('식당 조회 실패', error);
         }
       };
       researchStoreList();
     } else {
       // 검색어가 빈 string이 아닐 경우 해당 검색어를 포함한 식당들만 출력
       const filteredStores = searchStoreList.filter(storeItem =>
-        storeItem.name.includes(text),
+        storeItem.name.toLowerCase().includes(lowerCaseSearchText),
       );
       setSearchStoreList(filteredStores);
     }
@@ -137,6 +143,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
       <View>
         <View style={styles.searchContainer}>
           <TextInput
+            keyboardType="email-address"
             style={styles.searchInput}
             placeholder="이미 있는 식당은 아닌가요?"
             placeholderTextColor="#B6BE6A"
