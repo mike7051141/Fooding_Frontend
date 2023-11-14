@@ -22,8 +22,8 @@ type MainPageScreenProps = NativeStackScreenProps<
 
 function AddRestPage({navigation}: MainPageScreenProps) {
   // RestPage로 이동 (식당 페이지)
-  const toRestPage = (storeId: number) => {
-    navigation.navigate('RestPage', {storeid: storeId});
+  const toRestPage = (storeid: number) => {
+    navigation.navigate('RestPage', {storeid: storeid});
   };
 
   // AddRestWritePage로 이동 (식당 추가 페이지)
@@ -46,7 +46,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     rating: number;
     address: string;
     closeHour: string;
-    storeId: number;
+    storeid: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -71,7 +71,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               rating: storeItem.totalRate,
               address: storeItem.address,
               closeHour: storeItem.closeHour,
-              storeId: storeItem.storeId.toString(),
+              storeid: storeItem.storeId,
               img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -91,10 +91,10 @@ function AddRestPage({navigation}: MainPageScreenProps) {
 
   // 식당 이름 검색 기능
   const handleSearchChange = (text: string) => {
-    const lowerCaseSearchText = text.toLowerCase(); // 검색어를 소문자로 변환
-    setSearchStore(lowerCaseSearchText);
+    setSearchStore(text);
+    console.log('입력한 검색어 : ' + text);
 
-    if (lowerCaseSearchText === '') {
+    if (text === '') {
       // 검색어가 빈 string 값일 때 다시 식당 전체 조회 기능
       const researchStoreList = async () => {
         try {
@@ -115,7 +115,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 rating: storeItem.totalRate,
                 address: storeItem.address,
                 closeHour: storeItem.closeHour,
-                storeId: storeItem.storeId.toString(),
+                storeid: storeItem.storeId.toString(),
                 // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
                 img: require('../assets/image22.png'),
               })),
@@ -131,7 +131,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     } else {
       // 검색어가 빈 string이 아닐 경우 해당 검색어를 포함한 식당들만 출력
       const filteredStores = searchStoreList.filter(storeItem =>
-        storeItem.name.toLowerCase().includes(lowerCaseSearchText),
+        storeItem.name.includes(text),
       );
       setSearchStoreList(filteredStores);
     }
@@ -160,7 +160,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
         {searchStoreList.map((store, index) => (
-          <Pressable onPress={() => toRestPage(store.storeId)} key={index}>
+          <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
             <RestItem
               key={index}
               name={store.name}

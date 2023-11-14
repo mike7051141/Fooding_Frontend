@@ -12,6 +12,7 @@ import MapPage from '../pages/MapPage';
 import ProfilePage from '../pages/ProfilePage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestPage from '../pages/RestPage';
+import RestFoodPage from '../pages/RestFoodPage';
 import MainTabNavigator from './MainTabNavigator';
 import UpdatePage from '../pages/UpdatePage';
 import AddRestPage from '../pages/AddRestPage';
@@ -30,6 +31,7 @@ export type MainPageStackParamList = {
   RestListPage: {screen: string};
   SearchPage: undefined;
   RestPage: {storeid: number};
+  RestFoodPage: {storeid: number};
   KoreaFoodPage: undefined;
   UpdatePage: undefined;
   ProfilePage: undefined;
@@ -94,6 +96,13 @@ function MainStackList() {
         component={RestPage}
         options={{headerShown: false}}
       />
+
+      <Stack1.Screen
+        name="RestFoodPage"
+        component={RestFoodPage}
+        options={{headerShown: false}}
+      />
+
       <Stack1.Screen
         name="UpdatePage"
         component={UpdatePage}

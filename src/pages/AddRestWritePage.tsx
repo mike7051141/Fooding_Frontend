@@ -373,7 +373,9 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
           <Ionicons name="camera-outline" size={25} color={'black'} />
           <Text style={styles.text}>사진을 추가해 주세요</Text>
         </View>
-        <View></View>
+        <View>
+          <Text> // 사진 추가할 수 있는 컴포넌트 추가 필요</Text>
+        </View>
         <View>
           <Text style={styles.text}>이제 메뉴를 추가해볼까요?</Text>
         </View>

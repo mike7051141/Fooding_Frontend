@@ -71,6 +71,7 @@ function RestPage({navigation}: MainPageScreenProps) {
   };
   const route = useRoute();
   const storeId = route.params.storeid;
+  const copyStoreId = storeId;
   const [restData, setRestData] = useState(null);
 
   useEffect(() => {
@@ -78,7 +79,7 @@ function RestPage({navigation}: MainPageScreenProps) {
       try {
         const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
         //console.log(token);
-        console.log(storeId);
+        console.log('가게 id : ', storeId);
         const response = await axios.get(
           `http://kymokim.iptime.org:11080/api/store/get/${storeId}`,
           {
@@ -348,7 +349,9 @@ function RestPage({navigation}: MainPageScreenProps) {
           </Pressable>
         </View>
         <View>
-          {currentPage === 'RestFoodPage' && <RestFoodPage />}
+          {currentPage === 'RestFoodPage' && (
+            <RestFoodPage storeId={copyStoreId} />
+          )}
           {currentPage === 'RestMapPage' && <RestMapPage />}
           {currentPage === 'RestReviewPage' && <RestReviewPage />}
           {currentPage === 'RestLivePage' && <RestLivePage />}
