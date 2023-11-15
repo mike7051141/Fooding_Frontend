@@ -18,12 +18,13 @@ import axios from 'axios';
 
 type SearchPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
-  'SearchPage'
+  'SearchPage' | 'RestFoodPage'
 >;
 
 function SearchPage({navigation}: SearchPageScreenProps) {
-  const toRestPage = (storeId: number) => {
-    navigation.navigate('RestPage', {storeid: storeId});
+  const toRestPage = (storeid: number) => {
+    console.log('SearchPage에서 넘긴 storeid : ', storeid);
+    navigation.navigate('RestPage', {storeid: storeid});
   };
 
   // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
@@ -32,7 +33,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
     rating: number;
     address: string;
     closeHour: string;
-    storeId: number;
+    storeid: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -62,7 +63,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               rating: storeItem.totalRate,
               address: storeItem.address,
               closeHour: storeItem.closeHour,
-              storeId: storeItem.storeId.toString(),
+              storeid: storeItem.storeId.toString(),
               img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -108,7 +109,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               rating: storeItem.totalRate,
               address: storeItem.address,
               closeHour: storeItem.closeHour,
-              storeId: storeItem.storeId.toString(),
+              storeid: storeItem.storeId,
               img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
             })),
           );
@@ -150,7 +151,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
       <ScrollView
         style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
         {searchStoreList.map((store, index) => (
-          <Pressable onPress={() => toRestPage(store.storeId)} key={index}>
+          <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
             <SearchStore
               key={index}
               name={store.name}

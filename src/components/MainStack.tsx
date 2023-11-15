@@ -116,7 +116,7 @@ function MainStackList() {
       <Stack1.Screen
         name="AddRestPage"
         component={AddRestPage}
-        options={{headerShown: true}}
+        options={{headerShown: false}}
       />
       <Stack1.Screen
         name="AuthRegisterPage"

@@ -115,7 +115,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 rating: storeItem.totalRate,
                 address: storeItem.address,
                 closeHour: storeItem.closeHour,
-                storeid: storeItem.storeId.toString(),
+                storeid: storeItem.storeId,
                 // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
                 img: require('../assets/image22.png'),
               })),
@@ -139,45 +139,59 @@ function AddRestPage({navigation}: MainPageScreenProps) {
 
   return (
     // 화면 전체적인 UI
-    <View style={styles.container}>
-      <View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            keyboardType="email-address"
-            style={styles.searchInput}
-            placeholder="이미 있는 식당은 아닌가요?"
-            placeholderTextColor="#B6BE6A"
-            value={searchStore}
-            onChangeText={handleSearchChange}
-          />
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search-outline" size={30} color="#B6BE6A" />
-          </TouchableOpacity>
+    <>
+      {/* 상단바 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>식당 추가</Text>
         </View>
+        <TouchableOpacity style={styles.emptyButton}></TouchableOpacity>
       </View>
-      {/* 식당 정보 출력 컴포넌트 */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        {searchStoreList.map((store, index) => (
-          <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
-            <RestItem
-              key={index}
-              name={store.name}
-              rating={store.rating}
-              address={store.address}
-              closingTime={store.closeHour}
-              img={store.img}
+      <View style={styles.container}>
+        <View>
+          <View style={styles.searchContainer}>
+            <TextInput
+              keyboardType="email-address"
+              style={styles.searchInput}
+              placeholder="이미 있는 식당은 아닌가요?"
+              placeholderTextColor="#B6BE6A"
+              value={searchStore}
+              onChangeText={handleSearchChange}
             />
-          </Pressable>
-        ))}
-      </ScrollView>
-      <TouchableOpacity
-        style={styles.floatingButton}
-        onPress={toAddRestWritePage}>
-        <Ionicons name="duplicate-outline" size={40} color="#B6BE6A" />
-      </TouchableOpacity>
-    </View>
+            <TouchableOpacity style={styles.searchButton}>
+              <Ionicons name="search-outline" size={30} color="#B6BE6A" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* 식당 정보 출력 컴포넌트 */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}>
+          {searchStoreList.map((store, index) => (
+            <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
+              <RestItem
+                key={index}
+                name={store.name}
+                rating={store.rating}
+                address={store.address}
+                closingTime={store.closeHour}
+                img={store.img}
+              />
+            </Pressable>
+          ))}
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={toAddRestWritePage}>
+          <Ionicons name="duplicate-outline" size={40} color="#B6BE6A" />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
@@ -276,6 +290,32 @@ const RestItem = ({
 };
 
 const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  headerTitleContainer: {
+    flex: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 'auto', // 중앙 정렬을 위해 marginLeft을 auto로 지정
+    color: 'black',
+  },
+  backButton: {
+    flex: 1,
+  },
+  emptyButton: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',

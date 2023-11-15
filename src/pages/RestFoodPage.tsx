@@ -3,27 +3,6 @@ import {View, Text, Image, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {retrieveToken} from '../store/storage';
 import axios from 'axios';
-import {useRoute} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {MainPageStackParamList} from '../components/MainStack';
-
-const RestFoodsData = [
-  {
-    name: '1번 음식',
-    explanation: 'good',
-    price: '10,000',
-  },
-  {
-    name: '2번 음식',
-    explanation: 'amazing',
-    price: '20,000',
-  },
-  {
-    name: '3번 음식',
-    explanation: 'hmm...',
-    price: '30,000',
-  },
-];
 
 interface menuListData {
   menuId: number;
@@ -34,25 +13,16 @@ interface menuListData {
   storeId: number;
 }
 
-type MainPageScreenProps = NativeStackScreenProps<MainPageStackParamList>;
-
-function RestFoodPage({
-  storeId,
-  navigation,
-}: {
-  storeId: number;
-  navigation: MainPageScreenProps;
-}) {
+function RestFoodPage({storeid}: {storeid: number}) {
   const [menuList, setMenuList] = useState<Array<menuListData>>([]);
 
   useEffect(() => {
-    console.log('받아온 가게 id: ', storeId);
-
+    console.log('RestFoodPage에서 받은 storeid : ', storeid);
     const fetchData = async () => {
       try {
         const token = await retrieveToken();
         const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/menu/get',
+          `http://kymokim.iptime.org:11080/api/store/get/${storeid}`,
           {
             headers: {
               'x-auth-token': token,
@@ -60,27 +30,18 @@ function RestFoodPage({
           },
         );
         const data = response.data.data;
-        if (data && Array.isArray(data)) {
-          const filteredMenu = data.filter(menu => menu.storeId === storeId);
-          setMenuList(
-            filteredMenu.map(menuItem => ({
-              menuId: menuItem.menuId,
-              menuName: menuItem.menuName,
-              menuContent: menuItem.menuContent,
-              price: menuItem.price,
-              menuLikeCount: menuItem.menuLikeCount,
-              storeId: menuItem.storeId,
-            })),
-          );
+        if (data && data.menuList && Array.isArray(data.menuList)) {
+          setMenuList(data.menuList);
         } else {
           console.error('메뉴에 대한 데이터가 올바르게 반환되지 않았습니다.');
         }
+        // 이 부분에 어떤 코드를 추가해야할지 모르겠네
       } catch (error) {
-        console.error('메뉴 조회 실패', error);
+        console.error('데이터 가져오기 실패', error);
       }
     };
     fetchData();
-  }, [storeId, navigation]);
+  }, [storeid]);
 
   return (
     <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
@@ -129,9 +90,9 @@ const MenuItem = ({
             {menuName}
           </Text>
         </View>
-        <View style={{flexDirection: 'row', flex: 1, marginTop: 5}}>
-          <Text style={{color: 'black', marginLeft: 0, fontSize: 15}}>
-            메뉴 소개 : {menuContent}
+        <View style={{flexDirection: 'row', flex: 1, marginTop: 7}}>
+          <Text style={{color: 'black', marginLeft: 2, fontSize: 15}}>
+            {menuContent}
           </Text>
         </View>
 

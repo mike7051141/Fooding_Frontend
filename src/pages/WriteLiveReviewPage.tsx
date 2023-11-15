@@ -64,41 +64,55 @@ function WriteLiveReviewPage({navigation}: MainPageScreenProps) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.searchContainer}>
-          <TouchableOpacity onPress={toWriteLiveReviewSearchPage}>
-            <Text style={styles.searchInput}>
-              어떤 식당에 실시간 리뷰를 작성할건가요?
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search-outline" size={30} color="#B6BE6A" />
-          </TouchableOpacity>
+    <>
+      {/* 상단바 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>실시간 리뷰 작성</Text>
         </View>
-        <View style={styles.headerFixInfo}>
-          <Text style={styles.headerFixText}>최근 내가 남긴 후기</Text>
-          <Ionicons name="chatbox-outline" size={50} color={'black'} />
-        </View>
+        <TouchableOpacity style={styles.emptyButton}></TouchableOpacity>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        {LiveReviewData.map((LiveReview, index) => (
-          <Pressable key={index}>
-            <LiveReviewItem
-              key={index}
-              myImg={LiveReview.myImg}
-              userName={LiveReview.userName}
-              rating={LiveReview.rating}
-              userLiveReview={LiveReview.userLiveReview}
-              restName={LiveReview.restName}
-              foodImg={LiveReview.foodImg}
-            />
-          </Pressable>
-        ))}
-      </ScrollView>
-    </View>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.searchContainer}>
+            <TouchableOpacity onPress={toWriteLiveReviewSearchPage}>
+              <Text style={styles.searchInput}>
+                어떤 식당에 실시간 리뷰를 작성할건가요?
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.searchButton}>
+              <Ionicons name="search-outline" size={30} color="#B6BE6A" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.headerFixInfo}>
+            <Text style={styles.headerFixText}>최근 내가 남긴 후기</Text>
+            <Ionicons name="chatbox-outline" size={50} color={'black'} />
+          </View>
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}>
+          {LiveReviewData.map((LiveReview, index) => (
+            <Pressable key={index}>
+              <LiveReviewItem
+                key={index}
+                myImg={LiveReview.myImg}
+                userName={LiveReview.userName}
+                rating={LiveReview.rating}
+                userLiveReview={LiveReview.userLiveReview}
+                restName={LiveReview.restName}
+                foodImg={LiveReview.foodImg}
+              />
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
@@ -197,6 +211,32 @@ const LiveReviewImages = ({liveReviewImg}: {liveReviewImg: any}) => {
 };
 
 const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  headerTitleContainer: {
+    flex: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 'auto', // 중앙 정렬을 위해 marginLeft을 auto로 지정
+    color: 'black',
+  },
+  backButton: {
+    flex: 1,
+  },
+  emptyButton: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',

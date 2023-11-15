@@ -63,41 +63,55 @@ function WriteReviewPage({navigation}: MainPageScreenProps) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.searchContainer}>
-          <TouchableOpacity onPress={toWriteReviewSearchPage}>
-            <Text style={styles.searchInput}>
-              어떤 식당에 후기를 작성할건가요?
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search-outline" size={30} color="#B6BE6A" />
-          </TouchableOpacity>
+    <>
+      {/* 상단바 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>후기 작성</Text>
         </View>
-        <View style={styles.headerFixInfo}>
-          <Text style={styles.headerFixText}>최근 내가 남긴 후기</Text>
-          <Ionicons name="chatbox-outline" size={50} color={'black'} />
-        </View>
+        <TouchableOpacity style={styles.emptyButton}></TouchableOpacity>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        {ReviewData.map((Review, index) => (
-          <Pressable key={index}>
-            <ReviewItem
-              key={index}
-              myImg={Review.myImg}
-              userName={Review.userName}
-              rating={Review.rating}
-              userReview={Review.userReview}
-              restName={Review.restName}
-              foodImg={Review.foodImg}
-            />
-          </Pressable>
-        ))}
-      </ScrollView>
-    </View>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.searchContainer}>
+            <TouchableOpacity onPress={toWriteReviewSearchPage}>
+              <Text style={styles.searchInput}>
+                어떤 식당에 후기를 작성할건가요?
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.searchButton}>
+              <Ionicons name="search-outline" size={30} color="#B6BE6A" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.headerFixInfo}>
+            <Text style={styles.headerFixText}>최근 내가 남긴 후기</Text>
+            <Ionicons name="chatbox-outline" size={50} color={'black'} />
+          </View>
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}>
+          {ReviewData.map((Review, index) => (
+            <Pressable key={index}>
+              <ReviewItem
+                key={index}
+                myImg={Review.myImg}
+                userName={Review.userName}
+                rating={Review.rating}
+                userReview={Review.userReview}
+                restName={Review.restName}
+                foodImg={Review.foodImg}
+              />
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
@@ -193,6 +207,32 @@ const ReviewImages = ({reviewImg}: {reviewImg: any}) => {
 };
 
 const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  headerTitleContainer: {
+    flex: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 'auto', // 중앙 정렬을 위해 marginLeft을 auto로 지정
+    color: 'black',
+  },
+  backButton: {
+    flex: 1,
+  },
+  emptyButton: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',

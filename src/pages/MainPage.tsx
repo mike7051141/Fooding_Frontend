@@ -146,6 +146,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
   }));
 
   const toRestPage = (storeid: number) => {
+    console.log('MainPage에서 넘긴 storeid : ', storeid);
     navigation.navigate('RestPage', {storeid: storeid});
   };
 
