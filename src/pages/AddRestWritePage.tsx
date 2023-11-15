@@ -118,8 +118,8 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
         const {lat, lng} = location;
         const info = `주소: ${address} - 위도: ${lat}, 경도: ${lng}`;
         setLocationInfo(info);
-        setLongitude(lat);
-        setLatitude(lng);
+        setLongitude(lng);
+        setLatitude(lat);
         console.log(info);
       } else {
         console.error(response.data);

@@ -16,19 +16,81 @@ import NaverMapView, {
   Polygon,
 } from 'react-native-nmap';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
-const LikeRestData = [
-  {
-    name: '땀땀',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 12-5',
-    closingTime: '02:00',
-  },
-];
 function MapPage() {
-  const P0 = {latitude: 37.27566, longitude: 127.13245};
+  const [searchStoreList, setSearchStoreList] = useState<
+    Array<SearchStoreData>
+  >([]);
+  const [selectedMarker, setSelectedMarker] = useState(0);
 
-  const [currentLocation, setCurrentLocation] = useState(P0); // 초기 값으로 P0를 설정합니다.
+  interface SearchStoreData {
+    name: string;
+    rating: number;
+    address: string;
+    closeHour: string;
+    latitude: number;
+    longitude: number;
+    storeid: number;
+    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken();
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/store/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          setSearchStoreList(
+            data.map(storeItem => ({
+              name: storeItem.storeName,
+              rating: storeItem.totalRate,
+              address: storeItem.address,
+              closeHour: storeItem.closeHour,
+              latitude: parseFloat(storeItem.latitude),
+              longitude: parseFloat(storeItem.longitude),
+              storeid: storeItem.storeId,
+              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+            })),
+          );
+          console.log(data);
+        } else {
+          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+        }
+      } catch (error) {
+        console.error('식당 조회 실패', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const mark = searchStoreList.map(store => ({
+    storeid: store.storeid,
+    latitude: store.latitude,
+    longitude: store.longitude,
+  }));
+
+  const markInfo = searchStoreList.map(store => ({
+    storeid: store.storeid,
+    name: store.name,
+    rating: store.rating,
+    address: store.address,
+    closingTime: store.closeHour,
+  }));
+
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 37.27566,
+    longitude: 127.13245,
+  }); // 초기 값으로 P0를 설정합니다.
 
   // 사용자의 현재 위치를 가져오는 함수
   const getCurrentLocation = () => {
@@ -47,10 +109,10 @@ function MapPage() {
   useEffect(() => {
     getCurrentLocation();
 
-    // 3초마다 현재 위치 업데이트
+    // 10초마다 현재 위치 업데이트
     const updateLocationInterval = setInterval(() => {
       getCurrentLocation();
-    }, 3000);
+    }, 10000);
 
     return () => {
       clearInterval(updateLocationInterval); // 컴포넌트 언마운트 시 타이머 해제
@@ -68,51 +130,52 @@ function MapPage() {
           zoom: 15,
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
-          //latitude: (currentLocation.latitude + P0.latitude) / 2,
-          //longitude: (currentLocation.longitude + P0.longitude) / 2,
         }} // 중심 위치를 현재 위치로 설정합니다.
       >
         {/* 현재 위치 마커 추가 */}
+
+        {mark.map((point, index) => {
+          return (
+            <Marker
+              key={point.storeid}
+              coordinate={{
+                latitude: point.latitude,
+                longitude: point.longitude,
+              }}
+              pinColor="blue"
+              onClick={() => {
+                // 클릭한 마커의 정보를 선택된 마커로 설정
+                setSelectedMarker(point.storeid);
+                console.log(point.storeid);
+              }}
+            />
+          );
+        })}
+
         <Marker
+          pinColor="green"
           coordinate={{
             latitude: currentLocation.latitude,
             longitude: currentLocation.longitude,
           }}
           caption="현재 위치"
         />
-        <Marker
-          coordinate={P0}
-          pinColor="red"
-          onClick={() => console.warn('강남대!')}
-        />
       </NaverMapView>
-      {/*
-      <TouchableOpacity
-        onPress={() => getCurrentLocation()} // 버튼을 누를 때 현재 위치 업데이트
-        style={{
-          position: 'absolute',
-          top: 20,
-          right: 20,
-          backgroundColor: 'blue',
-          padding: 10,
-          borderRadius: 5,
-        }}>
-        <Text style={{color: 'white'}}>Update Current Location</Text>
-      </TouchableOpacity>
-      */}
-      {LikeRestData.map((restaurant, index) => (
+
+      {markInfo.map((restaurant, index) => (
         <View
           key={index}
           style={{
             position: 'absolute',
-            bottom: 20,
-            left: screenWidth * 0.05,
-            width: screenWidth * 0.9,
+            bottom: 10,
+            left: screenWidth * 0.02,
+            width: screenWidth * 0.96,
             height: 'auto',
             backgroundColor: 'white',
             borderWidth: 2,
             borderColor: '#B6BE6A',
             borderRadius: 10,
+            display: selectedMarker === restaurant.storeid ? 'flex' : 'none', // 선택된 마커에만 표시
           }}>
           <View
             style={{

@@ -5,7 +5,7 @@ import Geolocation from '@react-native-community/geolocation';
 import TMap from '../modules/TMap';
 
 function RestMapPage() {
-  const P0 = {latitude: 37.27566, longitude: 127.13245};
+  const P0 = {latitude: 37.2524629, longitude: 127.1206963};
   const [currentLocation, setCurrentLocation] = useState(P0); // 초기 값으로 P0를 설정합니다.
 
   // 사용자의 현재 위치를 가져오는 함수
