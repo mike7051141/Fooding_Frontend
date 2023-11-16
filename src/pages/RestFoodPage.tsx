@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {retrieveToken} from '../store/storage';
 import axios from 'axios';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MainPageStackParamList} from '../components/MainStack';
 
 interface menuListData {
   menuId: number;
@@ -13,11 +15,25 @@ interface menuListData {
   storeId: number;
 }
 
-function RestFoodPage({storeid}: {storeid: number}) {
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'AddMenuPage'
+>;
+
+type RestFoodPageProps = {
+  storeid: number;
+  navigation: MainPageScreenProps['navigation'];
+};
+
+function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
+  const copyStoreId = storeid;
+  const toAddMenuPage = () => {
+    navigation.navigate('AddMenuPage', {copyStoreId});
+  };
+
   const [menuList, setMenuList] = useState<Array<menuListData>>([]);
 
   useEffect(() => {
-    console.log('RestFoodPage에서 받은 storeid : ', storeid);
     const fetchData = async () => {
       try {
         const token = await retrieveToken();
@@ -44,16 +60,27 @@ function RestFoodPage({storeid}: {storeid: number}) {
   }, [storeid]);
 
   return (
-    <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
-      {menuList.map((menuItem, index) => (
-        <MenuItem
-          key={index}
-          menuName={menuItem.menuName}
-          menuContent={menuItem.menuContent}
-          price={menuItem.price}
-        />
-      ))}
-    </View>
+    <>
+      <View style={styles.AddMenuWrapper}>
+        <TouchableOpacity style={styles.AddMenu} onPress={toAddMenuPage}>
+          <Text style={{color: 'gray', fontSize: 12}}>메뉴 추가</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.AddMenu}>
+          <Text style={{color: 'gray', fontSize: 12}}>메뉴 수정</Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
+        {menuList.map((menuItem, index) => (
+          <MenuItem
+            key={index}
+            menuName={menuItem.menuName}
+            menuContent={menuItem.menuContent}
+            price={menuItem.price}
+          />
+        ))}
+      </View>
+    </>
   );
 }
 
@@ -117,6 +144,24 @@ const MenuItem = ({
 };
 
 const styles = StyleSheet.create({
+  AddMenuWrapper: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 40,
+    alignItems: 'center', // 가로 정렬
+    justifyContent: 'flex-end', // 세로 정렬
+  },
+  AddMenu: {
+    width: 70,
+    height: 30,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#B6BE6A',
+    alignItems: 'center', // 가로 정렬
+    justifyContent: 'center', // 세로 정렬
+    marginRight: 5,
+  },
   image: {
     alignItems: 'center',
     width: 100,

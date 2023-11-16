@@ -302,7 +302,6 @@ function RestPage({navigation}: MainPageScreenProps) {
             borderTopWidth: 1,
             paddingHorizontal: 40,
             paddingVertical: 20,
-            marginBottom: 30,
           }}>
           <Pressable
             style={{flex: 1}}
@@ -351,7 +350,7 @@ function RestPage({navigation}: MainPageScreenProps) {
         </View>
         <View>
           {currentPage === 'RestFoodPage' && (
-            <RestFoodPage storeid={copyStoreId} />
+            <RestFoodPage storeid={copyStoreId} navigation={navigation} />
           )}
           {currentPage === 'RestMapPage' && (
             <RestMapPage storeid={copyStoreId} />
