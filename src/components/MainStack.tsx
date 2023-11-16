@@ -32,6 +32,7 @@ export type MainPageStackParamList = {
   SearchPage: undefined;
   RestPage: {storeid: number};
   RestFoodPage: {storeid: number};
+  RestMapPage: {storeid: number};
   KoreaFoodPage: undefined;
   UpdatePage: undefined;
   ProfilePage: undefined;
@@ -45,6 +46,7 @@ export type MainPageStackParamList = {
   AddRestWritePage: {resetState: boolean};
   WriteReviewSearchPage: undefined;
   WriteLiveReviewSearchPage: undefined;
+  MapPage: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -156,6 +158,11 @@ function MainStackList() {
       <Stack1.Screen
         name="WriteLiveReviewSearchPage"
         component={WriteLiveReviewSearchPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="MapPage"
+        component={MapPage}
         options={{headerShown: false}}
       />
     </Stack1.Navigator>

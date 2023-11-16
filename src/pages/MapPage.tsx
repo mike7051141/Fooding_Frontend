@@ -18,12 +18,22 @@ import NaverMapView, {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {retrieveToken} from '../store/storage';
 import axios from 'axios';
+import {MainPageStackParamList} from '../components/MainStack';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-function MapPage() {
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'RestPage'
+>;
+
+function MapPage({navigation}: MainPageScreenProps) {
   const [searchStoreList, setSearchStoreList] = useState<
     Array<SearchStoreData>
   >([]);
   const [selectedMarker, setSelectedMarker] = useState(0);
+  const toRestPage = (storeid: number) => {
+    navigation.navigate('RestPage', {storeid: storeid});
+  };
 
   interface SearchStoreData {
     name: string;
@@ -163,8 +173,9 @@ function MapPage() {
       </NaverMapView>
 
       {markInfo.map((restaurant, index) => (
-        <View
+        <TouchableOpacity
           key={index}
+          onPress={() => toRestPage(restaurant.storeid)}
           style={{
             position: 'absolute',
             bottom: 10,
@@ -234,7 +245,7 @@ function MapPage() {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

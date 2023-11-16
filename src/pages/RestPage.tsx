@@ -353,7 +353,9 @@ function RestPage({navigation}: MainPageScreenProps) {
           {currentPage === 'RestFoodPage' && (
             <RestFoodPage storeid={copyStoreId} />
           )}
-          {currentPage === 'RestMapPage' && <RestMapPage />}
+          {currentPage === 'RestMapPage' && (
+            <RestMapPage storeid={copyStoreId} />
+          )}
           {currentPage === 'RestReviewPage' && <RestReviewPage />}
           {currentPage === 'RestLivePage' && <RestLivePage />}
         </View>
