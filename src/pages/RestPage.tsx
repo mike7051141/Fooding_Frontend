@@ -143,21 +143,7 @@ function RestPage({navigation}: MainPageScreenProps) {
                   <Ionicons name="heart-outline" size={30} color={'black'} />
                   <Text style={{color: 'black', marginLeft: 0}}>좋아요</Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    marginHorizontal: 5,
-                  }}>
-                  <Ionicons
-                    name="fast-food-outline"
-                    size={30}
-                    color={'black'}
-                  />
-                  <Text style={{color: 'black', marginRight: 0}}>
-                    메뉴 수정
-                  </Text>
-                </View>
+
                 <View
                   style={{
                     flexDirection: 'column',
