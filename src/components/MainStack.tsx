@@ -25,6 +25,7 @@ import WriteReviewSearchPage from '../pages/WriteReviewSearchPage';
 import WriteLiveReviewSearchPage from '../pages/WriteLiveReviewSearchPage';
 import StoreInfoEditPage from '../pages/StoreInfoEditPage';
 import AddMenuPage from '../pages/AddMenuPage';
+import UpdateMenuPage from '../pages/UpdateMenuPage';
 
 export type MainPageStackParamList = {
   MainPage: undefined;
@@ -49,6 +50,7 @@ export type MainPageStackParamList = {
   WriteLiveReviewSearchPage: undefined;
   MapPage: undefined;
   AddMenuPage: {storeid: number};
+  UpdateMenuPage: {menuId: number};
 };
 
 const Tab = createBottomTabNavigator();
@@ -170,6 +172,11 @@ function MainStackList() {
       <Stack1.Screen
         name="AddMenuPage"
         component={AddMenuPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="UpdateMenuPage"
+        component={UpdateMenuPage}
         options={{headerShown: false}}
       />
     </Stack1.Navigator>

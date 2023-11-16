@@ -2,33 +2,33 @@ import React, {useCallback, useState} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
+  ScrollView,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   Image,
+  StyleSheet,
   Alert,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
-import {retrieveToken} from '../store/storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import {retrieveToken} from '../store/storage';
 
-type MainPageScreenProps = NativeStackScreenProps<
-  MainPageStackParamList,
-  'AddMenuPage'
->;
+type MainPageScreenProps = NativeStackScreenProps<MainPageStackParamList>;
 
-type AddMenuPageProps = {
-  route: any;
+type UpdateMenuPageProps = {
+  route: {
+    params: {
+      menuId: number; // menuId 추가
+    };
+  };
   navigation: MainPageScreenProps['navigation'];
 };
 
-function AddMenuPage({route, navigation}: AddMenuPageProps) {
-  const {copyStoreId} = route.params;
-  console.log('메뉴 추가 페이지로 넘어온 storeId : ', copyStoreId);
+function UpdateMenuPage({route, navigation}: UpdateMenuPageProps) {
+  const {menuId} = route.params;
 
   // 입력받은 메뉴 이름, 메뉴 소개, 메뉴 가격 저장하는 변수
   const [menuName, setMenuName] = useState('');
@@ -38,30 +38,29 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
   // 중복 요청 방지 변수
   const [loading, setLoading] = useState(false);
 
-  const AddMenu = useCallback(async () => {
+  const UpdateMenu = useCallback(async () => {
     if (loading) {
       return;
     }
     if (!menuName || !menuName.trim()) {
-      return Alert.alert('알림', '메뉴 이름을 입력해주세요.');
+      return Alert.alert('알림', '수정할 메뉴의 이름을 입력해주세요.');
     }
     if (!menuIntroduction || !menuIntroduction.trim()) {
-      return Alert.alert('알림', '메뉴 소개를 입력해주세요.');
+      return Alert.alert('알림', '수정할 메뉴의 소개를 입력해주세요.');
     }
     if (!menuPrice || !menuPrice.trim()) {
-      return Alert.alert('알림', '메뉴 가격을 입력해주세요.');
+      return Alert.alert('알림', '수정할 메뉴의 가격을 입력해주세요.');
     }
     try {
-      // 이 부분에 이제 새로 추가한 메뉴 put 방식으로 update 하기 (UpdatePage.tsx 참고)
       setLoading(true);
       const token = await retrieveToken();
-      const response = await axios.post(
-        'http://kymokim.iptime.org:11080/api/menu/create',
+      const response = await axios.put(
+        'http://kymokim.iptime.org:11080/api/menu/update',
         {
           menuContent: menuIntroduction,
+          menuId: menuId,
           menuName: menuName,
           price: menuPrice,
-          storeId: copyStoreId,
         },
         {
           headers: {
@@ -69,22 +68,15 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
           },
         },
       );
-      console.log('새로운 메뉴 추가 완료');
+      console.log('메뉴 정보 수정 완료');
       navigation.goBack();
-      Alert.alert('알림', '새로운 메뉴 추가 완료');
+      Alert.alert('알림', '메뉴 수정 완료');
     } catch (error) {
-      console.error('새로운 메뉴 추가 실패', error);
+      console.error('메뉴 정보 수정 실패', error);
     } finally {
       setLoading(false);
     }
-  }, [
-    // 넣어야 할 변수들 넣기
-    loading,
-    menuName,
-    menuIntroduction,
-    menuPrice,
-    copyStoreId,
-  ]);
+  }, [loading, menuIntroduction, menuId, menuName, menuPrice]);
 
   return (
     <DismissKeyboardView style={styles.wrapper}>
@@ -98,10 +90,10 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerTitle}>메뉴 추가</Text>
+            <Text style={styles.headerTitle}>메뉴 수정</Text>
           </View>
           {/* 완료 버튼 */}
-          <TouchableOpacity style={styles.emptyButton} onPress={AddMenu}>
+          <TouchableOpacity style={styles.emptyButton} onPress={UpdateMenu}>
             <Ionicons name="checkmark-outline" size={24} color="green" />
           </TouchableOpacity>
         </View>
@@ -114,7 +106,7 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
           </View>
           <TextInput
             style={styles.menuInput}
-            placeholder="메뉴의 이름을 입력해주세요."
+            placeholder="수정할 메뉴의 이름을 입력해주세요."
             value={menuName}
             onChangeText={text => setMenuName(text)}
           />
@@ -129,7 +121,7 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
           </View>
           <TextInput
             style={styles.menuInput}
-            placeholder="메뉴의 소개를 입력해주세요."
+            placeholder="수정할 메뉴의 소개를 입력해주세요."
             value={menuIntroduction}
             onChangeText={text => setMenuIntroduction(text)}
           />
@@ -139,14 +131,16 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
           </View>
           <TextInput
             style={styles.menuInput}
-            placeholder="메뉴의 가격을 입력해주세요."
+            placeholder="수정할 메뉴의 가격을 입력해주세요."
             keyboardType="numeric"
             value={menuPrice}
             onChangeText={text => setMenuPrice(text)}
           />
           <View style={{flexDirection: 'row'}}>
             <Ionicons name="images-outline" size={22} color={'black'} />
-            <Text style={styles.holdText}>메뉴의 사진을 첨부해주세요.</Text>
+            <Text style={styles.holdText}>
+              수정할 메뉴의 사진을 첨부해주세요.
+            </Text>
             <TouchableOpacity style={styles.imageUpload}>
               <Text style={{color: '#B6BE6A', fontSize: 11}}>추가</Text>
             </TouchableOpacity>
@@ -230,4 +224,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddMenuPage;
+export default UpdateMenuPage;

@@ -13,11 +13,12 @@ interface menuListData {
   price: number;
   menuLikeCount: number;
   storeId: number;
+  navigation: MainPageScreenProps['navigation'];
 }
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
-  'AddMenuPage'
+  'AddMenuPage' | 'UpdateMenuPage'
 >;
 
 type RestFoodPageProps = {
@@ -57,7 +58,12 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
       }
     };
     fetchData();
-  }, [storeid]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [storeid, navigation]);
 
   return (
     <>
@@ -65,18 +71,17 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
         <TouchableOpacity style={styles.AddMenu} onPress={toAddMenuPage}>
           <Text style={{color: 'gray', fontSize: 12}}>메뉴 추가</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.AddMenu}>
-          <Text style={{color: 'gray', fontSize: 12}}>메뉴 수정</Text>
-        </TouchableOpacity>
       </View>
       <View
         style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
         {menuList.map((menuItem, index) => (
           <MenuItem
             key={index}
+            menuId={menuItem.menuId}
             menuName={menuItem.menuName}
             menuContent={menuItem.menuContent}
             price={menuItem.price}
+            navigation={navigation}
           />
         ))}
       </View>
@@ -88,22 +93,30 @@ const MenuItem = ({
   //name,
   //explanation,
   //price,
+  menuId, // 메뉴 수정할 때 넘길 menuId
   menuName,
   menuContent,
   price,
+  navigation,
 }: {
   //name: string;
   //explanation: string;
   //price: string;
+  menuId: number;
   menuName: string;
   menuContent: string;
   price: number;
+  navigation: MainPageScreenProps['navigation'];
 }) => {
+  const toUpdateMenuPage = () => {
+    navigation.navigate('UpdateMenuPage', {menuId});
+  };
   return (
     <View
       style={{
         flexDirection: 'row',
         marginHorizontal: 10,
+        marginTop: 10,
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderColor: 'lightgray',
@@ -113,7 +126,7 @@ const MenuItem = ({
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 23, color: 'black', fontWeight: 'bold'}}>
+          <Text style={{fontSize: 21, color: 'black', fontWeight: 'bold'}}>
             {menuName}
           </Text>
         </View>
@@ -131,12 +144,24 @@ const MenuItem = ({
             marginRight: 10,
           }}>
           <Text style={{color: 'red', fontSize: 18}}>{price} 원</Text>
-          <Ionicons
-            name="heart-outline"
-            size={30}
-            color={'black'}
-            style={{marginRight: 15}}
-          />
+          <View style={styles.menuSettings}>
+            <TouchableOpacity>
+              <Ionicons
+                name="heart-outline"
+                size={30}
+                color={'black'}
+                style={{marginRight: 7}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toUpdateMenuPage}>
+              <Ionicons
+                name="clipboard-outline"
+                size={30}
+                color={'black'}
+                style={{marginLeft: 7}}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -145,15 +170,14 @@ const MenuItem = ({
 
 const styles = StyleSheet.create({
   AddMenuWrapper: {
-    flexDirection: 'row',
     backgroundColor: 'white',
-    height: 40,
+    height: 35,
     alignItems: 'center', // 가로 정렬
-    justifyContent: 'flex-end', // 세로 정렬
+    justifyContent: 'center', // 세로 정렬
   },
   AddMenu: {
-    width: 70,
-    height: 30,
+    width: 400,
+    height: 25,
     backgroundColor: 'white',
     borderWidth: 1,
     borderRadius: 8,
@@ -184,6 +208,9 @@ const styles = StyleSheet.create({
     elevation: 7, // Android에서 그림자 효과 추가
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  menuSettings: {
+    flexDirection: 'row',
   },
 });
 
