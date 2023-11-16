@@ -184,38 +184,6 @@ function MainTabNavigator() {
       />
 
       <Tab.Screen
-        name="AddRestWritePage"
-        component={AddRestWritePage}
-        options={{
-          title: '식당 추가',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: 'black',
-          },
-          headerStyle: {
-            borderBottomWidth: 1.5,
-            borderColor: 'lightgray',
-            backgroundColor: 'white',
-          },
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => goToBack()}>
-              <Ionicons
-                name="arrow-back-outline"
-                size={25}
-                color="black"
-                style={{marginLeft: 13}}
-              />
-            </TouchableOpacity>
-          ),
-          tabBarShowLabel: false,
-          headerShown: true,
-          tabBarButton: () => null,
-          tabBarLabel: () => null,
-        }}
-      />
-      <Tab.Screen
         name="StoreInfoEditPage"
         component={StoreInfoEditPage}
         options={{

@@ -211,201 +211,243 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     setLoading(false);
   }, [selectedCloseTime]);
   return (
-    <ScrollView style={{backgroundColor: 'white'}}>
-      <DismissKeyboardView>
-        <View style={styles.View1}>
-          <Ionicons name="storefront-outline" size={25} color={'black'} />
-          <Text style={styles.text}>상호명을 입력해 주세요</Text>
+    <>
+      {/* 상단바 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>식당 추가</Text>
         </View>
-        <View>
-          <TextInput
-            style={styles.Textinput}
-            value={storeName}
-            onChangeText={text => setStoreName(text)}
-            placeholder="Fooding"
-          />
-        </View>
-        <View style={styles.View1}>
-          <Ionicons name="map-outline" size={25} color={'black'} />
-          <Text style={styles.text}>주소를 입력해 주세요</Text>
-          <View style={{flex: 1, alignItems: 'flex-end'}}>
-            <Button
-              title="주소 확인"
-              onPress={handleButtonClick}
-              color="#B6BE6A" // 버튼 색상
+        <TouchableOpacity style={styles.emptyButton}></TouchableOpacity>
+      </View>
+      <ScrollView style={{backgroundColor: 'white'}}>
+        <DismissKeyboardView>
+          <View style={styles.View1}>
+            <Ionicons name="storefront-outline" size={25} color={'black'} />
+            <Text style={styles.text}>상호명을 입력해 주세요</Text>
+          </View>
+          <View>
+            <TextInput
+              style={styles.Textinput}
+              value={storeName}
+              onChangeText={text => setStoreName(text)}
+              placeholder="Fooding"
             />
           </View>
-        </View>
-        <View>
-          <TextInput
-            style={styles.Textinput}
-            value={address}
-            onChangeText={text => setAddress(text)}
-            placeholder="강남대학교"
-          />
-        </View>
-        <View style={styles.View1}>
-          <Text style={{...styles.text, flex: 1}}>경도: {lat}</Text>
-          <Text style={{...styles.text, flex: 1}}>위도: {lng}</Text>
-        </View>
-
-        <View style={styles.View1}>
-          <Ionicons name="time-outline" size={25} color={'black'} />
-          <Text style={styles.text}>영업 시작 시간을 입력해 주세요</Text>
-        </View>
-        <View>
-          <TouchableOpacity onPress={() => setOpenConfirm(true)}>
-            <TextInput
-              pointerEvents="none"
-              style={styles.Textinput}
-              underlineColorAndroid="transparent"
-              editable={false}
-              value={selectedOpenTime}
-              onChangeText={text => setopenHour(text)}
-            />
-            <DatePicker
-              mode="time"
-              modal
-              open={openConfirm}
-              date={openDate}
-              onConfirm={date => {
-                setOpenConfirm(false);
-                setOpenDate(date);
-              }}
-              onCancel={() => {
-                setOpenConfirm(false);
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.View1}>
-          <Ionicons name="time-outline" size={25} color={'black'} />
-          <Text style={styles.text}>영업 종료 시간을 입력해 주세요</Text>
-        </View>
-        <View>
-          <TouchableOpacity onPress={() => setCloseConfirm(true)}>
-            <TextInput
-              pointerEvents="none"
-              style={styles.Textinput}
-              underlineColorAndroid="transparent"
-              editable={false}
-              value={selectedCloseTime}
-            />
-            <DatePicker
-              mode="time"
-              modal
-              open={closeConfirm}
-              date={closeDate}
-              onConfirm={date => {
-                setCloseConfirm(false);
-                setCloseDate(date);
-              }}
-              onCancel={() => {
-                setCloseConfirm(false);
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.View1}>
-          <Ionicons name="call-outline" size={25} color={'black'} />
-          <Text style={styles.text}>전화번호를 입력해 주세요</Text>
-        </View>
-        <View>
-          <TextInput
-            style={styles.Textinput}
-            value={storeNumber}
-            onChangeText={text => setStoreNumber(text)}
-            placeholder="031-1234-5678"
-          />
-        </View>
-        <View style={styles.View1}>
-          <Ionicons name="list-outline" size={25} color={'black'} />
-          <Text style={styles.text}>식당을 간단히 소개해주세요</Text>
-        </View>
-        <View>
-          <TextInput
-            style={styles.Textinput}
-            value={storeContent}
-            onChangeText={text => {
-              setStoreContent(text);
-            }}
-            placeholder="싱싱한 육준서"
-          />
-        </View>
-        <View style={styles.View1}>
-          <Ionicons name="menu-book-outline" size={25} color={'black'} />
-          <Text style={styles.text}>어떤 음식을 제공하나요?</Text>
-          <View style={{flex: 1, alignItems: 'flex-end'}}>
-            <Text style={{color: 'black'}}>{category}</Text>
-          </View>
-        </View>
-        <View style={{marginTop: 10, marginBottom: 5}}>
-          {Array.from({length: 2}).map((_, rowIndex) => (
-            <View key={rowIndex} style={{flexDirection: 'row'}}>
-              {foodCategories
-                .slice(rowIndex * 5, (rowIndex + 1) * 5)
-                .map((Category, index) => (
-                  <View
-                    style={{
-                      flex: 1,
-                      borderColor:
-                        category === Category.name ? '#B6BE6A' : 'transparent',
-                      borderWidth: category === Category.name ? 2 : 2,
-                      marginBottom: 5,
-                    }}
-                    key={index}>
-                    <TouchableOpacity
-                      onPress={() => setCategory(Category.name)}
-                      style={styles.foods}>
-                      <Image
-                        source={Category.imageSource}
-                        style={styles.image}
-                      />
-                      <Text style={styles.FoodsText}>{Category.name}</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
+          <View style={styles.View1}>
+            <Ionicons name="map-outline" size={25} color={'black'} />
+            <Text style={styles.text}>주소를 입력해 주세요</Text>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <Button
+                title="주소 확인"
+                onPress={handleButtonClick}
+                color="#B6BE6A" // 버튼 색상
+              />
             </View>
-          ))}
-        </View>
+          </View>
+          <View>
+            <TextInput
+              style={styles.Textinput}
+              value={address}
+              onChangeText={text => setAddress(text)}
+              placeholder="강남대학교"
+            />
+          </View>
+          <View style={styles.View1}>
+            <Text style={{...styles.text, flex: 1}}>경도: {lat}</Text>
+            <Text style={{...styles.text, flex: 1}}>위도: {lng}</Text>
+          </View>
 
-        <View style={styles.View1}>
-          <Ionicons name="camera-outline" size={25} color={'black'} />
-          <Text style={styles.text}>사진을 추가해 주세요</Text>
-        </View>
-        <View>
-          <Text> // 사진 추가할 수 있는 컴포넌트 추가 필요</Text>
-        </View>
-        <View>
-          <Text style={styles.text}>이제 메뉴를 추가해볼까요?</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            margin: 20,
-          }}>
-          {/* "신청" button */}
-          <TouchableOpacity
+          <View style={styles.View1}>
+            <Ionicons name="time-outline" size={25} color={'black'} />
+            <Text style={styles.text}>영업 시작 시간을 입력해 주세요</Text>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => setOpenConfirm(true)}>
+              <TextInput
+                pointerEvents="none"
+                style={styles.Textinput}
+                underlineColorAndroid="transparent"
+                editable={false}
+                value={selectedOpenTime}
+                onChangeText={text => setopenHour(text)}
+              />
+              <DatePicker
+                mode="time"
+                modal
+                open={openConfirm}
+                date={openDate}
+                onConfirm={date => {
+                  setOpenConfirm(false);
+                  setOpenDate(date);
+                }}
+                onCancel={() => {
+                  setOpenConfirm(false);
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.View1}>
+            <Ionicons name="time-outline" size={25} color={'black'} />
+            <Text style={styles.text}>영업 종료 시간을 입력해 주세요</Text>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => setCloseConfirm(true)}>
+              <TextInput
+                pointerEvents="none"
+                style={styles.Textinput}
+                underlineColorAndroid="transparent"
+                editable={false}
+                value={selectedCloseTime}
+              />
+              <DatePicker
+                mode="time"
+                modal
+                open={closeConfirm}
+                date={closeDate}
+                onConfirm={date => {
+                  setCloseConfirm(false);
+                  setCloseDate(date);
+                }}
+                onCancel={() => {
+                  setCloseConfirm(false);
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.View1}>
+            <Ionicons name="call-outline" size={25} color={'black'} />
+            <Text style={styles.text}>전화번호를 입력해 주세요</Text>
+          </View>
+          <View>
+            <TextInput
+              style={styles.Textinput}
+              value={storeNumber}
+              onChangeText={text => setStoreNumber(text)}
+              placeholder="031-1234-5678"
+            />
+          </View>
+          <View style={styles.View1}>
+            <Ionicons name="list-outline" size={25} color={'black'} />
+            <Text style={styles.text}>식당을 간단히 소개해주세요</Text>
+          </View>
+          <View>
+            <TextInput
+              style={styles.Textinput}
+              value={storeContent}
+              onChangeText={text => {
+                setStoreContent(text);
+              }}
+              placeholder="싱싱한 육준서"
+            />
+          </View>
+          <View style={styles.View1}>
+            <Ionicons name="menu-book-outline" size={25} color={'black'} />
+            <Text style={styles.text}>어떤 음식을 제공하나요?</Text>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
+              <Text style={{color: 'black'}}>{category}</Text>
+            </View>
+          </View>
+          <View style={{marginTop: 10, marginBottom: 5}}>
+            {Array.from({length: 2}).map((_, rowIndex) => (
+              <View key={rowIndex} style={{flexDirection: 'row'}}>
+                {foodCategories
+                  .slice(rowIndex * 5, (rowIndex + 1) * 5)
+                  .map((Category, index) => (
+                    <View
+                      style={{
+                        flex: 1,
+                        borderColor:
+                          category === Category.name
+                            ? '#B6BE6A'
+                            : 'transparent',
+                        borderWidth: category === Category.name ? 2 : 2,
+                        marginBottom: 5,
+                      }}
+                      key={index}>
+                      <TouchableOpacity
+                        onPress={() => setCategory(Category.name)}
+                        style={styles.foods}>
+                        <Image
+                          source={Category.imageSource}
+                          style={styles.image}
+                        />
+                        <Text style={styles.FoodsText}>{Category.name}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.View1}>
+            <Ionicons name="camera-outline" size={25} color={'black'} />
+            <Text style={styles.text}>사진을 추가해 주세요</Text>
+          </View>
+          <View>
+            <Text> // 사진 추가할 수 있는 컴포넌트 추가 필요</Text>
+          </View>
+          <View>
+            <Text style={styles.text}>이제 메뉴를 추가해볼까요?</Text>
+          </View>
+          <View
             style={{
-              height: 40,
-              width: 60,
-              backgroundColor: '#B6BE6A',
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={postStore}>
-            <Text style={{color: 'white', fontSize: 16}}>신청</Text>
-          </TouchableOpacity>
-        </View>
-      </DismissKeyboardView>
-    </ScrollView>
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              margin: 20,
+            }}>
+            {/* "신청" button */}
+            <TouchableOpacity
+              style={{
+                height: 40,
+                width: 60,
+                backgroundColor: '#B6BE6A',
+                borderRadius: 10,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={postStore}>
+              <Text style={{color: 'white', fontSize: 16}}>신청</Text>
+            </TouchableOpacity>
+          </View>
+        </DismissKeyboardView>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  headerTitleContainer: {
+    flex: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 'auto', // 중앙 정렬을 위해 marginLeft을 auto로 지정
+    color: 'black',
+  },
+  backButton: {
+    flex: 1,
+  },
+  emptyButton: {
+    flex: 1,
+  },
   View1: {
     flexDirection: 'row',
     marginTop: '3%',
