@@ -44,7 +44,7 @@ export type MainPageStackParamList = {
   AuthRegisterPage: undefined;
   WriteReviewPage: undefined;
   WriteLiveReviewPage: undefined;
-  AuthRequestPage: undefined;
+  AuthRequestPage: {storeid: number};
   AddRestWritePage: {resetState: boolean};
   WriteReviewSearchPage: undefined;
   WriteLiveReviewSearchPage: undefined;

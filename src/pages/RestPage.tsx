@@ -54,6 +54,7 @@ function RestPage({navigation}: MainPageScreenProps) {
 
   const [line, setLine] = useState(3);
   const [isActivated, setIsActivated] = useState(false);
+  const [isLiked, setIsLiked] = useState(false); // 버튼의 상태를 추적하는 새로운 상태
 
   const handleLine = () => {
     isActivated ? setLine(3) : setLine(Number.MAX_SAFE_INTEGER);
@@ -140,7 +141,12 @@ function RestPage({navigation}: MainPageScreenProps) {
                     alignItems: 'center',
                     marginHorizontal: 5,
                   }}>
-                  <Ionicons name="heart-outline" size={30} color={'black'} />
+                  <Ionicons
+                    name={isLiked ? 'heart' : 'heart-outline'} // 상태에 기반하여 아이콘 변경
+                    size={30}
+                    color={isLiked ? 'red' : 'black'}
+                    onPress={() => setIsLiked(prev => !prev)} // 버튼을 누를 때 상태 토글
+                  />
                   <Text style={{color: 'black', marginLeft: 0}}>좋아요</Text>
                 </View>
 

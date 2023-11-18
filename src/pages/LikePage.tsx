@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,45 +10,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
-
-const LikeRestData = [
-  {
-    name: '땀땀',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 12-5',
-    closingTime: '02:00',
-  },
-  {
-    name: '비어룸',
-    rating: 4.0,
-    address: '강남구 강남대로 98길 22',
-    closingTime: '01:00',
-  },
-  {
-    name: '낙원타코',
-    rating: 4.0,
-    address: '강남구 강남대로 123길 147',
-    closingTime: '12:00',
-  },
-  {
-    name: '경천 CU',
-    rating: 5.0,
-    address: '용인시 기흥구 구갈동 111',
-    closingTime: '24h',
-  },
-  {
-    name: '샬롬 GS25',
-    rating: 5.0,
-    address: '용인시 기흥구 구갈동 111',
-    closingTime: '24h',
-  },
-  {
-    name: '심전 emart24',
-    rating: 5.0,
-    address: '경기도 용인시 기흥구 상하동 521',
-    closingTime: '24h',
-  },
-];
+import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -56,22 +19,79 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 function LikePage({navigation}: MainPageScreenProps) {
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
+  const toRestPage = (storeid: number) => {
+    navigation.navigate('RestPage', {storeid: storeid});
   };
+
+  // 검색어 저장하는 변수
+  const [searchStore, setSearchStore] = useState('');
+  // 서버에서 받아온 식당들을 배열 형태로 저장
+  const [searchStoreList, setSearchStoreList] = useState<
+    Array<SearchStoreData>
+  >([]);
+
+  // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
+  interface SearchStoreData {
+    name: string;
+    rating: number;
+    address: string;
+    closeHour: string;
+    storeid: number;
+    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+  }
+
+  // 식당 전체 조회 기능
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken();
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/store/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          setSearchStoreList(
+            data.map(storeItem => ({
+              name: storeItem.storeName,
+              rating: storeItem.totalRate,
+              address: storeItem.address,
+              closeHour: storeItem.closeHour,
+              storeid: storeItem.storeId,
+              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+            })),
+          );
+        } else {
+          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+        }
+      } catch (error) {
+        console.error('식당 조회 실패', error);
+      }
+    };
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
-      {LikeRestData.map((LikeRest, index) => (
-        <Pressable onPress={toRestPage} key={index}>
+      {searchStoreList.map((store, index) => (
+        <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
           <LikeRestItem
             key={index}
-            name={LikeRest.name}
-            rating={LikeRest.rating}
-            address={LikeRest.address}
-            closingTime={LikeRest.closingTime}
+            name={store.name}
+            rating={store.rating}
+            address={store.address}
+            closingTime={store.closeHour}
+            img={store.img}
           />
         </Pressable>
       ))}
@@ -84,47 +104,14 @@ const LikeRestItem = ({
   rating,
   address,
   closingTime,
+  img,
 }: {
   name: string;
   rating: number;
   address: string;
   closingTime: string;
+  img: string;
 }) => {
-  const renderStars = (rating: number) => {
-    const yellowStars = [];
-    const grayStars = [];
-
-    for (let i = 0; i < rating; i++) {
-      yellowStars.push(
-        <Ionicons
-          key={i}
-          name="star"
-          size={15}
-          color="yellow"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    for (let i = rating; i < 5; i++) {
-      grayStars.push(
-        <Ionicons
-          key={i}
-          name="star-outline"
-          size={15}
-          color="gray"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    return (
-      <View style={{flexDirection: 'row'}}>
-        {yellowStars}
-        {grayStars}
-      </View>
-    );
-  };
   return (
     <View
       style={{
@@ -147,7 +134,8 @@ const LikeRestItem = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Text>{renderStars(rating)}</Text>
+          <Ionicons name="star" size={15} color="yellow" />
+          <Text>{rating}</Text>
           <Text style={{color: 'black'}}>{rating}</Text>
         </View>
         <View>

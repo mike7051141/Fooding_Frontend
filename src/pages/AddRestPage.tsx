@@ -209,41 +209,6 @@ const RestItem = ({
   closingTime: string;
   img: string;
 }) => {
-  const renderStars = (rating: number) => {
-    const yellowStars = [];
-    const grayStars = [];
-
-    for (let i = 0; i < rating; i++) {
-      yellowStars.push(
-        <Ionicons
-          key={i}
-          name="star"
-          size={15}
-          color="yellow"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    for (let i = rating; i < 5; i++) {
-      grayStars.push(
-        <Ionicons
-          key={i}
-          name="star-outline"
-          size={15}
-          color="gray"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    return (
-      <View style={{flexDirection: 'row'}}>
-        {yellowStars}
-        {grayStars}
-      </View>
-    );
-  };
   return (
     <View
       style={{
@@ -266,8 +231,9 @@ const RestItem = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Text>{renderStars(rating)}</Text>
-          <Text style={{color: 'black'}}>{rating}</Text>
+          <Ionicons name="star" size={15} color="yellow" />
+          <Text>{rating}</Text>
+          <Text style={{color: 'black'}}> {rating} (302)</Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>
@@ -370,9 +336,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
-  },
-  Scrollstar: {
-    color: 'gray',
   },
 });
 
