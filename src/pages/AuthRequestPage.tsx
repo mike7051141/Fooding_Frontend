@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -26,39 +26,43 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {SafeAreaFrameContext} from 'react-native-safe-area-context';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import SearchPage from './SearchPage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
 const Tab = createMaterialTopTabNavigator();
 
 function AuthRequestPage() {
-  return (
-    <View>
-      <RestHomePage />
-    </View>
-  );
-}
-
-const RestHomePage = () => {
   const [currentPage, setCurrentPage] = useState('');
+  const [storeName, setStoreName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const route = useRoute();
+  const storeId = route.params.storeid;
+  const copyStoreId = storeId;
 
-  // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
-  const changePage = (pageName: string) => {
-    setCurrentPage(pageName);
-  };
-
-  const [line, setLine] = useState(3);
-  const [isActivated, setIsActivated] = useState(false);
-
-  const handleLine = () => {
-    isActivated ? setLine(3) : setLine(Number.MAX_SAFE_INTEGER);
-    setIsActivated(prev => !prev);
-  };
-
-  const navigation = useNavigation();
-  const goBack = () => {
-    navigation.goBack();
-  };
-
+  useEffect(() => {
+    console.log('RestPage에서 받은 storeid : ', copyStoreId);
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+        //console.log(token);
+        const response = await axios.get(
+          `http://kymokim.iptime.org:11080/api/store/get/${storeId}`,
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        setStoreName(response.data.data.storeName);
+        setAddress(response.data.data.address);
+        //console.log(data);
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+    fetchData();
+  }, [storeId]);
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -81,13 +85,11 @@ const RestHomePage = () => {
               <View>
                 <Text
                   style={{fontWeight: 'bold', color: 'black', fontSize: 25}}>
-                  땀땀
+                  {storeName}
                 </Text>
               </View>
               <View style={{marginLeft: 20, marginTop: 5}}>
-                <Text style={{color: 'black'}}>
-                  서울 서초구 서초대로77길 55 102호
-                </Text>
+                <Text style={{color: 'black'}}>{address}</Text>
               </View>
             </View>
             <View
@@ -205,7 +207,7 @@ const RestHomePage = () => {
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   ListText: {

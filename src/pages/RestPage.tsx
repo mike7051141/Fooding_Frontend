@@ -52,13 +52,9 @@ function RestPage({navigation}: MainPageScreenProps) {
   const [storeNumber, setStoreNumber] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
 
-  // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
-  const changePage = (pageName: string) => {
-    setCurrentPage(pageName);
-  };
-
   const [line, setLine] = useState(3);
   const [isActivated, setIsActivated] = useState(false);
+  const [isLiked, setIsLiked] = useState(false); // 버튼의 상태를 추적하는 새로운 상태
 
   const handleLine = () => {
     isActivated ? setLine(3) : setLine(Number.MAX_SAFE_INTEGER);
@@ -71,14 +67,21 @@ function RestPage({navigation}: MainPageScreenProps) {
   };
   const route = useRoute();
   const storeId = route.params.storeid;
-  const [restData, setRestData] = useState(null);
+  const copyStoreId = storeId;
+  const [restData, setRestData] = useState(null); // 서버에서 받아온 식당 이름 저장
+
+  // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
+  const changePage = (pageName: string) => {
+    console.log('RestPage에서 넘길 storeid : ', copyStoreId);
+    setCurrentPage(pageName);
+  };
 
   useEffect(() => {
+    console.log('RestPage에서 받은 storeid : ', copyStoreId);
     const fetchData = async () => {
       try {
         const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
         //console.log(token);
-        console.log(storeId);
         const response = await axios.get(
           `http://kymokim.iptime.org:11080/api/store/get/${storeId}`,
           {
@@ -138,24 +141,15 @@ function RestPage({navigation}: MainPageScreenProps) {
                     alignItems: 'center',
                     marginHorizontal: 5,
                   }}>
-                  <Ionicons name="heart-outline" size={30} color={'black'} />
+                  <Ionicons
+                    name={isLiked ? 'heart' : 'heart-outline'} // 상태에 기반하여 아이콘 변경
+                    size={30}
+                    color={isLiked ? 'red' : 'black'}
+                    onPress={() => setIsLiked(prev => !prev)} // 버튼을 누를 때 상태 토글
+                  />
                   <Text style={{color: 'black', marginLeft: 0}}>좋아요</Text>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    marginHorizontal: 5,
-                  }}>
-                  <Ionicons
-                    name="fast-food-outline"
-                    size={30}
-                    color={'black'}
-                  />
-                  <Text style={{color: 'black', marginRight: 0}}>
-                    메뉴 수정
-                  </Text>
-                </View>
+
                 <View
                   style={{
                     flexDirection: 'column',
@@ -300,7 +294,6 @@ function RestPage({navigation}: MainPageScreenProps) {
             borderTopWidth: 1,
             paddingHorizontal: 40,
             paddingVertical: 20,
-            marginBottom: 30,
           }}>
           <Pressable
             style={{flex: 1}}
@@ -348,9 +341,15 @@ function RestPage({navigation}: MainPageScreenProps) {
           </Pressable>
         </View>
         <View>
-          {currentPage === 'RestFoodPage' && <RestFoodPage />}
-          {currentPage === 'RestMapPage' && <RestMapPage />}
-          {currentPage === 'RestReviewPage' && <RestReviewPage />}
+          {currentPage === 'RestFoodPage' && (
+            <RestFoodPage storeid={copyStoreId} navigation={navigation} />
+          )}
+          {currentPage === 'RestMapPage' && (
+            <RestMapPage storeid={copyStoreId} />
+          )}
+          {currentPage === 'RestReviewPage' && (
+            <RestReviewPage storeid={copyStoreId} navigation={navigation} />
+          )}
           {currentPage === 'RestLivePage' && <RestLivePage />}
         </View>
       </View>

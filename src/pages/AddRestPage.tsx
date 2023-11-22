@@ -22,8 +22,8 @@ type MainPageScreenProps = NativeStackScreenProps<
 
 function AddRestPage({navigation}: MainPageScreenProps) {
   // RestPage로 이동 (식당 페이지)
-  const toRestPage = (storeId: number) => {
-    navigation.navigate('RestPage', {storeid: storeId});
+  const toRestPage = (storeid: number) => {
+    navigation.navigate('RestPage', {storeid: storeid});
   };
 
   // AddRestWritePage로 이동 (식당 추가 페이지)
@@ -46,7 +46,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     rating: number;
     address: string;
     closeHour: string;
-    storeId: number;
+    storeid: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -71,7 +71,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               rating: storeItem.totalRate,
               address: storeItem.address,
               closeHour: storeItem.closeHour,
-              storeId: storeItem.storeId.toString(),
+              storeid: storeItem.storeId,
               img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -92,33 +92,39 @@ function AddRestPage({navigation}: MainPageScreenProps) {
   // 식당 이름 검색 기능
   const handleSearchChange = (text: string) => {
     setSearchStore(text);
+    console.log('입력한 검색어 : ' + text);
 
     if (text === '') {
       // 검색어가 빈 string 값일 때 다시 식당 전체 조회 기능
       const researchStoreList = async () => {
-        const token = await retrieveToken();
-        const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/store/get',
-          {
-            headers: {
-              'x-auth-token': token,
+        try {
+          const token = await retrieveToken();
+          const response = await axios.get(
+            'http://kymokim.iptime.org:11080/api/store/get',
+            {
+              headers: {
+                'x-auth-token': token,
+              },
             },
-          },
-        );
-        const data = response.data.data;
-        if (data && Array.isArray(data)) {
-          setSearchStoreList(
-            data.map(storeItem => ({
-              name: storeItem.storeName,
-              rating: storeItem.totalRate,
-              address: storeItem.address,
-              closeHour: storeItem.closeHour,
-              storeId: storeItem.storeId.toString(),
-              img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
-            })),
           );
-        } else {
-          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+          const data = response.data.data;
+          if (data && Array.isArray(data)) {
+            setSearchStoreList(
+              data.map(storeItem => ({
+                name: storeItem.storeName,
+                rating: storeItem.totalRate,
+                address: storeItem.address,
+                closeHour: storeItem.closeHour,
+                storeid: storeItem.storeId,
+                // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
+                img: require('../assets/image22.png'),
+              })),
+            );
+          } else {
+            console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+          }
+        } catch (error) {
+          console.error('식당 조회 실패', error);
         }
       };
       researchStoreList();
@@ -133,44 +139,59 @@ function AddRestPage({navigation}: MainPageScreenProps) {
 
   return (
     // 화면 전체적인 UI
-    <View style={styles.container}>
-      <View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="이미 있는 식당은 아닌가요?"
-            placeholderTextColor="#B6BE6A"
-            value={searchStore}
-            onChangeText={handleSearchChange}
-          />
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search-outline" size={30} color="#B6BE6A" />
-          </TouchableOpacity>
+    <>
+      {/* 상단바 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>식당 추가</Text>
         </View>
+        <TouchableOpacity style={styles.emptyButton}></TouchableOpacity>
       </View>
-      {/* 식당 정보 출력 컴포넌트 */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        {searchStoreList.map((store, index) => (
-          <Pressable onPress={() => toRestPage(store.storeId)} key={index}>
-            <RestItem
-              key={index}
-              name={store.name}
-              rating={store.rating}
-              address={store.address}
-              closingTime={store.closeHour}
-              img={store.img}
+      <View style={styles.container}>
+        <View>
+          <View style={styles.searchContainer}>
+            <TextInput
+              keyboardType="email-address"
+              style={styles.searchInput}
+              placeholder="이미 있는 식당은 아닌가요?"
+              placeholderTextColor="#B6BE6A"
+              value={searchStore}
+              onChangeText={handleSearchChange}
             />
-          </Pressable>
-        ))}
-      </ScrollView>
-      <TouchableOpacity
-        style={styles.floatingButton}
-        onPress={toAddRestWritePage}>
-        <Ionicons name="duplicate-outline" size={40} color="#B6BE6A" />
-      </TouchableOpacity>
-    </View>
+            <TouchableOpacity style={styles.searchButton}>
+              <Ionicons name="search-outline" size={30} color="#B6BE6A" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* 식당 정보 출력 컴포넌트 */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}>
+          {searchStoreList.map((store, index) => (
+            <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
+              <RestItem
+                key={index}
+                name={store.name}
+                rating={store.rating}
+                address={store.address}
+                closingTime={store.closeHour}
+                img={store.img}
+              />
+            </Pressable>
+          ))}
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={toAddRestWritePage}>
+          <Ionicons name="duplicate-outline" size={40} color="#B6BE6A" />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
@@ -188,41 +209,6 @@ const RestItem = ({
   closingTime: string;
   img: string;
 }) => {
-  const renderStars = (rating: number) => {
-    const yellowStars = [];
-    const grayStars = [];
-
-    for (let i = 0; i < rating; i++) {
-      yellowStars.push(
-        <Ionicons
-          key={i}
-          name="star"
-          size={15}
-          color="yellow"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    for (let i = rating; i < 5; i++) {
-      grayStars.push(
-        <Ionicons
-          key={i}
-          name="star-outline"
-          size={15}
-          color="gray"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    return (
-      <View style={{flexDirection: 'row'}}>
-        {yellowStars}
-        {grayStars}
-      </View>
-    );
-  };
   return (
     <View
       style={{
@@ -245,8 +231,9 @@ const RestItem = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Text>{renderStars(rating)}</Text>
-          <Text style={{color: 'black'}}>{rating}</Text>
+          <Ionicons name="star" size={15} color="yellow" />
+          <Text>{rating}</Text>
+          <Text style={{color: 'black'}}> {rating} (302)</Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>
@@ -269,6 +256,32 @@ const RestItem = ({
 };
 
 const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  headerTitleContainer: {
+    flex: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 'auto', // 중앙 정렬을 위해 marginLeft을 auto로 지정
+    color: 'black',
+  },
+  backButton: {
+    flex: 1,
+  },
+  emptyButton: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -323,9 +336,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
-  },
-  Scrollstar: {
-    color: 'gray',
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
+import {retrieveToken} from '../store/storage';
+import axios from 'axios';
 
 const RestData = [
   {
@@ -58,60 +60,186 @@ type MainPageScreenProps = NativeStackScreenProps<
 >;
 
 function AuthRegisterPage({navigation}: MainPageScreenProps) {
-  const toRestPage = () => {
-    navigation.navigate('RestPage');
+  const toRestPage = (storeid: number) => {
+    navigation.navigate('RestPage', {storeid: storeid});
   };
 
-  const toAuthRequestPage = () => {
-    navigation.navigate('AuthRequestPage');
+  const toAuthRequestPage = (storeid: number) => {
+    navigation.navigate('AuthRequestPage', {storeid: storeid});
   };
 
+  // 검색어 저장하는 변수
+  const [searchStore, setSearchStore] = useState('');
+  // 서버에서 받아온 식당들을 배열 형태로 저장
+  const [searchStoreList, setSearchStoreList] = useState<
+    Array<SearchStoreData>
+  >([]);
+
+  // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
+  interface SearchStoreData {
+    name: string;
+    rating: number;
+    address: string;
+    closeHour: string;
+    storeid: number;
+    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+  }
+
+  // 식당 전체 조회 기능
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken();
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/store/get',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          setSearchStoreList(
+            data.map(storeItem => ({
+              name: storeItem.storeName,
+              rating: storeItem.totalRate,
+              address: storeItem.address,
+              closeHour: storeItem.closeHour,
+              storeid: storeItem.storeId,
+              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+            })),
+          );
+        } else {
+          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+        }
+      } catch (error) {
+        console.error('식당 조회 실패', error);
+      }
+    };
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+  // 식당 이름 검색 기능
+  const handleSearchChange = (text: string) => {
+    setSearchStore(text);
+    console.log('입력한 검색어 : ' + text);
+
+    if (text === '') {
+      // 검색어가 빈 string 값일 때 다시 식당 전체 조회 기능
+      const researchStoreList = async () => {
+        try {
+          const token = await retrieveToken();
+          const response = await axios.get(
+            'http://kymokim.iptime.org:11080/api/store/get',
+            {
+              headers: {
+                'x-auth-token': token,
+              },
+            },
+          );
+          const data = response.data.data;
+          if (data && Array.isArray(data)) {
+            setSearchStoreList(
+              data.map(storeItem => ({
+                name: storeItem.storeName,
+                rating: storeItem.totalRate,
+                address: storeItem.address,
+                closeHour: storeItem.closeHour,
+                storeid: storeItem.storeId,
+                // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
+                img: require('../assets/image22.png'),
+              })),
+            );
+          } else {
+            console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
+          }
+        } catch (error) {
+          console.error('식당 조회 실패', error);
+        }
+      };
+      researchStoreList();
+    } else {
+      // 검색어가 빈 string이 아닐 경우 해당 검색어를 포함한 식당들만 출력
+      const filteredStores = searchStoreList.filter(storeItem =>
+        storeItem.name.includes(text),
+      );
+      setSearchStoreList(filteredStores);
+    }
+  };
   return (
-    <View style={styles.container}>
-      <View>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="어떤 식당을 검색할까요?"
-            placeholderTextColor="#B6BE6A"
-          />
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search-outline" size={30} color="#B6BE6A" />
-          </TouchableOpacity>
+    <>
+      {/* 상단바 */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>권한 등록</Text>
         </View>
+        <TouchableOpacity style={styles.emptyButton}></TouchableOpacity>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        {RestData.map((Rest, index) => (
-          <Pressable onPress={toRestPage} key={index}>
-            <RestItem
-              key={index}
-              name={Rest.name}
-              rating={Rest.rating}
-              address={Rest.address}
-              closingTime={Rest.closingTime}
-              toAuthRequestPage={toAuthRequestPage}
+      <View style={styles.container}>
+        <View>
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="어떤 식당을 검색할까요?"
+              placeholderTextColor="#B6BE6A"
+              value={searchStore}
+              onChangeText={handleSearchChange}
             />
-          </Pressable>
-        ))}
-      </ScrollView>
-    </View>
+            <TouchableOpacity style={styles.searchButton}>
+              <Ionicons name="search-outline" size={30} color="#B6BE6A" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* 식당 정보 출력 컴포넌트 */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}>
+          {searchStoreList.map((store, index) => (
+            <Pressable onPress={() => toRestPage(store.storeid)} key={index}>
+              <RestItem
+                key={index}
+                name={store.name}
+                storeid={store.storeid}
+                rating={store.rating}
+                address={store.address}
+                closingTime={store.closeHour}
+                toAuthRequestPage={toAuthRequestPage}
+                img={store.img}
+              />
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
+// 식당 1개에 대한 UI 컴포넌트
 const RestItem = ({
   name,
+  storeid,
   rating,
   address,
   closingTime,
   toAuthRequestPage,
+  img,
 }: {
   name: string;
+  storeid: number;
   rating: number;
   address: string;
   closingTime: string;
-  toAuthRequestPage: () => void;
+  toAuthRequestPage: (storeid: number) => void;
+  img: string;
 }) => {
   return (
     <View
@@ -135,37 +263,8 @@ const RestItem = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Text style={{color: 'black', marginLeft: 5}}>{rating} (302)</Text>
+          <Ionicons name="star" size={15} color="yellow" />
+          <Text>{rating}</Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>
@@ -183,7 +282,9 @@ const RestItem = ({
           </Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.autoButton} onPress={toAuthRequestPage}>
+      <TouchableOpacity
+        style={styles.autoButton}
+        onPress={() => toAuthRequestPage(storeid)}>
         <Ionicons name="id-card-outline" size={70} color="black" />
       </TouchableOpacity>
     </View>
@@ -191,6 +292,32 @@ const RestItem = ({
 };
 
 const styles = StyleSheet.create({
+  topBar: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: 'lightgray',
+  },
+  headerTitleContainer: {
+    flex: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 'auto', // 중앙 정렬을 위해 marginLeft을 auto로 지정
+    color: 'black',
+  },
+  backButton: {
+    flex: 1,
+  },
+  emptyButton: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',

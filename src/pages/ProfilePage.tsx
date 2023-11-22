@@ -79,7 +79,7 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
           style={styles.profileImage}
         />
         <View>
-          <Text style={styles.username}>{userData}</Text>
+          <Text style={styles.username}>{userData} 님</Text>
           <Pressable onPress={() => toUpdatePage()}>
             <View style={styles.setting}>
               <Text style={{marginRight: 5, fontSize: 15, color: 'gray'}}>

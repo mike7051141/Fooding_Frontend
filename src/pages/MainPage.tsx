@@ -146,6 +146,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
   }));
 
   const toRestPage = (storeid: number) => {
+    console.log('MainPage에서 넘긴 storeid : ', storeid);
     navigation.navigate('RestPage', {storeid: storeid});
   };
 
@@ -390,45 +391,10 @@ const MyNearPlaces = ({
   img,
 }: {
   name: string;
-  rating: string;
+  rating: number;
   address: string;
   img: string;
 }) => {
-  const renderStars = (rating: number) => {
-    const yellowStars = [];
-    const grayStars = [];
-
-    for (let i = 0; i < rating; i++) {
-      yellowStars.push(
-        <Ionicons
-          key={i}
-          name="star"
-          size={15}
-          color="yellow"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    for (let i = rating; i < 5; i++) {
-      grayStars.push(
-        <Ionicons
-          key={i}
-          name="star-outline"
-          size={15}
-          color="gray"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    return (
-      <View style={{flexDirection: 'row'}}>
-        {yellowStars}
-        {grayStars}
-      </View>
-    );
-  };
   return (
     <>
       <View style={{marginLeft: 20}}>
@@ -437,8 +403,8 @@ const MyNearPlaces = ({
           {name}
         </Text>
         <View style={{flexDirection: 'row'}}>
-          <Text>{renderStars(parseInt(rating))}</Text>
-          <Text style={{color: 'black'}}>{rating}</Text>
+          <Ionicons name="star" size={15} color="yellow" />
+          <Text>{rating}</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}
@@ -455,46 +421,10 @@ const RecentPlaces = ({
   img,
 }: {
   name: string;
-  rating: string;
+  rating: number;
   address: string;
   img: string;
 }) => {
-  const renderStars = (rating: number) => {
-    const yellowStars = [];
-    const grayStars = [];
-
-    for (let i = 0; i < rating; i++) {
-      yellowStars.push(
-        <Ionicons
-          key={i}
-          name="star"
-          size={15}
-          color="yellow"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    for (let i = rating; i < 5; i++) {
-      grayStars.push(
-        <Ionicons
-          key={i}
-          name="star-outline"
-          size={15}
-          color="gray"
-          style={styles.Scrollstar}
-        />,
-      );
-    }
-
-    return (
-      <View style={{flexDirection: 'row'}}>
-        {yellowStars}
-        {grayStars}
-      </View>
-    );
-  };
-
   return (
     <>
       <View style={{marginLeft: 20}}>
@@ -503,8 +433,8 @@ const RecentPlaces = ({
           {name}
         </Text>
         <View style={{flexDirection: 'row'}}>
-          <Text>{renderStars(4)}</Text>
-          <Text style={{color: 'black'}}>4 (302)</Text>
+          <Ionicons name="star" size={15} color="yellow" />
+          <Text> {rating}</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}

@@ -12,6 +12,7 @@ import MapPage from '../pages/MapPage';
 import ProfilePage from '../pages/ProfilePage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import RestPage from '../pages/RestPage';
+import RestFoodPage from '../pages/RestFoodPage';
 import MainTabNavigator from './MainTabNavigator';
 import UpdatePage from '../pages/UpdatePage';
 import AddRestPage from '../pages/AddRestPage';
@@ -23,6 +24,9 @@ import AddRestWritePage from '../pages/AddRestWritePage';
 import WriteReviewSearchPage from '../pages/WriteReviewSearchPage';
 import WriteLiveReviewSearchPage from '../pages/WriteLiveReviewSearchPage';
 import StoreInfoEditPage from '../pages/StoreInfoEditPage';
+import AddMenuPage from '../pages/AddMenuPage';
+import UpdateMenuPage from '../pages/UpdateMenuPage';
+import AddReviewPage from '../pages/AddReviewPage';
 
 export type MainPageStackParamList = {
   MainPage: undefined;
@@ -30,6 +34,8 @@ export type MainPageStackParamList = {
   RestListPage: {screen: string};
   SearchPage: undefined;
   RestPage: {storeid: number};
+  RestFoodPage: {storeid: number};
+  RestMapPage: {storeid: number};
   KoreaFoodPage: undefined;
   UpdatePage: undefined;
   ProfilePage: undefined;
@@ -39,10 +45,14 @@ export type MainPageStackParamList = {
   AuthRegisterPage: undefined;
   WriteReviewPage: undefined;
   WriteLiveReviewPage: undefined;
-  AuthRequestPage: undefined;
+  AuthRequestPage: {storeid: number};
   AddRestWritePage: {resetState: boolean};
   WriteReviewSearchPage: undefined;
   WriteLiveReviewSearchPage: undefined;
+  MapPage: undefined;
+  AddMenuPage: {storeid: number};
+  UpdateMenuPage: {menuId: number};
+  AddReviewPage: {storeid: number};
 };
 
 const Tab = createBottomTabNavigator();
@@ -94,6 +104,13 @@ function MainStackList() {
         component={RestPage}
         options={{headerShown: false}}
       />
+
+      <Stack1.Screen
+        name="RestFoodPage"
+        component={RestFoodPage}
+        options={{headerShown: false}}
+      />
+
       <Stack1.Screen
         name="UpdatePage"
         component={UpdatePage}
@@ -107,7 +124,7 @@ function MainStackList() {
       <Stack1.Screen
         name="AddRestPage"
         component={AddRestPage}
-        options={{headerShown: true}}
+        options={{headerShown: false}}
       />
       <Stack1.Screen
         name="AuthRegisterPage"
@@ -147,6 +164,26 @@ function MainStackList() {
       <Stack1.Screen
         name="WriteLiveReviewSearchPage"
         component={WriteLiveReviewSearchPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="MapPage"
+        component={MapPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="AddMenuPage"
+        component={AddMenuPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="UpdateMenuPage"
+        component={UpdateMenuPage}
+        options={{headerShown: false}}
+      />
+      <Stack1.Screen
+        name="AddReviewPage"
+        component={AddReviewPage}
         options={{headerShown: false}}
       />
     </Stack1.Navigator>
