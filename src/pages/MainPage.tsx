@@ -360,7 +360,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
-
   imageContainer: {
     margin: 10,
   },
@@ -369,10 +368,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 15,
-    borderColor: 'lightgray',
-    borderWidth: 1,
   },
-
   Scrollimage: {
     width: 150,
     height: 70,
