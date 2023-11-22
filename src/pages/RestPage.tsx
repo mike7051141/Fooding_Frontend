@@ -282,8 +282,12 @@ function RestPage({navigation}: MainPageScreenProps) {
               }}>
               <Ionicons name="location-outline" size={25} color={'black'} />
               <Text style={{fontWeight: 'bold', color: 'black', fontSize: 15}}>
-                거리:{' '}
-                {distance !== null ? `${distance.toFixed(2)} km` : '로딩 중...'}
+                {' '}
+                {distance !== null
+                  ? distance >= 1
+                    ? `${distance.toFixed(2)} km`
+                    : `${(distance * 1000).toFixed(0)} m`
+                  : '로딩 중...'}
               </Text>
             </View>
           </View>
@@ -346,6 +350,7 @@ function RestPage({navigation}: MainPageScreenProps) {
               numberOfLines={line}
               ellipsizeMode="tail"
               onPress={() => handleLine()}>
+              {'  '}
               {storeContent}
             </Text>
           </View>
