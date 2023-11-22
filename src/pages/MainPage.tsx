@@ -386,13 +386,11 @@ const styles = StyleSheet.create({
 
 const MyNearPlaces = ({
   name,
-  rating,
   address,
   img,
   storeRate,
 }: {
   name: string;
-  rating: number;
   address: string;
   img: string;
   storeRate: number;

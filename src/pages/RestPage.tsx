@@ -53,6 +53,7 @@ function RestPage({navigation}: MainPageScreenProps) {
   const [closeHour, setCloseHour] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
+  const [storeRate, setStoreRate] = useState<number>();
   const [latitude, setLatitude] = useState<string>('');
   const [longitude, setLongitude] = useState<string>('');
   const [distance, setDistance] = useState<number | null>(null);
@@ -149,6 +150,7 @@ function RestPage({navigation}: MainPageScreenProps) {
         setCloseHour(response.data.data.closeHour);
         setStoreNumber(response.data.data.storeNumber);
         setStoreContent(response.data.data.storeContent);
+        setStoreRate(response.data.data.storeRate);
         setLatitude(response.data.data.latitude);
         setLongitude(response.data.data.longitude);
         //console.log(data);
@@ -240,7 +242,7 @@ function RestPage({navigation}: MainPageScreenProps) {
                   fontSize: 15,
                   marginLeft: 10,
                 }}>
-                4.7(231)
+                {storeRate}
               </Text>
             </View>
           </View>
