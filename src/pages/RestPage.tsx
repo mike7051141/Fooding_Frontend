@@ -31,6 +31,8 @@ import axios from 'axios';
 import {retrieveToken} from '../store/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
+import Geolocation from '@react-native-community/geolocation';
+import {getDistance} from 'geolib'; // geolib 라이브러리 추가
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -51,7 +53,9 @@ function RestPage({navigation}: MainPageScreenProps) {
   const [closeHour, setCloseHour] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
-
+  const [latitude, setLatitude] = useState<string>('');
+  const [longitude, setLongitude] = useState<string>('');
+  const [distance, setDistance] = useState<number | null>(null);
   const [line, setLine] = useState(3);
   const [isActivated, setIsActivated] = useState(false);
   const [isLiked, setIsLiked] = useState(false); // 버튼의 상태를 추적하는 새로운 상태
@@ -69,6 +73,65 @@ function RestPage({navigation}: MainPageScreenProps) {
   const storeId = route.params.storeid;
   const copyStoreId = storeId;
   const [restData, setRestData] = useState(null); // 서버에서 받아온 식당 이름 저장
+
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 37.27566,
+    longitude: 127.13245,
+  }); // 초기 값으로 P0를 설정합니다.
+
+  // 사용자의 현재 위치를 가져오는 함수
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setCurrentLocation({latitude, longitude});
+        console.log('업데이트');
+      },
+      error => {
+        console.error('Error getting current location: ', error);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+
+    // 10초마다 현재 위치 업데이트
+    const updateLocationInterval = setInterval(() => {
+      getCurrentLocation();
+    }, 10000);
+
+    return () => {
+      clearInterval(updateLocationInterval); // 컴포넌트 언마운트 시 타이머 해제
+    };
+  }, []);
+
+  useEffect(() => {
+    if (
+      currentLocation.latitude &&
+      currentLocation.longitude &&
+      latitude &&
+      longitude
+    ) {
+      const dist = getDistance(
+        {
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+        },
+        {latitude: parseFloat(latitude), longitude: parseFloat(longitude)},
+      );
+
+      // 거리를 킬로미터로 변환
+      const distanceInKm = dist / 1000;
+
+      setDistance(distanceInKm);
+    }
+  }, [
+    currentLocation.latitude,
+    currentLocation.longitude,
+    latitude,
+    longitude,
+  ]);
 
   // 메뉴 항목을 클릭할 때 해당 페이지로 전환하는 함수
   const changePage = (pageName: string) => {
@@ -95,6 +158,8 @@ function RestPage({navigation}: MainPageScreenProps) {
         setCloseHour(response.data.data.closeHour);
         setStoreNumber(response.data.data.storeNumber);
         setStoreContent(response.data.data.storeContent);
+        setLatitude(response.data.data.latitude);
+        setLongitude(response.data.data.longitude);
         //console.log(data);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
@@ -217,7 +282,8 @@ function RestPage({navigation}: MainPageScreenProps) {
               }}>
               <Ionicons name="location-outline" size={25} color={'black'} />
               <Text style={{fontWeight: 'bold', color: 'black', fontSize: 15}}>
-                287m
+                거리:{' '}
+                {distance !== null ? `${distance.toFixed(2)} km` : '로딩 중...'}
               </Text>
             </View>
           </View>

@@ -117,25 +117,6 @@ function RestMapPage({storeid}: {storeid: number}) {
           onClick={() => console.warn('onClick! path')}
           width={10}
         />
-        {/*
-        <Marker
-          coordinate={P0}
-          pinColor="red"
-          onClick={() => {
-            TMap.openNavi(
-              '도착지',
-              P0.longitude.toString(),
-              P0.latitude.toString(),
-              'MOTORCYCLE',
-            ).then(data => {
-              console.log('TMap callback', data);
-              if (!data) {
-                Alert.alert('알림', '티맵을 설치하세요.');
-              }
-            });
-          }}
-        />
-        */}
       </NaverMapView>
     </View>
   );
