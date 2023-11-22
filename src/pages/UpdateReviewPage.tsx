@@ -43,10 +43,10 @@ function UpdateReviewPage({route, navigation}: UpdateMenuPageProps) {
       return;
     }
     if (!reviewContent || !reviewContent.trim()) {
-      return Alert.alert('알림', '수정할 후기를 입력해주세요.');
+      return Alert.alert('알림', '식당의 후기를 입력해주세요.');
     }
-    if (!rate || !rate.trim()) {
-      return Alert.alert('알림', '수정할 평점을 입력해주세요.');
+    if (!rate || isNaN(Number(rate))) {
+      return Alert.alert('알림', '식당의 평점을 숫자로 입력해주세요.');
     }
     try {
       setLoading(true);

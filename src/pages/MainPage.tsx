@@ -142,7 +142,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     rating: storeItem.totalRate,
     address: storeItem.address,
     storeid: storeItem.storeId,
-    img: require('../assets/image23.png'),
+    img: require('../assets/Fooding.png'),
   }));
 
   const toRestPage = (storeid: number) => {

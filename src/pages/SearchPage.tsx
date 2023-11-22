@@ -64,7 +64,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId.toString(),
-              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+              img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
         } else {

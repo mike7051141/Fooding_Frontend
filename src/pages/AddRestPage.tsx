@@ -72,7 +72,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
-              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+              img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
         } else {
@@ -117,7 +117,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 closeHour: storeItem.closeHour,
                 storeid: storeItem.storeId,
                 // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
-                img: require('../assets/image22.png'),
+                img: require('../assets/FoodingLogin.png'),
               })),
             );
           } else {
