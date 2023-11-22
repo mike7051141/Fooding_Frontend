@@ -44,8 +44,8 @@ function AddReviewPage({route, navigation}: AddMenuPageProps) {
     if (!reviewContent || !reviewContent.trim()) {
       return Alert.alert('알림', '식당의 후기를 입력해주세요.');
     }
-    if (!rate || !rate.trim()) {
-      return Alert.alert('알림', '식당의 평점을 입력해주세요.');
+    if (!rate || isNaN(Number(rate))) {
+      return Alert.alert('알림', '식당의 평점을 숫자로 입력해주세요.');
     }
     try {
       // 이 부분에 이제 새로 추가한 메뉴 put 방식으로 update 하기 (UpdatePage.tsx 참고)

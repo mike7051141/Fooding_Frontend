@@ -118,15 +118,6 @@ function MapPage({navigation}: MainPageScreenProps) {
 
   useEffect(() => {
     getCurrentLocation();
-
-    // 10초마다 현재 위치 업데이트
-    const updateLocationInterval = setInterval(() => {
-      getCurrentLocation();
-    }, 10000);
-
-    return () => {
-      clearInterval(updateLocationInterval); // 컴포넌트 언마운트 시 타이머 해제
-    };
   }, []);
 
   const screenWidth = Dimensions.get('window').width;

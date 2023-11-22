@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Pressable,
   Image,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {retrieveToken} from '../store/storage';
@@ -95,8 +96,28 @@ function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
 
       // 삭제 성공 후 데이터를 다시 가져오도록 fetchData 함수 호출
       fetchData();
-    } catch (e) {
-      console.error('메뉴 삭제 실패', e);
+    } catch (error: any) {
+      //console.error('메뉴 삭제 실패', error);
+
+      // 여기서 서버에서 반환한 상태 코드에 따라 알맞은 경고 메시지를 표시할 수 있습니다.
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 403) {
+          // 서버 내부 오류인 경우
+          Alert.alert(
+            '알림',
+            '서버에서 오류가 발생했습니다. 잠시 후에 다시 시도해주세요.',
+          );
+        } else if (error.response?.status === 500) {
+          // 삭제 권한이 없는 경우
+          Alert.alert('알림', '삭제 권한이 없습니다.');
+        } else {
+          // 기타 오류
+          Alert.alert('알림', '후기 삭제에 실패했습니다.');
+        }
+      } else {
+        // Axios 에러가 아닌 경우에 대한 처리
+        Alert.alert('알림', '후기 삭제에 실패했습니다.');
+      }
     }
   };
 
