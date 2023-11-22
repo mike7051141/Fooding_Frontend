@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -41,37 +41,64 @@ function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
   const [reviewList, setReviewList] = useState<Array<ReviewData>>([]);
 
   // 후기 출력
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
-        const response = await axios.get(
-          `http://kymokim.iptime.org:11080/api/review/get/${storeid}`,
-          {
-            headers: {
-              'x-auth-token': token,
-            },
+  const fetchData = useCallback(async () => {
+    try {
+      const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
+      const response = await axios.get(
+        `http://kymokim.iptime.org:11080/api/review/get/${storeid}`,
+        {
+          headers: {
+            'x-auth-token': token,
           },
+        },
+      );
+      const data = response.data.data;
+      if (data && Array.isArray(data)) {
+        setReviewList(
+          data.map(reviewItem => ({
+            reviewId: reviewItem.reviewId,
+            writerNickName: reviewItem.writerNickName,
+            reviewContent: reviewItem.reviewContent,
+            rate: reviewItem.rate,
+          })),
         );
-        const data = response.data.data;
-        if (data && Array.isArray(data)) {
-          setReviewList(
-            data.map(reviewItem => ({
-              reviewId: reviewItem.reviewId,
-              writerNickName: reviewItem.writerNickName,
-              reviewContent: reviewItem.reviewContent,
-              rate: reviewItem.rate,
-            })),
-          );
-        } else {
-          console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
-        }
-      } catch (e) {
-        console.error('데이터 가져오기 실패', e);
+      } else {
+        console.error('식당에 대한 데이터가 올바르게 반환되지 않았습니다.');
       }
-    };
+    } catch (e) {
+      console.error('데이터 가져오기 실패', e);
+    }
+  }, [storeid]);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트되거나 navigation focus 이벤트가 발생할 때 데이터를 가져옴
     fetchData();
-  }, [navigation]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    // 컴포넌트가 언마운트되면 이벤트 리스너 해제
+    return unsubscribe;
+  }, [fetchData, navigation]);
+
+  const DeleteReview = async (reviewId: number) => {
+    try {
+      const token = await retrieveToken();
+      await axios.delete(
+        `http://kymokim.iptime.org:11080/api/review/delete/${reviewId}`,
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+
+      // 삭제 성공 후 데이터를 다시 가져오도록 fetchData 함수 호출
+      fetchData();
+    } catch (e) {
+      console.error('메뉴 삭제 실패', e);
+    }
+  };
 
   return (
     <View>
@@ -91,6 +118,8 @@ function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
               writerNickName={Review.writerNickName}
               reviewContent={Review.reviewContent}
               rate={Review.rate}
+              navigation={navigation}
+              onDelete={() => DeleteReview(Review.reviewId)}
             />
           </Pressable>
         ))}
@@ -100,16 +129,23 @@ function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
 }
 
 const ReviewItem = ({
-  reviewId, // 23.11.22에 후기 작성 기능 및 후기 수정, 삭제 기능 추가할 경우 reviewId 사용하기
+  reviewId, // 23.11.22에 후기 수정 & 삭제 기능 추가할 경우 reviewId 사용하기
   writerNickName,
   reviewContent,
   rate,
+  navigation,
+  onDelete,
 }: {
   reviewId: number;
   writerNickName: string;
   reviewContent: string;
   rate: number;
+  navigation: MainPageScreenProps['navigation'];
+  onDelete: () => void;
 }) => {
+  const toUpdateReviewPage = () => {
+    navigation.navigate('UpdateReviewPage', {reviewId});
+  };
   return (
     <View style={styles.contentContainer}>
       <View style={{flexDirection: 'column'}}>
@@ -140,10 +176,13 @@ const ReviewItem = ({
               <Text style={{fontSize: 20, color: 'black', fontWeight: 'bold'}}>
                 {writerNickName}
               </Text>
-              <TouchableOpacity style={{marginLeft: 'auto'}}>
+              <TouchableOpacity
+                style={{marginLeft: 'auto'}}
+                onPress={toUpdateReviewPage}>
                 <Ionicons name="clipboard-outline" size={25} color={'black'} />
               </TouchableOpacity>
-              <TouchableOpacity style={{marginLeft: 10}}>
+              {/* 삭제 버튼 */}
+              <TouchableOpacity style={{marginLeft: 10}} onPress={onDelete}>
                 <Ionicons name="trash-outline" size={25} color={'black'} />
               </TouchableOpacity>
             </View>
@@ -172,6 +211,7 @@ const ReviewItem = ({
               fontWeight: 'bold',
               fontSize: 15,
               marginLeft: 10,
+              marginRight: 20,
             }}>
             {reviewContent}
           </Text>

@@ -4,24 +4,7 @@ import {View, Text, ScrollView} from 'react-native';
 function RestLivePage() {
   return (
     <>
-      <Text>소통</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
-      <Text>음식</Text>
+      <Text>실시간 리뷰 출력하는 페이지</Text>
     </>
   );
 }

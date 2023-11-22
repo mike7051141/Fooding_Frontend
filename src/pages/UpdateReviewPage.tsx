@@ -1,4 +1,3 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
 import {
   View,
@@ -10,53 +9,54 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {retrieveToken} from '../store/storage';
 import axios from 'axios';
+import {retrieveToken} from '../store/storage';
 
-type MainPageScreenProps = NativeStackScreenProps<
-  MainPageStackParamList,
-  'AddMenuPage'
->;
+type MainPageScreenProps = NativeStackScreenProps<MainPageStackParamList>;
 
-type AddMenuPageProps = {
-  route: any;
+type UpdateMenuPageProps = {
+  route: {
+    params: {
+      reviewId: number;
+    };
+  };
   navigation: MainPageScreenProps['navigation'];
 };
 
-function AddReviewPage({route, navigation}: AddMenuPageProps) {
-  // 해당 식당의 storeId
-  const {storeid} = route.params;
+function UpdateReviewPage({route, navigation}: UpdateMenuPageProps) {
+  // 수정할 후기의 reviewId 저장하는 변수
+  const {reviewId} = route.params;
 
   // 중복 요청 방지 변수
   const [loading, setLoading] = useState(false);
 
-  // 입력받은 평점, 후기 저장하는 변수
-  const [rate, setRate] = useState('');
+  // 수정 사항 입력받은 후기, 평점 저장하는 변수
   const [reviewContent, setReviewContent] = useState('');
+  const [rate, setRate] = useState('');
 
-  const AddReview = useCallback(async () => {
+  const UpdateReview = useCallback(async () => {
     if (loading) {
       return;
     }
     if (!reviewContent || !reviewContent.trim()) {
-      return Alert.alert('알림', '식당의 후기를 입력해주세요.');
+      return Alert.alert('알림', '수정할 후기를 입력해주세요.');
     }
     if (!rate || !rate.trim()) {
-      return Alert.alert('알림', '식당의 평점을 입력해주세요.');
+      return Alert.alert('알림', '수정할 평점을 입력해주세요.');
     }
     try {
-      // 이 부분에 이제 새로 추가한 메뉴 put 방식으로 update 하기 (UpdatePage.tsx 참고)
       setLoading(true);
       const token = await retrieveToken();
-      const response = await axios.post(
-        'http://kymokim.iptime.org:11080/api/review/create',
+      const response = await axios.put(
+        'http://kymokim.iptime.org:11080/api/review/update',
         {
           reviewContent: reviewContent,
           rate: rate,
-          storeId: storeid,
+          reviewId: reviewId,
         },
         {
           headers: {
@@ -65,18 +65,13 @@ function AddReviewPage({route, navigation}: AddMenuPageProps) {
         },
       );
       navigation.goBack();
-      Alert.alert('알림', '후기 작성 완료');
+      Alert.alert('알림', '후기 수정 완료');
     } catch (error) {
-      console.error('후기 작성 실패', error);
+      console.error('후기 수정 실패', error);
     } finally {
       setLoading(false);
     }
-  }, [
-    // 넣어야 할 변수들 넣기
-    loading,
-    rate,
-    reviewContent,
-  ]);
+  }, [loading, reviewContent, rate, reviewId]);
 
   return (
     <DismissKeyboardView style={styles.wrapper}>
@@ -90,10 +85,10 @@ function AddReviewPage({route, navigation}: AddMenuPageProps) {
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerTitle}>후기 작성</Text>
+            <Text style={styles.headerTitle}>후기 수정</Text>
           </View>
           {/* 완료 버튼 */}
-          <TouchableOpacity style={styles.emptyButton} onPress={AddReview}>
+          <TouchableOpacity style={styles.emptyButton} onPress={UpdateReview}>
             <Ionicons name="checkmark-outline" size={24} color="green" />
           </TouchableOpacity>
         </View>
@@ -106,7 +101,7 @@ function AddReviewPage({route, navigation}: AddMenuPageProps) {
           </View>
           <TextInput
             style={styles.menuInput}
-            placeholder="식당의 후기를 입력해주세요."
+            placeholder="식당의 후기를 수정해주세요."
             value={reviewContent}
             onChangeText={text => setReviewContent(text)}
           />
@@ -121,16 +116,16 @@ function AddReviewPage({route, navigation}: AddMenuPageProps) {
           </View>
           <TextInput
             style={styles.menuInput}
-            placeholder="식당의 평점을 입력해주세요."
+            placeholder="식당의 평점을 수정해주세요."
             value={rate}
             onChangeText={text => setRate(text)}
           />
           <View style={{flexDirection: 'row'}}>
             <Ionicons name="images-outline" size={22} color={'black'} />
-            <Text style={styles.holdText}>후기 사진을 첨부해주세요.</Text>
+            <Text style={styles.holdText}>후기 사진을 수정해주세요.</Text>
             {/* 사진 추가할 때 누를 버튼 */}
             <TouchableOpacity style={styles.imageUpload}>
-              <Text style={{color: '#B6BE6A', fontSize: 11}}>추가</Text>
+              <Text style={{color: '#B6BE6A', fontSize: 11}}>수정</Text>
             </TouchableOpacity>
           </View>
           <View>
@@ -212,4 +207,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddReviewPage;
+export default UpdateReviewPage;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {retrieveToken} from '../store/storage';
@@ -34,36 +34,57 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
 
   const [menuList, setMenuList] = useState<Array<menuListData>>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = await retrieveToken();
-        const response = await axios.get(
-          `http://kymokim.iptime.org:11080/api/store/get/${storeid}`,
-          {
-            headers: {
-              'x-auth-token': token,
-            },
+  const fetchData = useCallback(async () => {
+    try {
+      const token = await retrieveToken();
+      const response = await axios.get(
+        `http://kymokim.iptime.org:11080/api/store/get/${storeid}`,
+        {
+          headers: {
+            'x-auth-token': token,
           },
-        );
-        const data = response.data.data;
-        if (data && data.menuList && Array.isArray(data.menuList)) {
-          setMenuList(data.menuList);
-        } else {
-          console.error('메뉴에 대한 데이터가 올바르게 반환되지 않았습니다.');
-        }
-        // 이 부분에 어떤 코드를 추가해야할지 모르겠네
-      } catch (error) {
-        console.error('데이터 가져오기 실패', error);
+        },
+      );
+      const data = response.data.data;
+      if (data && data.menuList && Array.isArray(data.menuList)) {
+        setMenuList(data.menuList);
+      } else {
+        console.error('메뉴에 대한 데이터가 올바르게 반환되지 않았습니다.');
       }
-    };
+    } catch (error) {
+      console.error('데이터 가져오기 실패', error);
+    }
+  }, [storeid]);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트되거나 navigation focus 이벤트가 발생할 때 데이터를 가져옴
     fetchData();
     const unsubscribe = navigation.addListener('focus', () => {
       fetchData();
     });
 
+    // 컴포넌트가 언마운트되면 이벤트 리스너 해제
     return unsubscribe;
-  }, [storeid, navigation]);
+  }, [fetchData, navigation]);
+
+  const DeleteMenu = async (menuId: number) => {
+    try {
+      const token = await retrieveToken();
+      await axios.delete(
+        `http://kymokim.iptime.org:11080/api/menu/delete/${menuId}`,
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+
+      // 삭제 성공 후 데이터를 다시 가져오도록 fetchData 함수 호출
+      fetchData();
+    } catch (e) {
+      console.error('메뉴 삭제 실패', e);
+    }
+  };
 
   return (
     <>
@@ -82,6 +103,7 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
             menuContent={menuItem.menuContent}
             price={menuItem.price}
             navigation={navigation}
+            onDelete={() => DeleteMenu(menuItem.menuId)}
           />
         ))}
       </View>
@@ -98,6 +120,7 @@ const MenuItem = ({
   menuContent,
   price,
   navigation,
+  onDelete,
 }: {
   //name: string;
   //explanation: string;
@@ -107,6 +130,7 @@ const MenuItem = ({
   menuContent: string;
   price: number;
   navigation: MainPageScreenProps['navigation'];
+  onDelete: () => void;
 }) => {
   const toUpdateMenuPage = () => {
     navigation.navigate('UpdateMenuPage', {menuId});
@@ -145,17 +169,17 @@ const MenuItem = ({
           }}>
           <Text style={{color: 'red', fontSize: 18}}>{price} 원</Text>
           <View style={styles.menuSettings}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={toUpdateMenuPage}>
               <Ionicons
-                name="heart-outline"
+                name="clipboard-outline"
                 size={30}
                 color={'black'}
                 style={{marginRight: 7}}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={toUpdateMenuPage}>
+            <TouchableOpacity onPress={onDelete}>
               <Ionicons
-                name="clipboard-outline"
+                name="trash-outline"
                 size={30}
                 color={'black'}
                 style={{marginLeft: 7}}
