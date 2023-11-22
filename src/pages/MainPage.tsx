@@ -14,6 +14,8 @@ import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {MainPageStackParamList} from '../components/MainStack';
 import {retrieveToken} from '../store/storage';
 import axios from 'axios';
+import Geolocation from '@react-native-community/geolocation';
+import {API_KEY} from '@env';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,27 +27,6 @@ const Token = async () => {
     console.log('저장된 토큰을 찾을 수 없습니다.');
   }
 };
-
-const RecentPlacesData = [
-  {
-    name: '장안닭갈비',
-    rating: 4.0,
-    address: '서강남구 태헤란로1길 19',
-    img: require('../assets/image20.png'),
-  },
-  {
-    name: '육하망칙',
-    rating: 3.0,
-    address: '강남구 강남대로 100길 13 3층',
-    img: require('../assets/image21.png'),
-  },
-  {
-    name: '구구당',
-    rating: 4.0,
-    address: '강남구 강남대로 100길 13 3층',
-    img: require('../assets/image22.png'),
-  },
-];
 
 type MainPageScreenProps = NativeStackScreenProps<
   MainPageStackParamList,
@@ -73,11 +54,20 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     storeLikeCount: number;
     storeRate: number;
   }
-
+  interface VisitedData {
+    storeId: number;
+    storeName: string;
+    category: string;
+    address: string;
+    openHour: number;
+    closeHour: number;
+    totalRate: number;
+    reviewCount: number;
+    storeLikeCount: number;
+    storeRate: number;
+  }
   const [storeData, setStoreData] = useState<Array<StoreData>>([]);
-  const [storeName, setStoreName] = useState('');
-  const [category, setCategory] = useState('');
-  const [address, setAddress] = useState('');
+  const [visitedData, setVisitedData] = useState<Array<VisitedData>>([]);
 
   const [userData, setUserData] = useState('');
   useEffect(() => {
@@ -138,12 +128,54 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     return unsubscribe;
   }, [navigation]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = await retrieveToken();
+        const response = await axios.get(
+          'http://kymokim.iptime.org:11080/api/store/getRecentStore',
+          {
+            headers: {
+              'x-auth-token': token,
+            },
+          },
+        );
+
+        const data = response.data.data;
+        if (data && Array.isArray(data)) {
+          // 데이터를 가져와서 필요한 상태 변수를 업데이트합니다.
+          setVisitedData(data); // 전체 데이터를 상태로 설정
+        } else {
+          console.error('데이터가 올바르게 반환되지 않았습니다.');
+        }
+      } catch (error) {
+        console.error('데이터 가져오기 실패', error);
+      }
+    };
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   const MyNearPlacesData = storeData.map((storeItem, index) => ({
     name: storeItem.storeName,
     rating: storeItem.totalRate,
     address: storeItem.address,
     storeid: storeItem.storeId,
     storeRate: storeItem.storeRate,
+    reviewCount: storeItem.reviewCount,
+    img: require('../assets/Fooding.png'),
+  }));
+  const VisitedPlacesData = visitedData.map((storeItem, index) => ({
+    name: storeItem.storeName,
+    rating: storeItem.totalRate,
+    address: storeItem.address,
+    storeid: storeItem.storeId,
+    storeRate: storeItem.storeRate,
+    reviewCount: storeItem.reviewCount,
     img: require('../assets/Fooding.png'),
   }));
 
@@ -151,6 +183,93 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     console.log('MainPage에서 넘긴 storeid : ', storeid);
     navigation.navigate('RestPage', {storeid: storeid});
   };
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 37.27566,
+    longitude: 127.13245,
+  }); // 초기 값으로 P0를 설정합니다.
+  const [myLocation, setMyLocation] = useState('');
+
+  // 사용자의 현재 위치를 가져오는 함수
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setCurrentLocation({latitude, longitude});
+        console.log('업데이트');
+      },
+      error => {
+        console.error('Error getting current location: ', error);
+      },
+    );
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  interface AddressComponent {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  }
+
+  async function reverseGeocode(lat: number, lng: number, apiKey: string) {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&language=ko`,
+      );
+
+      if (response.data.status === 'OK') {
+        const addressComponents: AddressComponent[] =
+          response.data.results[0].address_components;
+
+        // 각 주소 구성 요소의 types 배열을 확인하여 필요한 레벨의 주소를 선택
+        const getLongName = (type: string) => {
+          const component = addressComponents.find(comp =>
+            comp.types.includes(type),
+          );
+          return component ? component.long_name : '';
+        };
+
+        // 원하는 주소 레벨 선택
+        const state = getLongName('administrative_area_level_1');
+        const city = getLongName('sublocality_level_1');
+        const district = getLongName('sublocality_level_2');
+        const street = getLongName('sublocality_level_3');
+        const sub4 = getLongName('sublocality_level_4');
+        const sub5 = getLongName('sublocality_level_5');
+        const premise = getLongName('premise');
+
+        // 필요한 정보로 주소 조합
+        const components = [
+          state,
+          city,
+          district,
+          street,
+          sub4,
+          sub5,
+          premise,
+        ].filter(Boolean);
+
+        // 필요한 정보로 주소 조합
+        let location = components.join(' ');
+        console.log(`위도: ${lat}, 경도: ${lng} - 주소: ${location}`);
+        setMyLocation(location);
+      } else {
+        console.error(response.data);
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
+    }
+  }
+
+  useEffect(() => {
+    reverseGeocode(
+      currentLocation.latitude,
+      currentLocation.longitude,
+      API_KEY,
+    );
+  }, [getCurrentLocation]);
 
   return (
     <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
@@ -162,7 +281,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           padding: 10,
         }}>
         <View style={{flex: 1}}>
-          <Text style={{color: 'gray'}}>지금 내 위치는</Text>
+          <Text style={{color: 'gray'}}>{myLocation}</Text>
         </View>
         <View style={{position: 'absolute', top: 10, right: 10}}>
           <Text style={{color: 'gray'}}>{userData}님 환영합니다</Text>
@@ -298,6 +417,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
                 address={MyNearPlace.address}
                 img={MyNearPlace.img}
                 storeRate={MyNearPlace.storeRate}
+                reviewCount={MyNearPlace.reviewCount}
               />
             </Pressable>
           ))}
@@ -321,13 +441,14 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           최근 방문한 장소
         </Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {RecentPlacesData.map((RecentPlace, index) => (
+          {VisitedPlacesData.map((VisitedPlace, index) => (
             <RecentPlaces
               key={index}
-              name={RecentPlace.name}
-              rating={4}
-              address={RecentPlace.address}
-              img={RecentPlace.img}
+              name={VisitedPlace.name}
+              storeRate={VisitedPlace.storeRate}
+              reviewCount={VisitedPlace.reviewCount}
+              address={VisitedPlace.address}
+              img={VisitedPlace.img}
             />
           ))}
         </ScrollView>
@@ -389,11 +510,13 @@ const MyNearPlaces = ({
   address,
   img,
   storeRate,
+  reviewCount,
 }: {
   name: string;
   address: string;
   img: string;
   storeRate: number;
+  reviewCount: number;
 }) => {
   return (
     <>
@@ -404,7 +527,10 @@ const MyNearPlaces = ({
         </Text>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
-          <Text>{storeRate}</Text>
+          <Text>
+            {' '}
+            {storeRate.toFixed(1)} ({reviewCount}){' '}
+          </Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}
@@ -416,14 +542,16 @@ const MyNearPlaces = ({
 
 const RecentPlaces = ({
   name,
-  rating,
   address,
   img,
+  storeRate,
+  reviewCount,
 }: {
   name: string;
-  rating: number;
   address: string;
   img: string;
+  storeRate: number;
+  reviewCount: number;
 }) => {
   return (
     <>
@@ -434,7 +562,10 @@ const RecentPlaces = ({
         </Text>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
-          <Text> {rating}</Text>
+          <Text>
+            {' '}
+            {storeRate.toFixed(1)} ({reviewCount}){' '}
+          </Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}

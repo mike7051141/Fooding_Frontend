@@ -33,10 +33,11 @@ function LikePage({navigation}: MainPageScreenProps) {
   // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
   interface SearchStoreData {
     name: string;
-    rating: number;
+    storeRate: number;
     address: string;
     closeHour: string;
     storeid: number;
+    reviewCount: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -58,10 +59,11 @@ function LikePage({navigation}: MainPageScreenProps) {
           setSearchStoreList(
             data.map(storeItem => ({
               name: storeItem.storeName,
-              rating: storeItem.totalRate,
+              storeRate: storeItem.storeRate,
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
+              reviewCount: storeItem.reviewCount,
               img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -88,7 +90,8 @@ function LikePage({navigation}: MainPageScreenProps) {
           <LikeRestItem
             key={index}
             name={store.name}
-            rating={store.rating}
+            storeRate={store.storeRate}
+            reviewCount={store.reviewCount}
             address={store.address}
             closingTime={store.closeHour}
             img={store.img}
@@ -101,16 +104,18 @@ function LikePage({navigation}: MainPageScreenProps) {
 
 const LikeRestItem = ({
   name,
-  rating,
   address,
   closingTime,
+  storeRate,
   img,
+  reviewCount,
 }: {
   name: string;
-  rating: number;
   address: string;
   closingTime: string;
+  storeRate: number;
   img: string;
+  reviewCount: number;
 }) => {
   return (
     <View
@@ -135,8 +140,10 @@ const LikeRestItem = ({
         </View>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
-          <Text>{rating}</Text>
-          <Text style={{color: 'black'}}>{rating}</Text>
+          <Text style={{color: 'black'}}>
+            {' '}
+            {storeRate.toFixed(1)} ({reviewCount}){' '}
+          </Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>

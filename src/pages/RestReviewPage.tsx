@@ -192,7 +192,7 @@ const ReviewItem = ({
             <View
               style={{
                 flexDirection: 'row',
-                width: 270,
+                width: 220,
               }}>
               <Text style={{fontSize: 20, color: 'black', fontWeight: 'bold'}}>
                 {writerNickName}

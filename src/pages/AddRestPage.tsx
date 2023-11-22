@@ -47,6 +47,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     closeHour: string;
     storeid: number;
     storeRate: number;
+    reviewCount: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -72,6 +73,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
               storeRate: storeItem.storeRate,
+              reviewCount: storeItem.reviewCount,
               img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -116,6 +118,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 closeHour: storeItem.closeHour,
                 storeid: storeItem.storeId,
                 storeRate: storeItem.storeRate,
+                reviewCount: storeItem.reviewCount,
                 // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
                 img: require('../assets/FoodingLogin.png'),
               })),
@@ -180,6 +183,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 address={store.address}
                 closingTime={store.closeHour}
                 storeRate={store.storeRate}
+                reviewCount={store.reviewCount}
                 img={store.img}
               />
             </Pressable>
@@ -202,12 +206,14 @@ const RestItem = ({
   closingTime,
   storeRate,
   img,
+  reviewCount,
 }: {
   name: string;
   address: string;
   closingTime: string;
   storeRate: number;
   img: string;
+  reviewCount: number;
 }) => {
   return (
     <View
@@ -235,7 +241,10 @@ const RestItem = ({
         </View>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
-          <Text style={{color: 'black'}}> {storeRate}</Text>
+          <Text style={{color: 'black'}}>
+            {' '}
+            {storeRate.toFixed(1)} ({reviewCount}){' '}
+          </Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>
