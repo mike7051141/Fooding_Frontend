@@ -221,7 +221,10 @@ const RestItem = ({
         borderColor: 'lightgray',
         height: 150,
       }}>
-      <View style={{marginHorizontal: 20}}>
+      <View
+        style={{
+          marginHorizontal: 20,
+        }}>
         <Image source={img} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
@@ -336,6 +339,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
+
+    borderWidth: 1,
+    borderColor: 'lightgray',
   },
 });
 

@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 15,
-    borderColor: 'gray',
+    borderColor: 'lightgray',
     borderWidth: 1,
   },
 
@@ -377,6 +377,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 70,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'lightgray',
   },
   Scrollstar: {
     color: 'gray',
