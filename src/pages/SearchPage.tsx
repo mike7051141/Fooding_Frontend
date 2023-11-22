@@ -34,6 +34,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
     address: string;
     closeHour: string;
     storeid: number;
+    storeRate: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -64,6 +65,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId.toString(),
+              storeRate: storeItem.storeRate,
               img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -110,6 +112,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
+              storeRate: storeItem.storeRate,
               img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
             })),
           );
@@ -155,9 +158,9 @@ function SearchPage({navigation}: SearchPageScreenProps) {
             <SearchStore
               key={index}
               name={store.name}
-              rating={store.rating}
               address={store.address}
               closingTime={store.closeHour}
+              storeRate={store.storeRate}
               img={store.img}
             />
           </Pressable>
@@ -170,15 +173,15 @@ function SearchPage({navigation}: SearchPageScreenProps) {
 // 화면에 실제로 출력되는 식당 정보에 대한 컴포넌트
 const SearchStore = ({
   name,
-  rating,
   address,
   closingTime,
+  storeRate,
   img,
 }: {
   name: string;
-  rating: number;
   address: string;
   closingTime: string;
+  storeRate: number;
   img: string;
 }) => {
   return (
@@ -200,37 +203,9 @@ const SearchStore = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Ionicons
-            name="star-outline"
-            size={15}
-            color="black"
-            style={styles.Scrollstar}
-          />
-          <Text style={{color: 'black', marginLeft: 5}}>{rating} (302)</Text>
+          <Ionicons name="star-outline" size={15} color="yellow" />
+
+          <Text style={{color: 'black', marginLeft: 5}}>{storeRate}</Text>
         </View>
 
         <View
@@ -314,9 +289,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'lightgray',
-  },
-  Scrollstar: {
-    color: 'gray',
   },
 });
 

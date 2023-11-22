@@ -71,6 +71,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     totalRate: number;
     reviewCount: number;
     storeLikeCount: number;
+    storeRate: number;
   }
 
   const [storeData, setStoreData] = useState<Array<StoreData>>([]);
@@ -142,6 +143,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     rating: storeItem.totalRate,
     address: storeItem.address,
     storeid: storeItem.storeId,
+    storeRate: storeItem.storeRate,
     img: require('../assets/Fooding.png'),
   }));
 
@@ -293,9 +295,9 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
               <MyNearPlaces
                 key={index}
                 name={MyNearPlace.name}
-                rating={MyNearPlace.rating}
                 address={MyNearPlace.address}
                 img={MyNearPlace.img}
+                storeRate={MyNearPlace.storeRate}
               />
             </Pressable>
           ))}
@@ -387,11 +389,13 @@ const MyNearPlaces = ({
   rating,
   address,
   img,
+  storeRate,
 }: {
   name: string;
   rating: number;
   address: string;
   img: string;
+  storeRate: number;
 }) => {
   return (
     <>
@@ -402,7 +406,7 @@ const MyNearPlaces = ({
         </Text>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
-          <Text>{rating}</Text>
+          <Text>{storeRate}</Text>
         </View>
         <Text style={{fontSize: 10, fontWeight: 'bold', color: 'black'}}>
           {address}

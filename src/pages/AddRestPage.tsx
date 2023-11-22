@@ -43,10 +43,10 @@ function AddRestPage({navigation}: MainPageScreenProps) {
   // searchStoreList에 받아온 배열 형태의 식당들의 멤버 변수들
   interface SearchStoreData {
     name: string;
-    rating: number;
     address: string;
     closeHour: string;
     storeid: number;
+    storeRate: number;
     img: any; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
@@ -68,10 +68,10 @@ function AddRestPage({navigation}: MainPageScreenProps) {
           setSearchStoreList(
             data.map(storeItem => ({
               name: storeItem.storeName,
-              rating: storeItem.totalRate,
               address: storeItem.address,
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
+              storeRate: storeItem.storeRate,
               img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
             })),
           );
@@ -112,10 +112,10 @@ function AddRestPage({navigation}: MainPageScreenProps) {
             setSearchStoreList(
               data.map(storeItem => ({
                 name: storeItem.storeName,
-                rating: storeItem.totalRate,
                 address: storeItem.address,
                 closeHour: storeItem.closeHour,
                 storeid: storeItem.storeId,
+                storeRate: storeItem.storeRate,
                 // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
                 img: require('../assets/FoodingLogin.png'),
               })),
@@ -177,9 +177,9 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               <RestItem
                 key={index}
                 name={store.name}
-                rating={store.rating}
                 address={store.address}
                 closingTime={store.closeHour}
+                storeRate={store.storeRate}
                 img={store.img}
               />
             </Pressable>
@@ -198,15 +198,15 @@ function AddRestPage({navigation}: MainPageScreenProps) {
 // 식당 1개에 대한 UI 컴포넌트
 const RestItem = ({
   name,
-  rating,
   address,
   closingTime,
+  storeRate,
   img,
 }: {
   name: string;
-  rating: number;
   address: string;
   closingTime: string;
+  storeRate: number;
   img: string;
 }) => {
   return (
@@ -235,8 +235,7 @@ const RestItem = ({
         </View>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
-          <Text>{rating}</Text>
-          <Text style={{color: 'black'}}> {rating} (302)</Text>
+          <Text style={{color: 'black'}}> {storeRate}</Text>
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 'bold', fontSize: 12}}>
