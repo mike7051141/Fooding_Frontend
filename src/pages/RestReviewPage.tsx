@@ -14,7 +14,10 @@ import axios from 'axios';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 
-type MainPageScreenProps = NativeStackScreenProps<MainPageStackParamList>;
+type MainPageScreenProps = NativeStackScreenProps<
+  MainPageStackParamList,
+  'AddReviewPage'
+>;
 
 type RestReviewPageProps = {
   storeid: number;
@@ -22,7 +25,11 @@ type RestReviewPageProps = {
 };
 
 function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
-  //
+  const toAddReviewPage = () => {
+    navigation.navigate('AddReviewPage', {storeid});
+  };
+
+  // 해당 식당에 달린 모든 후기들 정보 담는 배열의 타입
   interface ReviewData {
     reviewId: number;
     writerNickName: string;
@@ -30,9 +37,10 @@ function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
     rate: number;
   }
 
-  //
+  // 해당 식당에 달린 모든 후기들 정보 담는 배열 선언
   const [reviewList, setReviewList] = useState<Array<ReviewData>>([]);
 
+  // 후기 출력
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -68,7 +76,7 @@ function RestReviewPage({storeid, navigation}: RestReviewPageProps) {
   return (
     <View>
       <View style={styles.AddMenuWrapper}>
-        <TouchableOpacity style={styles.AddMenu}>
+        <TouchableOpacity style={styles.AddMenu} onPress={toAddReviewPage}>
           <Text style={{color: 'gray', fontSize: 12}}>후기 작성</Text>
         </TouchableOpacity>
       </View>
