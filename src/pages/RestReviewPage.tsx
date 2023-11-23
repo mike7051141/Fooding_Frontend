@@ -178,7 +178,7 @@ const ReviewItem = ({
           }}>
           <View style={styles.imageFrame}>
             <Image
-              source={require('../assets/food2.png')}
+              source={require('../assets/profileImage.png')}
               style={styles.image}
             />
           </View>
