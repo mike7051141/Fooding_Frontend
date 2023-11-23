@@ -172,8 +172,8 @@ function RestPage({navigation}: MainPageScreenProps) {
           <Ionicons name="arrow-back-outline" size={25} color="white" />
         </TouchableOpacity>
         <View>
-          <View style={{}}>
-            <Image source={require('../assets/RestImage.png')} />
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={require('../assets/McDonald.png')} />
           </View>
           <View
             style={{

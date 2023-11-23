@@ -134,7 +134,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     } else {
       // 검색어가 빈 string이 아닐 경우 해당 검색어를 포함한 식당들만 출력
       const filteredStores = searchStoreList.filter(storeItem =>
-        storeItem.name.includes(text),
+        storeItem.name.toLowerCase().includes(text.toLowerCase()),
       );
       setSearchStoreList(filteredStores);
     }
