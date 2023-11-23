@@ -95,6 +95,7 @@ function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
             value={password}
             ref={passwordRef}
             onChangeText={onChangePassword}
+            secureTextEntry={true} // Set secureTextEntry to true
             style={styles.TextInPut}></TextInput>
         </View>
       </View>

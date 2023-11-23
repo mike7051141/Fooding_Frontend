@@ -20,7 +20,7 @@ function RestListPage() {
     <Tab.Navigator
       screenOptions={{
         tabBarScrollEnabled: true, // 스크롤 가능하도록 설정
-        tabBarItemStyle: {width: 80}, // 탭 너비 자동 조정
+        tabBarItemStyle: {width: 100}, // 탭 너비 자동 조정
         swipeEnabled: false,
       }}>
       <Tab.Screen
@@ -43,7 +43,7 @@ function RestListPage() {
       <Tab.Screen
         name="FoodPage2"
         component={FoodPage2}
-        options={{title: '일식'}}
+        options={{title: '패스트푸드'}}
       />
       <Tab.Screen
         name="FoodPage3"

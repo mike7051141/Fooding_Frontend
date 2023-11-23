@@ -174,6 +174,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
             placeholder={userPassWord}
             style={styles.input}
             value={newUserPassWord}
+            secureTextEntry={true} // Set secureTextEntry to true
             onChangeText={text => setNewUserPassWord(text)}
           />
         </View>

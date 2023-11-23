@@ -53,6 +53,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     reviewCount: number;
     storeLikeCount: number;
     storeRate: number;
+    imgUrl: string;
   }
   interface VisitedData {
     storeId: number;
@@ -65,6 +66,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     reviewCount: number;
     storeLikeCount: number;
     storeRate: number;
+    imgUrl: string;
   }
   const [storeData, setStoreData] = useState<Array<StoreData>>([]);
   const [visitedData, setVisitedData] = useState<Array<VisitedData>>([]);
@@ -167,7 +169,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     storeid: storeItem.storeId,
     storeRate: storeItem.storeRate,
     reviewCount: storeItem.reviewCount,
-    img: require('../assets/Fooding.png'),
+    imgUrl: storeItem.imgUrl,
   }));
   const VisitedPlacesData = visitedData.map((storeItem, index) => ({
     name: storeItem.storeName,
@@ -176,7 +178,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     storeid: storeItem.storeId,
     storeRate: storeItem.storeRate,
     reviewCount: storeItem.reviewCount,
-    img: require('../assets/Fooding.png'),
+    imgUrl: storeItem.imgUrl,
   }));
 
   const toRestPage = (storeid: number) => {
@@ -415,7 +417,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
                 key={index}
                 name={MyNearPlace.name}
                 address={MyNearPlace.address}
-                img={MyNearPlace.img}
+                img={MyNearPlace.imgUrl}
                 storeRate={MyNearPlace.storeRate}
                 reviewCount={MyNearPlace.reviewCount}
               />
@@ -441,14 +443,14 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           최근 방문한 장소
         </Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {VisitedPlacesData.map((VisitedPlace, index) => (
+          {VisitedPlacesData.reverse().map((VisitedPlace, index) => (
             <RecentPlaces
               key={index}
               name={VisitedPlace.name}
               storeRate={VisitedPlace.storeRate}
               reviewCount={VisitedPlace.reviewCount}
               address={VisitedPlace.address}
-              img={VisitedPlace.img}
+              imgUrl={VisitedPlace.imgUrl}
             />
           ))}
         </ScrollView>
@@ -508,20 +510,20 @@ const styles = StyleSheet.create({
 const MyNearPlaces = ({
   name,
   address,
-  img,
+  imgUrl,
   storeRate,
   reviewCount,
 }: {
   name: string;
   address: string;
-  img: string;
+  imgUrl: string;
   storeRate: number;
   reviewCount: number;
 }) => {
   return (
     <>
       <View style={{marginLeft: 20}}>
-        <Image source={img} style={styles.Scrollimage} />
+        <Image source={{uri: imgUrl}} style={styles.Scrollimage} />
         <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
           {name}
         </Text>
@@ -543,20 +545,20 @@ const MyNearPlaces = ({
 const RecentPlaces = ({
   name,
   address,
-  img,
+  imgUrl,
   storeRate,
   reviewCount,
 }: {
   name: string;
   address: string;
-  img: string;
+  imgUrl: string;
   storeRate: number;
   reviewCount: number;
 }) => {
   return (
     <>
       <View style={{marginLeft: 20}}>
-        <Image source={img} style={styles.Scrollimage} />
+        <Image source={{uri: imgUrl}} style={styles.Scrollimage} />
         <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
           {name}
         </Text>
