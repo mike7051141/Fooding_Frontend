@@ -73,17 +73,7 @@ function MainStackList() {
         component={RestListPage}
         options={({navigation}) => ({
           headerShown: true,
-          headerTitle: () => (
-            <Image
-              source={require('../assets/FoodingLogin.png')}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 50,
-                height: 60,
-              }}
-            />
-          ),
+          headerTitle: () => <View></View>,
           headerRight: () => (
             <View>
               <Pressable

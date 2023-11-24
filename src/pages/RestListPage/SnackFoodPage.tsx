@@ -20,8 +20,8 @@ type MainPageScreenProps = NativeStackScreenProps<
   'RestPage'
 >;
 
-function KoreaFoodPage({navigation}: MainPageScreenProps) {
-  const category = '한식';
+function SnackFoodPage({navigation}: MainPageScreenProps) {
+  const category = '분식';
   const toRestPage = (storeid: number) => {
     navigation.navigate('RestPage', {storeid: storeid});
   };
@@ -260,4 +260,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default KoreaFoodPage;
+export default SnackFoodPage;

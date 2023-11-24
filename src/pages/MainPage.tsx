@@ -123,6 +123,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
       }
     };
 
+    fetchData();
     const unsubscribe = navigation.addListener('focus', () => {
       fetchData();
     });
@@ -309,7 +310,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         }}>
         <View style={styles.ViewFood}>
           <View style={styles.foods}>
-            <Pressable onPress={() => toRestListPage('KoreaFoodPage')}>
+            <Pressable onPress={() => toRestListPage('Korea')}>
               <Image
                 source={require('../assets/food1.png')}
                 style={styles.image}
@@ -327,7 +328,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             <Text style={styles.FoodsText}>중식</Text>
           </View>
           <View style={styles.foods}>
-            <Pressable onPress={() => toRestListPage('FoodPage1')}>
+            <Pressable onPress={() => toRestListPage('Italy')}>
               <Image
                 source={require('../assets/food3.png')}
                 style={styles.image}
@@ -336,7 +337,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             <Text style={styles.FoodsText}>양식</Text>
           </View>
           <View style={styles.foods}>
-            <Pressable onPress={() => toRestListPage('FoodPage2')}>
+            <Pressable onPress={() => toRestListPage('Japan')}>
               <Image
                 source={require('../assets/food4.png')}
                 style={styles.image}
@@ -345,7 +346,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             <Text style={styles.FoodsText}>일식</Text>
           </View>
           <View style={styles.foods}>
-            <Pressable onPress={() => toRestListPage('FoodPage3')}>
+            <Pressable onPress={() => toRestListPage('LateNight')}>
               <Image
                 source={require('../assets/food5.png')}
                 style={styles.image}
@@ -356,38 +357,48 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         </View>
         <View style={styles.ViewFood}>
           <View style={styles.foods}>
-            <Image
-              source={require('../assets/food6.png')}
-              style={styles.image}
-            />
+            <Pressable onPress={() => toRestListPage('Dessert')}>
+              <Image
+                source={require('../assets/food6.png')}
+                style={styles.image}
+              />
+            </Pressable>
             <Text style={styles.FoodsText}>디저트</Text>
           </View>
           <View style={styles.foods}>
-            <Image
-              source={require('../assets/food7.png')}
-              style={styles.image}
-            />
+            <Pressable onPress={() => toRestListPage('Chicken')}>
+              <Image
+                source={require('../assets/food7.png')}
+                style={styles.image}
+              />
+            </Pressable>
             <Text style={styles.FoodsText}>치킨</Text>
           </View>
           <View style={styles.foods}>
-            <Image
-              source={require('../assets/food8.png')}
-              style={styles.image}
-            />
+            <Pressable onPress={() => toRestListPage('Pizza')}>
+              <Image
+                source={require('../assets/food8.png')}
+                style={styles.image}
+              />
+            </Pressable>
             <Text style={styles.FoodsText}>피자</Text>
           </View>
           <View style={styles.foods}>
-            <Image
-              source={require('../assets/food9.png')}
-              style={styles.image}
-            />
+            <Pressable onPress={() => toRestListPage('SnackFood')}>
+              <Image
+                source={require('../assets/food9.png')}
+                style={styles.image}
+              />
+            </Pressable>
             <Text style={styles.FoodsText}>분식</Text>
           </View>
           <View style={styles.foods}>
-            <Image
-              source={require('../assets/food10.png')}
-              style={styles.image}
-            />
+            <Pressable onPress={() => toRestListPage('FastFood')}>
+              <Image
+                source={require('../assets/food10.png')}
+                style={styles.image}
+              />
+            </Pressable>
             <Text style={styles.FoodsText}>패스트푸드</Text>
           </View>
         </View>

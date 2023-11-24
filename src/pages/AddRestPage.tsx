@@ -84,6 +84,8 @@ function AddRestPage({navigation}: MainPageScreenProps) {
         console.error('식당 조회 실패', error);
       }
     };
+
+    fetchData();
     const unsubscribe = navigation.addListener('focus', () => {
       fetchData();
     });

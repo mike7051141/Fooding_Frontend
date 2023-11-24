@@ -3,13 +3,15 @@ import React from 'react';
 import {View, Text, ScrollView, BackHandler} from 'react-native';
 import KoreaFoodPage from './RestListPage/KoreaFoodPage';
 import ChinaFoodPage from './RestListPage/ChinaFoodPage';
-import FoodPage1 from './RestListPage/FoodPage1';
-import FoodPage2 from './RestListPage/FoodPage2';
-import FoodPage3 from './RestListPage/FoodPage3';
-import FoodPage4 from './RestListPage/FoodPage4';
-import FoodPage5 from './RestListPage/FoodPage5';
+import ItalyFoodPage from './RestListPage/ItalyFoodPage';
+import JapanFoodPage from './RestListPage/JapanFoodPage';
+import LateNightFoodPage from './RestListPage/LateNightFoodPage';
+import DessertPage from './RestListPage/DessertPage';
+import ChickenPage from './RestListPage/ChickenPage';
+import PizzaPage from './RestListPage/PizzaPage';
+import SnackFoodPage from './RestListPage/SnackFoodPage';
+import FastFoodPage from './RestListPage/FastFoodPage';
 import {useRoute} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,7 +26,7 @@ function RestListPage() {
         swipeEnabled: false,
       }}>
       <Tab.Screen
-        name="KoreaFoodPage"
+        name="Korea"
         component={KoreaFoodPage}
         options={{
           title: '한식',
@@ -36,29 +38,44 @@ function RestListPage() {
         options={{title: '중식'}}
       />
       <Tab.Screen
-        name="FoodPage1"
-        component={FoodPage1}
+        name="Italy"
+        component={ItalyFoodPage}
         options={{title: '양식'}}
       />
       <Tab.Screen
-        name="FoodPage2"
-        component={FoodPage2}
-        options={{title: '패스트푸드'}}
+        name="Japan"
+        component={JapanFoodPage}
+        options={{title: '일식'}}
       />
       <Tab.Screen
-        name="FoodPage3"
-        component={FoodPage3}
+        name="LateNight"
+        component={LateNightFoodPage}
         options={{title: '야식'}}
       />
       <Tab.Screen
-        name="FoodPage4"
-        component={FoodPage4}
+        name="Dessert"
+        component={DessertPage}
         options={{title: '디저트'}}
       />
       <Tab.Screen
-        name="FoodPage5"
-        component={FoodPage5}
+        name="Chicken"
+        component={ChickenPage}
         options={{title: '치킨'}}
+      />
+      <Tab.Screen
+        name="Pizza"
+        component={PizzaPage}
+        options={{title: '피자'}}
+      />
+      <Tab.Screen
+        name="SnackFood"
+        component={SnackFoodPage}
+        options={{title: '분식'}}
+      />
+      <Tab.Screen
+        name="FastFood"
+        component={FastFoodPage}
+        options={{title: '패스트푸드'}}
       />
     </Tab.Navigator>
   );

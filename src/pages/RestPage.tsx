@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import MainTabNavigator from '../components/MainTabNavigator';
 import MainPage from './MainPage';
@@ -48,6 +49,42 @@ function RestPage({navigation}: MainPageScreenProps) {
       resetState: resetState,
     });
   };
+
+  const deleteStore = async (storeId: number) => {
+    Alert.alert(
+      '알림',
+      '이 식당을 삭제하시겠습니까?',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '삭제',
+          onPress: async () => {
+            navigation.goBack();
+
+            try {
+              const token = await retrieveToken();
+              await axios.delete(
+                `http://kymokim.iptime.org:11080/api/store/delete/${storeId}`,
+                {
+                  headers: {
+                    'x-auth-token': token,
+                  },
+                },
+              );
+            } catch (e) {
+              console.error('식당 삭제 실패', e);
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
   const [currentPage, setCurrentPage] = useState('');
   const [address, setAddress] = useState<string>(''); // State to store the input address
   const [closeHour, setCloseHour] = useState<string>('');
@@ -197,6 +234,8 @@ function RestPage({navigation}: MainPageScreenProps) {
                 }}>
                 <View
                   style={{
+                    width: 60,
+                    height: 60,
                     flexDirection: 'column',
                     alignItems: 'center',
                     marginHorizontal: 5,
@@ -212,6 +251,28 @@ function RestPage({navigation}: MainPageScreenProps) {
 
                 <View
                   style={{
+                    width: 60,
+                    height: 60,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginHorizontal: 5,
+                  }}>
+                  <TouchableOpacity onPress={() => deleteStore(storeId)}>
+                    <Ionicons
+                      name="trash-outline"
+                      size={30}
+                      color={'black'}
+                      style={{marginLeft: 15}}
+                    />
+                    <Text style={{color: 'black', marginRight: 0}}>
+                      식당 삭제
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    width: 60,
+                    height: 60,
                     flexDirection: 'column',
                     alignItems: 'center',
                     marginHorizontal: 5,

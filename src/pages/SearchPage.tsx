@@ -77,6 +77,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
       }
     };
 
+    fetchData();
     const unsubscribe = navigation.addListener('focus', () => {
       fetchData();
     });
