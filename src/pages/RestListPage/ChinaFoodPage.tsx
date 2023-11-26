@@ -1,55 +1,95 @@
 import React, {useState} from 'react';
-import {View, Button, Image} from 'react-native';
+import {View, Button, Image, Alert} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import axios from 'axios';
 import {retrieveToken} from '../../store/storage';
 
-interface ChinaFoodPageProps {}
-
-const ChinaFoodPage: React.FC<ChinaFoodPageProps> = () => {
+const ChinaFoodPage: React.FC = () => {
   const [imgFile, setImgFile] = useState<any>(null);
-  const [imageSource, setImageSource] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImagePicker = async () => {
     try {
-      const image = await ImagePicker.openPicker({
+      const imagePickerOptions = {
         width: 300,
         height: 400,
         cropping: true,
-      });
-
-      const file = {
-        uri: image.path,
-        type: image.mime,
-        name: image.path.split('/').pop(),
       };
 
-      setImgFile(file);
-      setImageSource(image.path);
+      ImagePicker.openPicker(imagePickerOptions).then(image => {
+        // 이미지 선택 후 처리
+        const file = {
+          uri: image.path,
+          type: image.mime,
+          name: image.path.split('/').pop(),
+        };
+        setImgFile(file);
+        if (image.path) {
+          setSelectedImage(image.path);
+        }
+      });
     } catch (error) {
-      console.log('Error selecting image:', error);
+      console.error('Error selecting image', error);
     }
   };
 
-  const handleSubmit = async () => {
+  const handleImageUpload = async () => {
+    const token = await retrieveToken();
+
+    if (!selectedImage) {
+      Alert.alert('경고', '이미지를 선택하세요.');
+      return;
+    }
+
     try {
       const formData = new FormData();
+      // const uploadImgDto = {
+      //   storeId: 18,
+      //   decId: 0,
+      // };
+      // const blob = new Blob([JSON.stringify(uploadImgDto)], {
+      //   type: 'application/json',
+      // });
 
-      const photoBlob = new Blob([imgFile]);
-      formData.append('file', photoBlob);
+      // formData.append('uploadImgDto', blob);
+      formData.append('image', imgFile);
 
-      //formData.append('file', imgFile);
+      console.log(formData);
+      console.log(formData.getParts());
+      const response = await axios.post(
+        'http://kymokim.iptime.org:11080/api/store/uploadImg',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'x-auth-token': token,
+          },
+        },
+      );
 
-      // Modify the structure of the JSON payload
-      //formData.append('uploadImgDto', JSON.stringify({storeId: 2, decId: 0}));
+      // 서버 응답 처리
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error uploading image', error);
+    }
+  };
 
-      const json1 = JSON.stringify({storeId: 1, decId: 0});
-      const blob1 = new Blob([json1]);
-      formData.append('uploadImgDto', blob1);
+  //프로필 이미지
+  const propleImageUpload = async () => {
+    const token = await retrieveToken();
+
+    if (!selectedImage) {
+      Alert.alert('경고', '이미지를 선택하세요.');
+      return;
+    }
+
+    try {
+      const formData1 = new FormData();
+      formData1.append('file', imgFile);
 
       const token = await retrieveToken();
       const headers: Record<string, string> = {
-        // Remove 'Content-Type' from headers since FormData sets it automatically
-        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
       };
 
       if (token) {
@@ -57,30 +97,40 @@ const ChinaFoodPage: React.FC<ChinaFoodPageProps> = () => {
       }
 
       const response = await fetch(
-        'http://kymokim.iptime.org:11080/api/store/uploadImg',
+        'http://kymokim.iptime.org:11080/api/auth/uploadImg',
         {
           method: 'POST',
           headers: headers,
-          body: formData,
-          mode: 'cors',
+          body: formData1,
         },
       );
+
+      console.log(imgFile);
+      console.log(response);
 
       const responseData = await response.json();
       console.log(responseData);
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error('데이터 전송 중 오류 발생:', error);
     }
   };
 
   return (
-    <View>
-      {imageSource && (
-        <Image source={{uri: imageSource}} style={{width: 200, height: 200}} />
-      )}
-      <Button title="Select Image" onPress={handleImagePicker} />
-      <Button title="Send Image" onPress={handleSubmit} />
-    </View>
+    <>
+      <View>
+        <Button title="이미지 선택" onPress={handleImagePicker} />
+        {selectedImage && (
+          <Image
+            source={{uri: selectedImage}}
+            style={{width: 200, height: 200}}
+          />
+        )}
+        <Button title="이미지 업로드" onPress={handleImageUpload} />
+      </View>
+      <View>
+        <Button title="프로필 이미지 업로드" onPress={propleImageUpload} />
+      </View>
+    </>
   );
 };
 
