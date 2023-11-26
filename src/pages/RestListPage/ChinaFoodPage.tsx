@@ -43,16 +43,16 @@ const ChinaFoodPage: React.FC = () => {
 
     try {
       const formData = new FormData();
-      // const uploadImgDto = {
-      //   storeId: 18,
-      //   decId: 0,
-      // };
-      // const blob = new Blob([JSON.stringify(uploadImgDto)], {
-      //   type: 'application/json',
-      // });
+      const uploadImgDto = {
+        storeId: 22,
+        decId: 0,
+      };
+      const blob = new Blob([JSON.stringify(uploadImgDto)], {
+        type: 'application/json',
+      });
 
-      // formData.append('uploadImgDto', blob);
-      formData.append('image', imgFile);
+      formData.append('uploadImgDto', blob);
+      formData.append('file', imgFile);
 
       console.log(formData);
       console.log(formData.getParts());
@@ -76,8 +76,6 @@ const ChinaFoodPage: React.FC = () => {
 
   //프로필 이미지
   const propleImageUpload = async () => {
-    const token = await retrieveToken();
-
     if (!selectedImage) {
       Alert.alert('경고', '이미지를 선택하세요.');
       return;
