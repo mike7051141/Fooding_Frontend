@@ -43,7 +43,7 @@ function MapPage({navigation}: MainPageScreenProps) {
     latitude: number;
     longitude: number;
     storeid: number;
-    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+    imgUrl: string;
   }
 
   useEffect(() => {
@@ -69,7 +69,7 @@ function MapPage({navigation}: MainPageScreenProps) {
               latitude: parseFloat(storeItem.latitude),
               longitude: parseFloat(storeItem.longitude),
               storeid: storeItem.storeId,
-              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+              imgUrl: storeItem.imgUrl,
             })),
           );
           console.log(data);
@@ -95,6 +95,7 @@ function MapPage({navigation}: MainPageScreenProps) {
     rating: store.rating,
     address: store.address,
     closingTime: store.closeHour,
+    imgUrl: store.imgUrl,
   }));
 
   const [currentLocation, setCurrentLocation] = useState({
@@ -190,10 +191,7 @@ function MapPage({navigation}: MainPageScreenProps) {
               height: 150,
             }}>
             <View style={{marginHorizontal: 10}}>
-              <Image
-                source={require('../assets/food1.png')}
-                style={styles.image}
-              />
+              <Image source={{uri: restaurant.imgUrl}} style={styles.image} />
             </View>
             <View style={{flex: 1, flexDirection: 'column'}}>
               <View>
@@ -248,6 +246,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderWidth: 1,
+    borderRadius: 20,
     borderColor: 'black',
   },
   Scrollstar: {
