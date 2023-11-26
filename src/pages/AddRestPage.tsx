@@ -48,7 +48,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
     storeid: number;
     storeRate: number;
     reviewCount: number;
-    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+    imgUrl: string; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
   // 식당 전체 조회 기능
@@ -74,7 +74,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
               storeid: storeItem.storeId,
               storeRate: storeItem.storeRate,
               reviewCount: storeItem.reviewCount,
-              img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
+              imgUrl: storeItem.imgUrl,
             })),
           );
         } else {
@@ -121,8 +121,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 storeid: storeItem.storeId,
                 storeRate: storeItem.storeRate,
                 reviewCount: storeItem.reviewCount,
-                // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
-                img: require('../assets/FoodingLogin.png'),
+                imgUrl: storeItem.imgUrl,
               })),
             );
           } else {
@@ -186,7 +185,7 @@ function AddRestPage({navigation}: MainPageScreenProps) {
                 closingTime={store.closeHour}
                 storeRate={store.storeRate}
                 reviewCount={store.reviewCount}
-                img={store.img}
+                imgUrl={store.imgUrl}
               />
             </Pressable>
           ))}
@@ -207,14 +206,14 @@ const RestItem = ({
   address,
   closingTime,
   storeRate,
-  img,
+  imgUrl,
   reviewCount,
 }: {
   name: string;
   address: string;
   closingTime: string;
   storeRate: number;
-  img: string;
+  imgUrl: string;
   reviewCount: number;
 }) => {
   return (
@@ -233,7 +232,7 @@ const RestItem = ({
         style={{
           marginHorizontal: 20,
         }}>
-        <Image source={img} style={styles.image} />
+        <Image source={{uri: imgUrl}} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View>

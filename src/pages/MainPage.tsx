@@ -428,7 +428,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
                 key={index}
                 name={MyNearPlace.name}
                 address={MyNearPlace.address}
-                img={MyNearPlace.imgUrl}
+                imgUrl={MyNearPlace.imgUrl}
                 storeRate={MyNearPlace.storeRate}
                 reviewCount={MyNearPlace.reviewCount}
               />

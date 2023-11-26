@@ -38,7 +38,7 @@ function LikePage({navigation}: MainPageScreenProps) {
     closeHour: string;
     storeid: number;
     reviewCount: number;
-    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+    imgUrl: string; // 이미지에 대한 정보가 없어서 any로 처리
   }
 
   // 식당 전체 조회 기능
@@ -64,7 +64,7 @@ function LikePage({navigation}: MainPageScreenProps) {
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
               reviewCount: storeItem.reviewCount,
-              img: require('../assets/image22.png'), // 식당들 초기 조회 시 출력되는 사진들
+              imgUrl: storeItem.imgUrl,
             })),
           );
         } else {
@@ -94,7 +94,7 @@ function LikePage({navigation}: MainPageScreenProps) {
             reviewCount={store.reviewCount}
             address={store.address}
             closingTime={store.closeHour}
-            img={store.img}
+            imgUrl={store.imgUrl}
           />
         </Pressable>
       ))}
@@ -107,14 +107,14 @@ const LikeRestItem = ({
   address,
   closingTime,
   storeRate,
-  img,
+  imgUrl,
   reviewCount,
 }: {
   name: string;
   address: string;
   closingTime: string;
   storeRate: number;
-  img: string;
+  imgUrl: string;
   reviewCount: number;
 }) => {
   return (
@@ -130,7 +130,7 @@ const LikeRestItem = ({
         height: 150,
       }}>
       <View style={{marginHorizontal: 20}}>
-        <Image source={require('../assets/food1.png')} style={styles.image} />
+        <Image source={{uri: imgUrl}} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View>
@@ -170,6 +170,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100,
     height: 100,
+    borderRadius: 10,
+
+    borderWidth: 1,
+    borderColor: 'lightgray',
   },
   Scrollstar: {
     color: 'gray',

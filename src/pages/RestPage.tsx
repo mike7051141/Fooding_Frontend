@@ -90,6 +90,7 @@ function RestPage({navigation}: MainPageScreenProps) {
   const [closeHour, setCloseHour] = useState<string>('');
   const [storeNumber, setStoreNumber] = useState<string>('');
   const [storeContent, setStoreContent] = useState<string>('');
+  const [imgUrl, setImgUrl] = useState<string>('');
   const [storeRate, setStoreRate] = useState<number | null>(null);
   const [reviewCount, setReviewCount] = useState<number>();
   const [latitude, setLatitude] = useState<string>('');
@@ -190,6 +191,7 @@ function RestPage({navigation}: MainPageScreenProps) {
         setStoreContent(response.data.data.storeContent);
         setStoreRate(response.data.data.storeRate);
         setReviewCount(response.data.data.reviewCount);
+        setImgUrl(response.data.data.imgUrl);
         setLatitude(response.data.data.latitude);
         setLongitude(response.data.data.longitude);
         //console.log(data);
@@ -210,7 +212,10 @@ function RestPage({navigation}: MainPageScreenProps) {
         </TouchableOpacity>
         <View>
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <Image source={require('../assets/McDonald.png')} />
+            <Image
+              source={{uri: imgUrl}}
+              style={{width: '100%', aspectRatio: 1.3, resizeMode: 'cover'}}
+            />
           </View>
           <View
             style={{
