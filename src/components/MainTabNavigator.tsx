@@ -147,8 +147,6 @@ function MainTabNavigator() {
             color: 'white',
           },
           headerStyle: {
-            borderBottomWidth: 1.5,
-            borderColor: 'gray',
             backgroundColor: '#B6BE6A',
           },
           tabBarShowLabel: false,
@@ -174,8 +172,6 @@ function MainTabNavigator() {
             color: 'white',
           },
           headerStyle: {
-            borderBottomWidth: 1.5,
-            borderColor: 'gray',
             backgroundColor: '#B6BE6A',
           },
           tabBarShowLabel: false,

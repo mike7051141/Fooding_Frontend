@@ -70,14 +70,17 @@ function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
   }, [loading, navigation, email, password]);
 
   return (
-    <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
+    <View style={styles.wrapper}>
       <View style={styles.Fooding}>
         <Image
           source={require('../assets/FoodingLogin.png')} // 이미지 경로 설정
           style={styles.image} // 이미지 스타일 설정
         />
       </View>
-      <View style={{flex: 2}}>
+      <View
+        style={{
+          flex: 2,
+        }}>
         <View style={styles.Email}>
           <TextInput
             placeholder="이메일을 입력하세요"
@@ -108,8 +111,15 @@ function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    paddingTop: 30,
+    paddingHorizontal: 10,
+  },
   Fooding: {
-    flex: 2,
+    flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -123,20 +133,23 @@ const styles = StyleSheet.create({
   Email: {
     flex: 2,
     paddingHorizontal: 20,
+    justifyContent: 'center',
   },
   Password: {
     flex: 2,
     paddingHorizontal: 20,
+    justifyContent: 'center',
   },
   TextInPut: {
     padding: 5,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 1,
+    borderColor: 'gray',
     marginBottom: 5,
   },
   buttonZone: {
     alignItems: 'center',
     justifyContent: 'flex-end',
-    flex: 4,
+    flex: 3,
     marginBottom: 20,
   },
   LoginButton: {

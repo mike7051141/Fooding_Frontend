@@ -139,9 +139,12 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
   ]);
 
   return (
-    <DismissKeyboardView>
-      <View style={{marginHorizontal: '1%'}}>
-        <View>
+    <DismissKeyboardView style={{backgroundColor: 'white'}}>
+      <View
+        style={{
+          margin: '3%',
+        }}>
+        <View style={{paddingRight: 7}}>
           <View style={styles.View1}>
             <Icon
               name="mail-outline"
@@ -170,7 +173,6 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               value={password}
               ref={passwordRef}
               onChangeText={onChangePassword}
-              placeholderTextColor="black"
             />
           </View>
           <View style={styles.View1}>
@@ -180,11 +182,7 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               size={30}
               style={styles.Icons}
             />
-            <TextInput
-              style={styles.TextInPut1}
-              placeholder="비밀번호 확인"
-              placeholderTextColor="black"
-            />
+            <TextInput style={styles.TextInPut1} placeholder="비밀번호 확인" />
           </View>
           <View style={styles.View1}>
             <Icon
@@ -199,7 +197,6 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               value={name}
               ref={nameRef}
               onChangeText={onChangeName}
-              placeholderTextColor="black"
             />
           </View>
           <View style={styles.View1}>
@@ -215,7 +212,6 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               value={nickName}
               ref={nickNameRef}
               onChangeText={onChangeNickName}
-              placeholderTextColor="black"
             />
           </View>
           <View style={styles.View1}>
@@ -231,7 +227,6 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               value={ID}
               ref={IDRef}
               onChangeText={onChangeID}
-              placeholderTextColor="black"
             />
             <Text style={styles.IdText}>-</Text>
             <TextInput
@@ -243,7 +238,7 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
             />
             <Text
               style={{
-                marginTop: 10,
+                marginTop: 15,
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 'bold',
@@ -266,7 +261,6 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               value={callnumber}
               ref={callnumberRef}
               onChangeText={onChangeCallNumber}
-              placeholderTextColor="black"
             />
           </View>
         </View>
@@ -299,10 +293,11 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     margin: 10,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderColor: 'gray',
     borderRadius: 5,
     marginBottom: 5,
+    fontSize: 11,
   },
 
   TextInPutId: {
@@ -310,18 +305,20 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     margin: 10,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderColor: 'gray',
     borderRadius: 5,
     marginBottom: 5,
+    fontSize: 11,
   },
   TextInPutIdBack: {
     padding: 5,
     margin: 10,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderColor: 'gray',
     borderRadius: 5,
     marginBottom: 5,
+    fontSize: 11,
   },
   IdText: {
     marginTop: 10,
@@ -334,8 +331,8 @@ const styles = StyleSheet.create({
 
   View2: {},
   StartButton: {
-    marginTop: 200,
-    marginHorizontal: 30,
+    marginTop: 50,
+    marginHorizontal: 40,
     backgroundColor: '#B6BE6A',
     paddingHorizontal: 50,
     paddingVertical: 15,
@@ -343,6 +340,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     borderRadius: 20,
     marginBottom: 10,
+    elevation: 7,
   },
   StartButtonText: {
     color: 'white',

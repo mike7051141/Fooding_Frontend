@@ -191,22 +191,24 @@ const SearchStore = ({
         flexDirection: 'row',
         marginHorizontal: 10,
         paddingVertical: 10,
-        borderBottomWidth: 2,
-        borderColor: '#B6BE6A',
+        borderBottomWidth: 0.5,
+        borderColor: 'gray',
       }}>
       <View style={{marginHorizontal: 10}}>
         <Image source={img} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 23, color: 'black', fontWeight: 'bold'}}>
+          <Text style={{fontSize: 20, color: 'black', fontWeight: 'bold'}}>
             {name}
           </Text>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
           <Ionicons name="star-outline" size={15} color="yellow" />
 
-          <Text style={{color: 'black', marginLeft: 5}}>{storeRate}</Text>
+          <Text style={{color: 'black', marginLeft: 5}}>
+            {storeRate.toFixed(1)}
+          </Text>
         </View>
 
         <View
@@ -270,9 +272,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 2,
+    borderBottomWidth: 0.5,
     marginHorizontal: 10,
-    borderColor: '#B6BE6A',
+    borderColor: 'gray',
   },
   backButton: {
     height: 40,

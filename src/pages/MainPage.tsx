@@ -286,7 +286,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           <Text style={styles.LocationText}>내 위치</Text>
         </View>
         <View style={{flex: 3, marginTop: 10}}>
-          <Pressable onPress={toSearchPage}>
+          <Pressable style={{elevation: 15}} onPress={toSearchPage}>
             <View pointerEvents="none">
               <IconTextInput
                 placeholder="오늘은 어디로?"
@@ -300,8 +300,18 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         style={{
           flex: 4,
           flexDirection: 'column',
+          backgroundColor: '#B6BE6A',
         }}>
-        <View style={styles.ViewFood}>
+        <View
+          style={{
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            flex: 1,
+            flexDirection: 'row',
+            backgroundColor: 'white',
+            paddingHorizontal: 20,
+            paddingVertical: 20,
+          }}>
           <View style={styles.foods}>
             <Pressable onPress={() => toRestListPage('Korea')}>
               <Image
@@ -405,12 +415,13 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         <Text
           style={{
             margin: 5,
-            marginLeft: 10,
+            marginLeft: 15,
+            marginTop: 10,
             fontSize: 20,
             fontWeight: 'bold',
             color: 'black',
           }}>
-          내주변 가까운 맛집
+          내 주변 가까운 맛집
         </Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {MyNearPlacesData.map((MyNearPlace, index) => (
@@ -439,7 +450,8 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
         <Text
           style={{
             margin: 5,
-            marginLeft: 10,
+            marginLeft: 15,
+            marginTop: 10,
             fontSize: 20,
             fontWeight: 'bold',
             color: 'black',
@@ -487,7 +499,6 @@ const styles = StyleSheet.create({
   },
   FoodsText: {
     color: 'black',
-    fontWeight: 'bold',
   },
   imageContainer: {
     margin: 10,
@@ -504,6 +515,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'lightgray',
+    elevation: 10,
   },
   Scrollstar: {
     color: 'gray',
@@ -528,9 +540,7 @@ const MyNearPlaces = ({
     <>
       <View style={{marginLeft: 20}}>
         <Image source={{uri: imgUrl}} style={styles.Scrollimage} />
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-          {name}
-        </Text>
+        <Text style={{fontSize: 20, color: 'black'}}>{name}</Text>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
           <Text>
@@ -563,9 +573,7 @@ const RecentPlaces = ({
     <>
       <View style={{marginLeft: 20}}>
         <Image source={{uri: imgUrl}} style={styles.Scrollimage} />
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'black'}}>
-          {name}
-        </Text>
+        <Text style={{fontSize: 20, color: 'black'}}>{name}</Text>
         <View style={{flexDirection: 'row'}}>
           <Ionicons name="star" size={15} color="yellow" />
           <Text>
