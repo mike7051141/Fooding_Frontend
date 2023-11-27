@@ -54,7 +54,6 @@ function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
           password,
         },
       );
-      console.log(response.data.data.accessToken);
       await storeToken(response.data.data.accessToken);
       Alert.alert('알림', '로그인 되었습니다.');
       onLoginSuccess();
@@ -101,7 +100,7 @@ function LoginPage({navigation, onLoginSuccess}: LoginPageScreenProps) {
       </View>
       <View style={styles.buttonZone}>
         <Pressable style={styles.LoginButton} onPress={onPostLogin}>
-          <Text style={styles.LoginButtonText}>들어가기</Text>
+          <Text style={styles.LoginButtonText}>로그인</Text>
         </Pressable>
       </View>
     </View>

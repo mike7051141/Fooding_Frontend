@@ -21,11 +21,6 @@ const Stack = createNativeStackNavigator();
 
 const Token = async () => {
   const token = await retrieveToken();
-  if (token) {
-    console.log('저장된 토큰:', token);
-  } else {
-    console.log('저장된 토큰을 찾을 수 없습니다.');
-  }
 };
 
 type MainPageScreenProps = NativeStackScreenProps<
@@ -76,7 +71,6 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
     const fetchData = async () => {
       try {
         const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
-        console.log(token);
         const response = await axios.get(
           'http://kymokim.iptime.org:11080/api/auth/get',
           {
@@ -256,7 +250,6 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
 
         // 필요한 정보로 주소 조합
         let location = components.join(' ');
-        console.log(`위도: ${lat}, 경도: ${lng} - 주소: ${location}`);
         setMyLocation(location);
       } else {
         console.error(response.data);
