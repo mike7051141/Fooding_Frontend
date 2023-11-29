@@ -47,7 +47,7 @@ function LikePage({navigation}: MainPageScreenProps) {
       try {
         const token = await retrieveToken();
         const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/store/get',
+          'http://kymokim.iptime.org:11080/api/store/getLikedStore',
           {
             headers: {
               'x-auth-token': token,

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -99,6 +99,7 @@ function RestPage({navigation}: MainPageScreenProps) {
   const [line, setLine] = useState(3);
   const [isActivated, setIsActivated] = useState(false);
   const [isLiked, setIsLiked] = useState(false); // 버튼의 상태를 추적하는 새로운 상태
+  const [loading, setLoading] = useState(false);
 
   const handleLine = () => {
     isActivated ? setLine(3) : setLine(Number.MAX_SAFE_INTEGER);
@@ -194,6 +195,7 @@ function RestPage({navigation}: MainPageScreenProps) {
         setImgUrl(response.data.data.imgUrl);
         setLatitude(response.data.data.latitude);
         setLongitude(response.data.data.longitude);
+        setIsLiked(response.data.data.isStoreLiked);
         //console.log(data);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
@@ -201,6 +203,58 @@ function RestPage({navigation}: MainPageScreenProps) {
     };
     fetchData();
   }, [storeId]);
+
+  // 좋아요 기능
+  const likeStore = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const token = await retrieveToken();
+      const response = await axios.post(
+        `http://kymokim.iptime.org:11080/api/store/like/${storeId}`, // 수정된 부분
+        {},
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+      console.log('좋아요!', response.data);
+      Alert.alert('좋아요', '좋아요 성공');
+    } catch (error) {
+      console.error('사용자 정보 업데이트 실패', error);
+    } finally {
+      setLoading(false); // 성공하든 실패하든 loading 상태를 false로 설정
+    }
+  }, [loading, isLiked]);
+
+  // 좋아요 취소 기능
+  const cancelStore = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const token = await retrieveToken();
+      const response = await axios.post(
+        `http://kymokim.iptime.org:11080/api/store/unlike/${storeId}`, // 수정된 부분
+        {},
+        {
+          headers: {
+            'x-auth-token': token,
+          },
+        },
+      );
+      console.log('좋아요취소!', response.data);
+      Alert.alert('좋아요취소', '좋아요 취소');
+    } catch (error) {
+      console.error('사용자 정보 업데이트 실패', error);
+    } finally {
+      setLoading(false); // 성공하든 실패하든 loading 상태를 false로 설정
+    }
+  }, [loading, isLiked]);
 
   return (
     <ScrollView
@@ -230,7 +284,7 @@ function RestPage({navigation}: MainPageScreenProps) {
               <View style={{flex: 8}}>
                 <Text
                   style={{fontWeight: 'bold', color: 'black', fontSize: 25}}>
-                  {restData}
+                  {restData} ({storeId})
                 </Text>
               </View>
               <View
@@ -243,13 +297,19 @@ function RestPage({navigation}: MainPageScreenProps) {
                     height: 60,
                     flexDirection: 'column',
                     alignItems: 'center',
-                    marginHorizontal: 5,
                   }}>
                   <Ionicons
                     name={isLiked ? 'heart' : 'heart-outline'} // 상태에 기반하여 아이콘 변경
-                    size={30}
+                    size={25}
                     color={isLiked ? 'red' : 'black'}
-                    onPress={() => setIsLiked(prev => !prev)} // 버튼을 누를 때 상태 토글
+                    onPress={() => {
+                      setIsLiked(prev => !prev);
+                      if (isLiked) {
+                        cancelStore();
+                      } else {
+                        likeStore();
+                      }
+                    }} // 버튼을 누를 때 상태 토글
                   />
                   <Text style={{color: 'black', marginLeft: 0}}>좋아요</Text>
                 </View>
@@ -260,12 +320,11 @@ function RestPage({navigation}: MainPageScreenProps) {
                     height: 60,
                     flexDirection: 'column',
                     alignItems: 'center',
-                    marginHorizontal: 5,
                   }}>
                   <TouchableOpacity onPress={() => deleteStore(storeId)}>
                     <Ionicons
                       name="trash-outline"
-                      size={30}
+                      size={25}
                       color={'black'}
                       style={{marginLeft: 15}}
                     />
@@ -280,13 +339,13 @@ function RestPage({navigation}: MainPageScreenProps) {
                     height: 60,
                     flexDirection: 'column',
                     alignItems: 'center',
-                    marginHorizontal: 5,
+                    marginHorizontal: 2,
                   }}>
                   <TouchableOpacity
                     onPress={() => toStoreInfoEditPage(storeId, false)}>
                     <Ionicons
                       name="create-outline"
-                      size={30}
+                      size={25}
                       color={'black'}
                       style={{marginLeft: 15}}
                     />
