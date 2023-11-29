@@ -36,41 +36,52 @@ const ChinaFoodPage: React.FC = () => {
   const handleImageUpload = async () => {
     const token = await retrieveToken();
 
-    if (!selectedImage) {
+    // 이미지 정보 확인
+    if (!imgFile) {
       Alert.alert('경고', '이미지를 선택하세요.');
       return;
     }
 
+    // FormData 생성
+    const formData = new FormData();
+
+    // 이미지 파일 추가
+    formData.append('file', imgFile);
+
+    // 추가 데이터를 JSON 문자열로 추가
+    const jsonData = {storeId: 2004, decId: 0};
+    const jsonString = JSON.stringify(jsonData);
+    const blob = new Blob([jsonString], {
+      type: 'application/json',
+    } as BlobOptions);
+    formData.append('uploadImgDto', blob);
+
     try {
-      const formData = new FormData();
-      const uploadImgDto = {
-        storeId: 22,
-        decId: 0,
+      const headers: Record<string, string> = {
+        // 'Content-Type': 'multipart/form-data', // 주석 처리: 자동으로 설정됨
       };
-      const blob = new Blob([JSON.stringify(uploadImgDto)], {
-        type: 'application/json',
-      });
 
-      formData.append('uploadImgDto', blob);
-      formData.append('file', imgFile);
+      if (token) {
+        headers['x-auth-token'] = token;
+      }
 
-      console.log(formData);
-      console.log(formData.getParts());
-      const response = await axios.post(
+      const response = await fetch(
         'http://kymokim.iptime.org:11080/api/store/uploadImg',
-        formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'x-auth-token': token,
-          },
+          method: 'POST',
+          headers: headers,
+          mode: 'cors',
+          credentials: 'include',
+          body: formData,
         },
       );
 
+      const data = await response.json();
       // 서버 응답 처리
-      console.log(response.data);
+      console.log(data);
     } catch (error) {
-      console.error('Error uploading image', error);
+      // 오류 처리
+      console.error('에러:', error);
     }
   };
 

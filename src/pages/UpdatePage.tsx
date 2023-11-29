@@ -11,6 +11,7 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 import {retrieveToken, storeToken} from '../store/storage';
 
@@ -31,6 +32,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
   const [userNickName, setUserNickName] = useState('');
   const [userTel, setUserTel] = useState(''); // 회원가입할 때 백에 전화번호 저장 안 됨 아직
   const [userPassWord, setUserPassWord] = useState('');
+  const [imgUri, setImgUri] = useState(null);
 
   // 사용자 정보 끌어와서 placeholder로 표시
   useEffect(() => {
@@ -51,6 +53,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
         const nickName = response.data.data.nickName;
         const tel = response.data.data.phoneNumber;
         const password = response.data.data.password;
+        const userImg = response.data.data.userImg;
 
         // 데이터 담기
         setUserName(name);
@@ -58,6 +61,7 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
         setUserNickName(nickName);
         setUserTel(tel);
         setUserPassWord(password);
+        setImgUri(userImg);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
       }
@@ -71,13 +75,46 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
   const [newUserTel, setNewUserTel] = useState('');
   const [newUserNickName, setNewUserNickName] = useState('');
   const [newUserPassWord, setNewUserPassWord] = useState('');
+  const [imgFile, setImgFile] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImagePicker = async () => {
+    try {
+      const imagePickerOptions = {
+        width: 300,
+        height: 400,
+        cropping: true,
+      };
+
+      ImagePicker.openPicker(imagePickerOptions).then(image => {
+        // 이미지 선택 후 처리
+        const file = {
+          uri: image.path,
+          type: image.mime,
+          name: image.path.split('/').pop(),
+        };
+        setImgFile(file);
+        if (image.path) {
+          setSelectedImage(image.path);
+          setImgUri(imgFile);
+        }
+      });
+    } catch (error) {
+      console.error('Error selecting image', error);
+    }
+  };
 
   const updateUser = useCallback(async () => {
     if (loading) {
       return;
     }
+
     try {
       setLoading(true);
+
+      const formData1 = new FormData();
+      formData1.append('file', imgFile);
+
       const token = await retrieveToken();
       const response = await axios.put(
         'http://kymokim.iptime.org:11080/api/auth/update',
@@ -94,6 +131,24 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
           },
         },
       );
+
+      const headers: Record<string, string> = {
+        'Content-Type': 'multipart/form-data',
+      };
+
+      if (token) {
+        headers['x-auth-token'] = token;
+      }
+      const responseimg = await fetch(
+        'http://kymokim.iptime.org:11080/api/auth/uploadImg',
+        {
+          method: 'POST',
+          headers: headers,
+          body: formData1,
+        },
+      );
+      const responseData = await responseimg.json();
+
       console.log('사용자 정보 업데이트됨:', response.data);
       Alert.alert('알림', '회원 정보 수정 완료');
       toProfilePage();
@@ -121,11 +176,15 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
         </TouchableOpacity>
       </View>
       <View style={styles.profileContainer}>
-        <Image
-          source={require('../assets/food1.png')} // 프로필 이미지 경로 설정
-          style={styles.profileImage}
-        />
-        <TouchableOpacity onPress={() => {}}>
+        {imgUri ? (
+          <Image source={{uri: imgUri}} style={styles.profileImage} />
+        ) : (
+          <Image
+            source={require('../assets/profileImage.png')}
+            style={styles.profileImage}
+          />
+        )}
+        <TouchableOpacity onPress={handleImagePicker}>
           <Text style={styles.editProfileButton}>사진 편집</Text>
         </TouchableOpacity>
       </View>
