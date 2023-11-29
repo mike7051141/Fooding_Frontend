@@ -284,7 +284,7 @@ function RestPage({navigation}: MainPageScreenProps) {
               <View style={{flex: 8}}>
                 <Text
                   style={{fontWeight: 'bold', color: 'black', fontSize: 25}}>
-                  {restData} ({storeId})
+                  {restData}
                 </Text>
               </View>
               <View

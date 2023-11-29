@@ -44,6 +44,8 @@ function MapPage({navigation}: MainPageScreenProps) {
     longitude: number;
     storeid: number;
     imgUrl: string;
+    storeRate: number;
+    reviewCount: number;
   }
 
   useEffect(() => {
@@ -70,6 +72,8 @@ function MapPage({navigation}: MainPageScreenProps) {
               longitude: parseFloat(storeItem.longitude),
               storeid: storeItem.storeId,
               imgUrl: storeItem.imgUrl,
+              storeRate: storeItem.storeRate,
+              reviewCount: storeItem.reviewCount,
             })),
           );
           console.log(data);
@@ -92,7 +96,8 @@ function MapPage({navigation}: MainPageScreenProps) {
   const markInfo = searchStoreList.map(store => ({
     storeid: store.storeid,
     name: store.name,
-    rating: store.rating,
+    storeRate: store.storeRate,
+    reviewCount: store.reviewCount,
     address: store.address,
     closingTime: store.closeHour,
     imgUrl: store.imgUrl,
@@ -129,7 +134,7 @@ function MapPage({navigation}: MainPageScreenProps) {
         style={{flex: 1}}
         showsMyLocationButton={false}
         center={{
-          zoom: 15,
+          zoom: 13,
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
         }} // 중심 위치를 현재 위치로 설정합니다.
@@ -201,14 +206,10 @@ function MapPage({navigation}: MainPageScreenProps) {
                 </Text>
               </View>
               <View style={{flexDirection: 'row'}}>
-                <Ionicons
-                  name="star-outline"
-                  size={15}
-                  color="black"
-                  style={styles.Scrollstar}
-                />
-                <Text style={{color: 'black', marginLeft: 5}}>
-                  {restaurant.rating} (302)
+                <Ionicons name="star" size={15} color="yellow" />
+                <Text>
+                  {' '}
+                  {restaurant.storeRate.toFixed(1)} ({restaurant.reviewCount}){' '}
                 </Text>
               </View>
               <View>
