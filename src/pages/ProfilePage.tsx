@@ -100,7 +100,7 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
         horizontal={false}
         renderItem={({item}) => (
           <Pressable onPress={() => toRestPage()} style={styles.frame}>
-            <Image source={item.image} style={styles.photo} />
+            <View></View>
           </Pressable>
         )}
         keyExtractor={item => item.id.toString()}
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     margin: 0.5,
     borderWidth: 0.5,
-    padding: 5,
+    padding: 0.5,
     borderColor: 'lightgray',
   },
   photo: {
