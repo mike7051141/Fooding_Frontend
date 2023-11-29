@@ -35,7 +35,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
     closeHour: string;
     storeid: number;
     storeRate: number;
-    img: any; // 이미지에 대한 정보가 없어서 any로 처리
+    imgUrl: string;
   }
 
   // 서버에서 받아온 식당들을 배열 형태로 저장
@@ -66,7 +66,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId.toString(),
               storeRate: storeItem.storeRate,
-              img: require('../assets/FoodingLogin.png'), // 식당들 초기 조회 시 출력되는 사진들
+              imgUrl: storeItem.imgUrl,
             })),
           );
         } else {
@@ -114,7 +114,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               closeHour: storeItem.closeHour,
               storeid: storeItem.storeId,
               storeRate: storeItem.storeRate,
-              img: require('../assets/image22.png'), // 검색어를 전부 지웠을 때 출력되는 식당들의 사진들
+              imgUrl: storeItem.imgUrl,
             })),
           );
         } else {
@@ -162,7 +162,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               address={store.address}
               closingTime={store.closeHour}
               storeRate={store.storeRate}
-              img={store.img}
+              imgUrl={store.imgUrl}
             />
           </Pressable>
         ))}
@@ -177,13 +177,13 @@ const SearchStore = ({
   address,
   closingTime,
   storeRate,
-  img,
+  imgUrl,
 }: {
   name: string;
   address: string;
   closingTime: string;
   storeRate: number;
-  img: string;
+  imgUrl: string;
 }) => {
   return (
     <View
@@ -195,7 +195,7 @@ const SearchStore = ({
         borderColor: 'gray',
       }}>
       <View style={{marginHorizontal: 10}}>
-        <Image source={img} style={styles.image} />
+        <Image source={{uri: imgUrl}} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View style={{flex: 1}}>
