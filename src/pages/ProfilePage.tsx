@@ -44,6 +44,8 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
 
   const [userData, setUserData] = useState('');
 
+  const [imgUri, setImgUri] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,6 +60,8 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
           },
         );
         const data = response.data.data.nickName;
+        const imgUri = response.data.data.userImg;
+        setImgUri(imgUri);
         setUserData(data);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
@@ -74,10 +78,14 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-        <Image
-          source={require('../assets/food9.png')}
-          style={styles.profileImage}
-        />
+        {imgUri ? (
+          <Image source={{uri: imgUri}} style={styles.profileImage} />
+        ) : (
+          <Image
+            source={require('../assets/profileImage.png')}
+            style={styles.profileImage}
+          />
+        )}
         <View>
           <Text style={styles.username}>{userData} 님</Text>
           <Pressable onPress={() => toUpdatePage()}>
