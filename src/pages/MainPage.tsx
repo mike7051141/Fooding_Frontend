@@ -298,7 +298,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
       </View>
       <View
         style={{
-          flex: 4,
+          flex: 3.5,
           flexDirection: 'column',
           backgroundColor: '#B6BE6A',
         }}>
@@ -306,6 +306,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
           style={{
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
+            elevation: 10,
             flex: 1,
             flexDirection: 'row',
             backgroundColor: 'white',

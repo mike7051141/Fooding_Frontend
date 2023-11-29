@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     margin: 0.5,
     borderWidth: 0.5,
-    padding: 0.5,
+    padding: 5,
     borderColor: 'lightgray',
   },
   photo: {
