@@ -7,6 +7,7 @@ import {
   Pressable,
   FlatList,
   Alert,
+  TextInput,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -28,29 +29,19 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
     navigation.navigate('UpdatePage');
   };
 
-  const photosData = [
-    {id: 1, image: require('../assets/food1.png')},
-    {id: 2, image: require('../assets/food2.png')},
-    {id: 3, image: require('../assets/food3.png')},
-    {id: 4, image: require('../assets/food4.png')},
-    {id: 5, image: require('../assets/food5.png')},
-    {id: 6, image: require('../assets/food6.png')},
-    {id: 7, image: require('../assets/food7.png')},
-    {id: 8, image: require('../assets/food8.png')},
-    {id: 9, image: require('../assets/food9.png')},
-  ];
-
-  const [loading, setLoading] = useState(false);
-
-  const [userData, setUserData] = useState('');
-
+  // placeholder 표시하기 위한 변수들
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userNickName, setUserNickName] = useState('');
+  const [userTel, setUserTel] = useState(''); // 회원가입할 때 백에 전화번호 저장 안 됨 아직
+  const [userPassWord, setUserPassWord] = useState('');
   const [imgUri, setImgUri] = useState(null);
 
+  // 사용자 정보 끌어와서 placeholder로 표시
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
-        console.log(token);
         const response = await axios.get(
           'http://kymokim.iptime.org:11080/api/auth/get',
           {
@@ -59,21 +50,26 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
             },
           },
         );
-        const data = response.data.data.nickName;
-        const imgUri = response.data.data.userImg;
-        setImgUri(imgUri);
-        setUserData(data);
+        // get매핑의 response객체에서 각각 필요한 정보 뺀 후 변수에 저장
+        const name = response.data.data.name;
+        const email = response.data.data.email;
+        const nickName = response.data.data.nickName;
+        const tel = response.data.data.phoneNumber;
+        const userImg = response.data.data.userImg;
+
+        // 데이터 담기
+        setUserName(name);
+        setUserEmail(email);
+        setUserNickName(nickName);
+        setUserTel(tel);
+        setImgUri(userImg);
       } catch (error) {
         console.error('데이터 가져오기 실패', error);
       }
     };
 
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchData();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+    fetchData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -87,7 +83,7 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
           />
         )}
         <View>
-          <Text style={styles.username}>{userData} 님</Text>
+          <Text style={styles.username}>{userNickName} 님</Text>
           <Pressable onPress={() => toUpdatePage()}>
             <View style={styles.setting}>
               <Text style={{marginRight: 5, fontSize: 15, color: 'gray'}}>
@@ -98,21 +94,28 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
           </Pressable>
         </View>
       </View>
-      <View style={styles.profileMid}>
-        <Text style={styles.profileMidFont}>나만의 맛집</Text>
+      <View style={styles.inputContainer}>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>이름: </Text>
+          <TextInput style={styles.input} editable={false} value={userName} />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>아이디: </Text>
+          <TextInput style={styles.input} editable={false} value={userEmail} />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>전화번호: </Text>
+          <TextInput style={styles.input} editable={false} value={userTel} />
+        </View>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>닉네임: </Text>
+          <TextInput
+            style={styles.input}
+            editable={false}
+            value={userNickName}
+          />
+        </View>
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={photosData}
-        numColumns={3}
-        horizontal={false}
-        renderItem={({item}) => (
-          <Pressable onPress={() => toRestPage()} style={styles.frame}>
-            <View></View>
-          </Pressable>
-        )}
-        keyExtractor={item => item.id.toString()}
-      />
     </View>
   );
 };
@@ -126,16 +129,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    height: 150,
-    borderBottomWidth: 1.5,
+    height: 200,
     borderColor: 'gray',
     paddingLeft: 20,
     backgroundColor: 'whitesmoke',
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 150,
+    height: 150,
+    borderRadius: 70,
+    marginLeft: 30,
     marginRight: 50,
   },
   username: {
@@ -172,6 +175,40 @@ const styles = StyleSheet.create({
   photo: {
     flex: 1,
     aspectRatio: 1,
+  },
+  inputContainer: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderColor: 'black',
+    paddingTop: 30,
+    // backgroundColor: 'red',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    // backgroundColor: 'red',
+    width: 400,
+  },
+  inputLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+    marginHorizontal: 10,
+    textAlign: 'center',
+    marginTop: 8,
+    marginLeft: 25,
+    // backgroundColor: 'blue',
+  },
+  input: {
+    color: 'black',
+    flex: 3,
+    borderBottomWidth: 1.5,
+    borderColor: 'gray',
+    fontSize: 18,
+    marginRight: 50,
+    // backgroundColor: 'red',
   },
 });
 
