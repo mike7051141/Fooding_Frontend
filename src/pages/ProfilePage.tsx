@@ -96,20 +96,24 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
       </View>
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>이름</Text>
-          <TextInput style={styles.input} value={userName} />
+          <Text style={styles.inputLabel}>이름: </Text>
+          <TextInput style={styles.input} editable={false} value={userName} />
         </View>
         <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>아이디</Text>
-          <TextInput style={styles.input} value={userEmail} />
+          <Text style={styles.inputLabel}>아이디: </Text>
+          <TextInput style={styles.input} editable={false} value={userEmail} />
         </View>
         <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>전화번호</Text>
-          <TextInput style={styles.input} value={userTel} />
+          <Text style={styles.inputLabel}>전화번호: </Text>
+          <TextInput style={styles.input} editable={false} value={userTel} />
         </View>
         <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>닉네임</Text>
-          <TextInput style={styles.input} value={userNickName} />
+          <Text style={styles.inputLabel}>닉네임: </Text>
+          <TextInput
+            style={styles.input}
+            editable={false}
+            value={userNickName}
+          />
         </View>
       </View>
     </View>
