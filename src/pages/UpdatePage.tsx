@@ -176,7 +176,9 @@ const UserProfileEdit = ({navigation}: MainPageScreenProps) => {
         </TouchableOpacity>
       </View>
       <View style={styles.profileContainer}>
-        {selectedImage ? (
+        {imgUri ? (
+          <Image source={{uri: imgUri}} style={styles.profileImage} />
+        ) : selectedImage ? (
           <Image source={{uri: selectedImage}} style={styles.profileImage} />
         ) : (
           <Image
