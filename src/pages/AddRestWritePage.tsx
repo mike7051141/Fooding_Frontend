@@ -11,6 +11,7 @@ import {
   Button,
   Alert,
 } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
 
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -49,6 +50,8 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
   const [closeDate, setCloseDate] = useState(new Date('2023-11-12T00:00:00'));
   const [openConfirm, setOpenConfirm] = useState(false);
   const [closeConfirm, setCloseConfirm] = useState(false);
+
+  const [storeId, setStoreId] = useState(null);
 
   const selectedOpenTime = openDate.toLocaleTimeString('ko-KR', {
     hour: '2-digit',
@@ -107,6 +110,34 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     fetchData();
   }, []);
 
+  const [imgFile, setImgFile] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const handleImagePicker = async () => {
+    try {
+      const imagePickerOptions = {
+        width: 300,
+        height: 400,
+        cropping: true,
+      };
+
+      ImagePicker.openPicker(imagePickerOptions).then(image => {
+        // 이미지 선택 후 처리
+        const file = {
+          uri: image.path,
+          type: image.mime,
+          name: image.path.split('/').pop(),
+        };
+        setImgFile(file);
+        if (image.path) {
+          setSelectedImage(image.path);
+        }
+      });
+    } catch (error) {
+      console.error('Error selecting image', error);
+    }
+  };
+
   async function geocodeAddress(address: string, apiKey: string) {
     try {
       const response = await axios.get(
@@ -150,6 +181,9 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     if (loading) {
       return;
     }
+    const token = await retrieveToken();
+    const formData = new FormData();
+    formData.append('file', imgFile);
     // Check if any of the required values are empty
     if (
       !address ||
@@ -167,7 +201,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     }
     try {
       setLoading(true);
-      const token = await retrieveToken();
+
       const response = await axios.post(
         'http://kymokim.iptime.org:11080/api/store/create',
         {
@@ -187,7 +221,32 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
           },
         },
       );
-      console.log('식당 추가 완료:', response.data);
+      console.log('식당 추가 완료:', response.data.data);
+      console.log(response.data.status);
+      console.log(response.status);
+      setStoreId(response.data.data);
+      var storeid = response.data.data;
+      console.log(storeid);
+
+      const headers: Record<string, string> = {
+        'Content-Type': 'multipart/form-data',
+      };
+
+      if (token) {
+        headers['x-auth-token'] = token;
+      }
+
+      const response1 = await fetch(
+        `http://kymokim.iptime.org:11080/api/store/uploadImg/${storeid}`, // 여기에 추가 문자를 제거하세요
+        {
+          method: 'POST',
+          headers: headers,
+          body: formData,
+        },
+      );
+      console.log(response1);
+      const responseData = await response1.json();
+
       Alert.alert('알림', '식당 추가 완료');
       toAddRestPage();
     } catch (error) {
@@ -195,7 +254,6 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     }
   }, [
     loading,
-    navigation,
     address,
     category,
     closeHour,
@@ -388,8 +446,16 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
             <Ionicons name="camera-outline" size={25} color={'black'} />
             <Text style={styles.text}>사진을 추가해 주세요</Text>
           </View>
-          <View>
-            <Text> // 이 위치에 사진 추가할 수 있는 컴포넌트 추가 필요</Text>
+          <View style={styles.View1}>
+            <TouchableOpacity onPress={handleImagePicker}>
+              <Ionicons name="add-circle" size={40} color="black" />
+            </TouchableOpacity>
+            {selectedImage && (
+              <Image
+                source={{uri: selectedImage}}
+                style={{width: 50, height: 50}}
+              />
+            )}
           </View>
           <View
             style={{
