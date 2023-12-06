@@ -422,10 +422,10 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             fontWeight: 'bold',
             color: 'black',
           }}>
-          내 주변 가까운 맛집
+          가장 최근 등록된 맛집
         </Text>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {MyNearPlacesData.map((MyNearPlace, index) => (
+          {MyNearPlacesData.reverse().map((MyNearPlace, index) => (
             <Pressable
               onPress={() => toRestPage(MyNearPlace.storeid)}
               key={index}>
