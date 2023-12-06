@@ -69,6 +69,11 @@ const ProfilePage = ({navigation}: MainPageScreenProps) => {
     };
 
     fetchData();
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
@@ -135,8 +140,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'whitesmoke',
   },
   profileImage: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     borderRadius: 70,
     marginLeft: 30,
     marginRight: 50,
