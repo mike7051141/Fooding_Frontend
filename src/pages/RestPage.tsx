@@ -542,7 +542,9 @@ function RestPage({navigation}: MainPageScreenProps) {
           {currentPage === 'RestReviewPage' && (
             <RestReviewPage storeid={copyStoreId} navigation={navigation} />
           )}
-          {currentPage === 'RestLivePage' && <RestLivePage />}
+          {currentPage === 'RestLivePage' && (
+            <RestLivePage storeid={copyStoreId} navigation={navigation} />
+          )}
         </View>
       </View>
     </ScrollView>
