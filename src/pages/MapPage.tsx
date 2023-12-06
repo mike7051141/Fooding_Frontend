@@ -165,7 +165,6 @@ function MapPage({navigation}: MainPageScreenProps) {
             latitude: currentLocation.latitude,
             longitude: currentLocation.longitude,
           }}
-          caption="현재 위치"
         />
       </NaverMapView>
 

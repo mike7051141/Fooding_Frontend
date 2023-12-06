@@ -2,12 +2,13 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import StartPage from './src/pages/StartPage';
 import LoginPage from './src/pages/LoginPage';
 import SignUpPage from './src/pages/SignUpPage';
 import MainStackList from './src/components/MainStack';
 import usePermissions from './src/hooks/usePermissions';
+import {LogBox} from 'react-native';
 
 export type RootStackParamList = {
   StartPage: undefined;
@@ -23,6 +24,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
+  // useEffect(() => {
+  //   LogBox.ignoreAllLogs();
+  // }, []);
 
   const handleLoginSuccess = () => {
     // 로그인이 성공하면 isLoggedIn 값을 true로 업데이트

@@ -36,6 +36,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
     storeid: number;
     storeRate: number;
     imgUrl: string;
+    reviewCount: number;
   }
 
   // 서버에서 받아온 식당들을 배열 형태로 저장
@@ -67,6 +68,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               storeid: storeItem.storeId.toString(),
               storeRate: storeItem.storeRate,
               imgUrl: storeItem.imgUrl,
+              reviewCount: storeItem.reviewCount,
             })),
           );
         } else {
@@ -115,6 +117,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               storeid: storeItem.storeId,
               storeRate: storeItem.storeRate,
               imgUrl: storeItem.imgUrl,
+              reviewCount: storeItem.reviewCount,
             })),
           );
         } else {
@@ -163,6 +166,7 @@ function SearchPage({navigation}: SearchPageScreenProps) {
               closingTime={store.closeHour}
               storeRate={store.storeRate}
               imgUrl={store.imgUrl}
+              reviewCount={store.reviewCount}
             />
           </Pressable>
         ))}
@@ -178,12 +182,14 @@ const SearchStore = ({
   closingTime,
   storeRate,
   imgUrl,
+  reviewCount,
 }: {
   name: string;
   address: string;
   closingTime: string;
   storeRate: number;
   imgUrl: string;
+  reviewCount: number;
 }) => {
   return (
     <View
@@ -204,10 +210,10 @@ const SearchStore = ({
           </Text>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
-          <Ionicons name="star-outline" size={15} color="yellow" />
+          <Ionicons name="star" size={15} color="yellow" />
 
           <Text style={{color: 'black', marginLeft: 5}}>
-            {storeRate.toFixed(1)}
+            {storeRate.toFixed(1)} ({reviewCount})
           </Text>
         </View>
 

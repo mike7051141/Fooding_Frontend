@@ -172,6 +172,7 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               placeholder="비밀번호"
               value={password}
               ref={passwordRef}
+              secureTextEntry={true} // Set secureTextEntry to true
               onChangeText={onChangePassword}
             />
           </View>
@@ -182,7 +183,11 @@ function SignUpPage({navigation}: SignUpPageScreenProps) {
               size={30}
               style={styles.Icons}
             />
-            <TextInput style={styles.TextInPut1} placeholder="비밀번호 확인" />
+            <TextInput
+              style={styles.TextInPut1}
+              placeholder="비밀번호 확인"
+              secureTextEntry={true} // Set secureTextEntry to true
+            />
           </View>
           <View style={styles.View1}>
             <Icon
