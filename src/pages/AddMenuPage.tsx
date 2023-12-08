@@ -14,6 +14,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 import DismissKeyboardView from '../components/DissmissKeyboardView';
 import {retrieveToken} from '../store/storage';
+import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 
 type MainPageScreenProps = NativeStackScreenProps<
@@ -34,9 +35,36 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
   const [menuName, setMenuName] = useState('');
   const [menuIntroduction, setMenuIntroduction] = useState('');
   const [menuPrice, setMenuPrice] = useState('');
+  const [imgFile, setImgFile] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // 중복 요청 방지 변수
   const [loading, setLoading] = useState(false);
+
+  const handleImagePicker = async () => {
+    try {
+      const imagePickerOptions = {
+        width: 300,
+        height: 400,
+        cropping: true,
+      };
+
+      ImagePicker.openPicker(imagePickerOptions).then(image => {
+        // 이미지 선택 후 처리
+        const file = {
+          uri: image.path,
+          type: image.mime,
+          name: image.path.split('/').pop(),
+        };
+        setImgFile(file);
+        if (image.path) {
+          setSelectedImage(image.path);
+        }
+      });
+    } catch (error) {
+      console.error('Error selecting image', error);
+    }
+  };
 
   const AddMenu = useCallback(async () => {
     if (loading) {
@@ -147,15 +175,21 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
           <View style={{flexDirection: 'row'}}>
             <Ionicons name="images-outline" size={22} color={'black'} />
             <Text style={styles.holdText}>메뉴의 사진을 첨부해주세요.</Text>
-            <TouchableOpacity style={styles.imageUpload}>
+            <TouchableOpacity
+              onPress={handleImagePicker}
+              style={styles.imageUpload}>
               <Text style={{color: '#B6BE6A', fontSize: 11}}>추가</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <Image
-              source={require('../assets/image22.png')}
-              style={styles.image}
-            />
+            {selectedImage ? (
+              <Image source={{uri: selectedImage}} style={styles.image} />
+            ) : (
+              <Image
+                source={require('../assets/image22.png')}
+                style={styles.image}
+              />
+            )}
           </View>
         </View>
       </ScrollView>

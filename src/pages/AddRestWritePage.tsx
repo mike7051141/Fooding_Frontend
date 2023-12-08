@@ -51,6 +51,9 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [closeConfirm, setCloseConfirm] = useState(false);
 
+  const [imgFile, setImgFile] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const [storeId, setStoreId] = useState(null);
 
   const selectedOpenTime = openDate.toLocaleTimeString('ko-KR', {
@@ -85,35 +88,13 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       setCloseDate(new Date('2023-11-12T00:00:00'));
       setOpenConfirm(false);
       setCloseConfirm(false);
+      setImgFile(null);
 
       // 기타 초기화 로직 추가 가능
     }
   }, [route.params]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = await retrieveToken(); // 여기에 토큰을 설정합니다.
-        const response = await axios.get(
-          'http://kymokim.iptime.org:11080/api/auth/get',
-          {
-            headers: {
-              'x-auth-token': token,
-            },
-          },
-        );
-      } catch (error) {
-        console.error('데이터 가져오기 실패', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const [imgFile, setImgFile] = useState<any>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-  const handleImagePicker = async () => {
+  const handleImagePicker = useCallback(async () => {
     try {
       const imagePickerOptions = {
         width: 300,
@@ -136,7 +117,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     } catch (error) {
       console.error('Error selecting image', error);
     }
-  };
+  }, []);
 
   async function geocodeAddress(address: string, apiKey: string) {
     try {
@@ -182,8 +163,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       return;
     }
     const token = await retrieveToken();
-    const formData = new FormData();
-    formData.append('file', imgFile);
+
     // Check if any of the required values are empty
     if (
       !address ||
@@ -194,7 +174,8 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       !openHour ||
       !storeContent ||
       !storeName ||
-      !storeNumber
+      !storeNumber ||
+      !imgFile
     ) {
       Alert.alert('알림', '모든 필수 정보를 입력해주세요.');
       return;
@@ -221,6 +202,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
           },
         },
       );
+
       console.log('식당 추가 완료:', response.data.data);
       console.log(response.data.status);
       console.log(response.status);
@@ -228,24 +210,33 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
       var storeid = response.data.data;
       console.log(storeid);
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'multipart/form-data',
-      };
+      const formData = new FormData();
+      formData.append('file', imgFile);
+      console.log('임지' + imgFile);
 
-      if (token) {
-        headers['x-auth-token'] = token;
+      try {
+        const response1 = await axios.post(
+          `http://kymokim.iptime.org:11080/api/store/uploadImg/${storeid}`,
+          formData,
+          {
+            headers: {
+              'x-auth-token': token,
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        console.log(response1);
+      } catch (error) {
+        console.log('여긴가' + error);
       }
-
-      const response1 = await fetch(
-        `http://kymokim.iptime.org:11080/api/store/uploadImg/${storeid}`, // 여기에 추가 문자를 제거하세요
-        {
-          method: 'POST',
-          headers: headers,
-          body: formData,
-        },
-      );
-      console.log(response1);
-      const responseData = await response1.json();
+      // const response1 = await fetch(
+      //   `http://kymokim.iptime.org:11080/api/store/uploadImg/${storeid}`, // 여기에 추가 문자를 제거하세요
+      //   {
+      //     method: 'POST',
+      //     headers: headers,
+      //     body: formData,
+      //   },
+      // );
 
       Alert.alert('알림', '식당 추가 완료');
       toAddRestPage();
@@ -263,6 +254,7 @@ const AddRestWritePage = ({route, navigation}: MainPageScreenProps) => {
     storeContent,
     storeName,
     storeNumber,
+    imgFile,
   ]);
 
   useEffect(() => {
