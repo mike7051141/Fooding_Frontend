@@ -7,6 +7,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MainPageStackParamList} from '../components/MainStack';
 
 interface menuListData {
+  imgUrl: string;
   menuId: number;
   menuName: string;
   menuContent: string;
@@ -46,6 +47,7 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
         },
       );
       const data = response.data.data;
+      console.log('dlrjrjrjrjrjrjrj' + data);
       if (data && data.menuList && Array.isArray(data.menuList)) {
         setMenuList(data.menuList);
       } else {
@@ -85,7 +87,7 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
       console.error('메뉴 삭제 실패', e);
     }
   };
-
+  console.log(menuList);
   return (
     <>
       <View style={styles.AddMenuWrapper}>
@@ -103,6 +105,7 @@ function RestFoodPage({storeid, navigation}: RestFoodPageProps) {
             menuContent={menuItem.menuContent}
             price={menuItem.price}
             navigation={navigation}
+            imgUrl={menuItem.imgUrl}
             onDelete={() => DeleteMenu(menuItem.menuId)}
           />
         ))}
@@ -120,6 +123,7 @@ const MenuItem = ({
   menuContent,
   price,
   navigation,
+  imgUrl,
   onDelete,
 }: {
   //name: string;
@@ -130,6 +134,7 @@ const MenuItem = ({
   menuContent: string;
   price: number;
   navigation: MainPageScreenProps['navigation'];
+  imgUrl: string;
   onDelete: () => void;
 }) => {
   const toUpdateMenuPage = () => {
@@ -146,7 +151,7 @@ const MenuItem = ({
         borderColor: 'lightgray',
       }}>
       <View style={{marginHorizontal: 10}}>
-        <Image source={require('../assets/food1.png')} style={styles.image} />
+        <Image source={{uri: imgUrl}} style={styles.image} />
       </View>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View style={{flex: 1}}>

@@ -98,6 +98,33 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
         },
       );
       console.log('새로운 메뉴 추가 완료');
+      console.log(response);
+
+      const formData = new FormData();
+      formData.append('file', imgFile);
+      console.log('dlawl' + imgFile.uri);
+      console.log('1' + response.data.data);
+      console.log('2' + response.data.menuid);
+
+      var menuid = response.data.data;
+      console.log(menuid);
+
+      try {
+        const response1 = await axios.post(
+          `http://kymokim.iptime.org:11080/api/menu/uploadImg/${menuid}`,
+          formData,
+          {
+            headers: {
+              'x-auth-token': token,
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        console.log(response1);
+      } catch (error) {
+        console.log('여긴가' + error);
+      }
+
       navigation.goBack();
       Alert.alert('알림', '새로운 메뉴 추가 완료');
     } catch (error) {
@@ -112,6 +139,7 @@ function AddMenuPage({route, navigation}: AddMenuPageProps) {
     menuIntroduction,
     menuPrice,
     copyStoreId,
+    imgFile,
   ]);
 
   return (
