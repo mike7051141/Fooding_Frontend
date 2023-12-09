@@ -33,10 +33,11 @@ function RestListPage() {
         }}
       />
       <Tab.Screen
-        name="China"
-        component={ChinaFoodPage}
-        options={{title: '중식'}}
+        name="SnackFood"
+        component={SnackFoodPage}
+        options={{title: '분식'}}
       />
+
       <Tab.Screen
         name="Italy"
         component={ItalyFoodPage}
@@ -67,15 +68,16 @@ function RestListPage() {
         component={PizzaPage}
         options={{title: '피자'}}
       />
-      <Tab.Screen
-        name="SnackFood"
-        component={SnackFoodPage}
-        options={{title: '분식'}}
-      />
+
       <Tab.Screen
         name="FastFood"
         component={FastFoodPage}
         options={{title: '패스트푸드'}}
+      />
+      <Tab.Screen
+        name="China"
+        component={ChinaFoodPage}
+        options={{title: '중식'}}
       />
     </Tab.Navigator>
   );

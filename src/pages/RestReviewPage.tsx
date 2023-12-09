@@ -209,7 +209,7 @@ const ReviewItem = ({
             </View>
             <View style={{flexDirection: 'row'}}>
               <Ionicons name="star" size={18} color={'#E7D532'} />
-              <Text style={{color: 'black'}}> {rate}</Text>
+              <Text style={{color: 'black'}}> {rate.toFixed(1)}</Text>
             </View>
             {/* 이미지 통신 뚫으면 여기에 이미지 넣는 컴포넌트 추가 */}
           </View>

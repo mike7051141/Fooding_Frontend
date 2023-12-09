@@ -323,13 +323,13 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             <Text style={styles.FoodsText}>한식</Text>
           </View>
           <View style={styles.foods}>
-            <Pressable onPress={() => toRestListPage('China')}>
+            <Pressable onPress={() => toRestListPage('SnackFood')}>
               <Image
-                source={require('../assets/food2.png')}
+                source={require('../assets/food9.png')}
                 style={styles.image}
               />
             </Pressable>
-            <Text style={styles.FoodsText}>중식</Text>
+            <Text style={styles.FoodsText}>분식</Text>
           </View>
           <View style={styles.foods}>
             <Pressable onPress={() => toRestListPage('Italy')}>
@@ -340,6 +340,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             </Pressable>
             <Text style={styles.FoodsText}>양식</Text>
           </View>
+
           <View style={styles.foods}>
             <Pressable onPress={() => toRestListPage('Japan')}>
               <Image
@@ -387,15 +388,7 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
             </Pressable>
             <Text style={styles.FoodsText}>피자</Text>
           </View>
-          <View style={styles.foods}>
-            <Pressable onPress={() => toRestListPage('SnackFood')}>
-              <Image
-                source={require('../assets/food9.png')}
-                style={styles.image}
-              />
-            </Pressable>
-            <Text style={styles.FoodsText}>분식</Text>
-          </View>
+
           <View style={styles.foods}>
             <Pressable onPress={() => toRestListPage('FastFood')}>
               <Image
@@ -404,6 +397,15 @@ function MainPage({navigation}: MainPageScreenProps): React.JSX.Element {
               />
             </Pressable>
             <Text style={styles.FoodsText}>패스트푸드</Text>
+          </View>
+          <View style={styles.foods}>
+            <Pressable onPress={() => toRestListPage('China')}>
+              <Image
+                source={require('../assets/food2.png')}
+                style={styles.image}
+              />
+            </Pressable>
+            <Text style={styles.FoodsText}>중식</Text>
           </View>
         </View>
       </View>
